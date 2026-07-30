@@ -22,6 +22,7 @@ kept, revert path named, and nothing rides into a ship unconfirmed.
 | `drafts` | runs freely | nothing |
 | `fetch` | needs your k | shelf |
 | `help` | runs freely | nothing |
+| `import` | runs freely | workshop, state, project, shelf |
 | `init` | runs freely | workshop, state, settings |
 | `make` | runs freely | workshop |
 | `note` | needs your k | workshop |
@@ -33,6 +34,7 @@ kept, revert path named, and nothing rides into a ship unconfirmed.
 | `resume` | needs your k at a real terminal | workshop, project |
 | `save` | runs freely | shelf |
 | `seal` | runs freely | core |
+| `setup` | runs freely | workshop |
 | `share` | runs freely | workshop |
 | `ship` | needs your k | workshop |
 | `status` | runs freely | nothing |

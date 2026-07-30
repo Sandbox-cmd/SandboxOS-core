@@ -316,6 +316,41 @@ def _app(ws, argv):
     return 0 if ok else 1
 
 
+def _import(ws, argv):
+    from . import succession
+    take, rest = _flag(argv, "--projects")
+    if not rest:
+        print("import needs the old workshop: sandbox import PATH [--projects a,b,c]")
+        return 2
+    if take is None:
+        offers = succession.list_old(rest[0])
+        if not offers:
+            print("nothing at %s looks like a workshop." % rest[0])
+            return 1
+        print("the old workshop offers:")
+        for o in offers:
+            print("  %-22s %-8s %s" % (o["name"], o["state"], o["goal"][:60]))
+        print("choose with: sandbox import %s --projects name,name" % rest[0])
+        return 0
+    ok, text = succession.run(ws, rest[0], [t.strip() for t in take.split(",") if t.strip()])
+    print(text)
+    return 0 if ok else 1
+
+
+def _setup(ws, argv):
+    from .cli import ROOT
+    shim_dir = os.path.expanduser("~/.local/bin")
+    os.makedirs(shim_dir, exist_ok=True)
+    shim = os.path.join(shim_dir, "sandbox")
+    with open(shim, "w", encoding="utf-8") as f:
+        f.write('#!/bin/sh\nexec "%s" "$@"\n' % os.path.join(ROOT, "sandbox"))
+    os.chmod(shim, 0o755)
+    print("one shim written: %s -> this copy" % shim)
+    if shim_dir not in os.environ.get("PATH", ""):
+        print("add to your PATH if it is not there:  export PATH=\"$HOME/.local/bin:$PATH\"")
+    return 0
+
+
 def _reset(ws, argv):
     from . import onboard, placement
     if not argv:
@@ -372,6 +407,8 @@ TABLE = {
     "share": _share,
     "fetch": _fetch,
     "app": _app,
+    "import": _import,
+    "setup": _setup,
     "reset": _reset,
     "page": _page,
     "update": _update,
@@ -403,6 +440,9 @@ DECLARATIONS = {
                          emits="assert"),
     "app": declaration(reads=("workshop", "apps"), writes=("apps", "workshop"),
                        gate="keystroke", emits="place"),
+    "import": declaration(reads=("workshop",), writes=("workshop", "state", "project", "shelf"),
+                          emits="assert"),
+    "setup": declaration(reads=("core",), writes=("workshop",)),
     "reset": declaration(reads=("core",), writes=("workshop", "state"), emits="place"),
     "page": declaration(reads=("workshop", "project"), writes=("workshop",)),
     "update": declaration(reads=("core", "workshop"), writes=("workshop", "state", "settings"),
