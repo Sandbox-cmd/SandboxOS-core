@@ -20,9 +20,10 @@ closes each item, and the known limits.
 - **the plugin against a live session.** hooks are wired directly into the
   workshop settings by init (proven path). the plugin directory ships for
   marketplace distribution and has not yet met a live claude session.
-- **the crew.** shipped agents (checker, challenger) are specced for the
-  lean core and not yet written; a fresh instance today boots with the
-  contract and the guard, no crew.
+- **the wider crew.** checker and challenger ship in the vessel and boot
+  with every fresh instance; the rest of the crew (keeper, producer,
+  voicer, surveyor shapes from the seventh body) waits for real need on a
+  real instance, per the lean-core ruling.
 
 ## waits on the first release (the owner's hands)
 

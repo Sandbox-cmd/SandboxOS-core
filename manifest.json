@@ -6,7 +6,7 @@
   "VERSION": "462c9aaa608fb2014cd9649af1c5c009485c60b9c8b15b89401fdc10cf6161c6",
   "boot.py": "eca168882b0fa962db928ca19d9bbba539762f3806d3c8fd1217c4396e905695",
   "docs/MANUAL.md": "4ccfdbeac4e55027e9c148591a654d8b7fbfb1b45f19e057a60825337cecf418",
-  "docs/OPEN.md": "d58a435a0e25c554f9de6190f96bab13d9a748cf31f513676e3b96b1ea2a1b4c",
+  "docs/OPEN.md": "26a03aac78c65ba1aa4c1a804198ade5d0d3eb06fdc51c9c857d018e495f12c3",
   "docs/START-HERE.md": "bfe3bf2c1f009139f888f0c046312b97eefa016399f7398bf4b91da9d3167453",
   "engine/__init__.py": "bbf025736696572bc3947dafebe76a5071d2add853a707fc1dd6310c3af0ae27",
   "engine/apps.py": "0d9ce6c93355990a8264a553629335e026a243a8895da40d53a19b7dfecc7765",
@@ -18,7 +18,7 @@
   "engine/journal.py": "a06302185b9b4cc496e8761806d0bde0457c9a8bdac9761113a03443155f782b",
   "engine/make.py": "6cf85fca87480f84de6543a28cef61991b40b158c5b19b5d563ac27ae80ceb13",
   "engine/notes.py": "5e70245882d41d71796ab35010ab129c14ab06696d39ce145c37aa2af1d4e01c",
-  "engine/onboard.py": "dd0a83fa9056f5324518e319396c161188346bf089d168a62ba8b9af9e397520",
+  "engine/onboard.py": "0d67dc9c74afa445561f3331a47cb3100dd30197bd61ac9e62a24cf0ac41efc1",
   "engine/page.py": "100f7b3c14fe61f55ae63e60eec604ac7e8a1881672214d77ddd4f27c70e94a6",
   "engine/placement.py": "cf1abe8ba5cccd14b0923302bab1503331b158367926c689339147a60bddb55e",
   "engine/project.py": "7928a3461bbd2282c58c70a185c0d05456292a593381dd0bc4389b651eb05d95",
@@ -42,7 +42,7 @@
   "engine/tests/test_make.py": "ec834a17ae3d7ea7bdbe66a34f2b8a2311893bedc1d9ab67ab4d96196ccd7b85",
   "engine/tests/test_notes.py": "3c43d2666a6c120e389074ab103c76af2d9610dd384ea89359f60e46a9c5b4da",
   "engine/tests/test_person_clean.py": "17411a22a79c224caa924c788b819b59f2d84f046d9b77f634f2148f7cf36790",
-  "engine/tests/test_placement.py": "8bdce58fc95e51c9c251056a8d54339d711dab806847fd96b0feff3865710979",
+  "engine/tests/test_placement.py": "b531f5499f5693d8d073f1a9d1a27ced5cd076cd8857f654e714c9e9f8ff4a80",
   "engine/tests/test_project.py": "504ca980a9db75c6d3a59c33e76f12048e08fd3c9169f1fb2499a0aeb28e800e",
   "engine/tests/test_provisional.py": "e8d4d4b3e28066669a45a161fa46810e79098bd94f1a18371e1e7fd0665b56de",
   "engine/tests/test_registry.py": "eee339e15cc7afd4b7f351be7ea63a8959c3b437e9b374ee78b0a5f410678961",
@@ -55,10 +55,12 @@
   "engine/verbs.py": "ab1935f3dbe3392af017c076694122d761e2a361aec978e75c34830ee5811934",
   "sandbox": "a3f97bc6170c5a05b8cab8dccb105d54faac896ee6da2741263bd1990b2b82b5",
   "vessel/claude-code/CLAUDE.md": "2c34a1acc504d14988b3884b5125fcadd22eb6226ffb78724009f14c9483dcbc",
+  "vessel/claude-code/agents/challenger.md": "86cb1aad70fa434255988604a576cbe5c42d96dd134504370befedb96480ee0e",
+  "vessel/claude-code/agents/checker.md": "0ea94722f3ba410c2b6988c987b7572ace40c7601e5b84eb6cc061c29b9b60b9",
   "vessel/claude-code/guard.py": "a750e2b6a9f18d92a2a62216012ab9ed2bf76f1f2cfb03555cc0ac86c271c157",
   "vessel/plugin/.claude-plugin/plugin.json": "181a670d748935dadfd0620f9f4108b787bf638d74b11dd5663081fafe4836d4",
   "vessel/plugin/hooks/hooks.json": "3d6da9fc549f678375ce17f347022aaf7ad2294680b8356babe1254552755a1f",
   "vessel/plugin/output-styles/plain.md": "c6de491632973357b067e494dfb3ee4fe8df6ff99ade65cc04daa6a2156bc475"
  },
- "generated": "2026-07-30T10:56:05Z"
+ "generated": "2026-07-30T10:58:13Z"
 }

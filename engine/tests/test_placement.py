@@ -87,6 +87,9 @@ class TestInit(unittest.TestCase):
         self.assertIn("read-back: the wiring took", text)
         self.assertTrue(os.path.exists(os.path.join(ws, "CLAUDE.md")))
         self.assertTrue(os.path.exists(os.path.join(ws, ".claude", "settings.json")))
+        # The crew boots with every fresh instance.
+        self.assertTrue(os.path.exists(os.path.join(ws, ".claude", "agents", "checker.md")))
+        self.assertTrue(os.path.exists(os.path.join(ws, ".claude", "agents", "challenger.md")))
         import json
         with open(os.path.join(ws, ".claude", "settings.json")) as f:
             settings = json.load(f)

@@ -102,6 +102,11 @@ def run(ws):
         os.path.join(ws, "CLAUDE.md"): os.path.join(src, "CLAUDE.md"),
         os.path.join(vdir, "guard.py"): os.path.join(src, "guard.py"),
     }
+    agents_src = os.path.join(src, "agents")
+    if os.path.isdir(agents_src):
+        for name in sorted(os.listdir(agents_src)):
+            payload[os.path.join(ws, ".claude", "agents", name)] = \
+                os.path.join(agents_src, name)
     for line in placement.sync(ws, payload):
         lines.append(line)
 
