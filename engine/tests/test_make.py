@@ -41,6 +41,33 @@ class TestMake(unittest.TestCase):
         ok, msg = make.close_session(self.ws, "geardoor")
         self.assertFalse(ok)
 
+    def test_build_without_a_builder_hands_you_the_prompt(self):
+        os.environ[make.CLAUDE_ENV] = "none"
+        try:
+            ok, msg = make.build(self.ws, "geardoor", "add the tax table")
+        finally:
+            del os.environ[make.CLAUDE_ENV]
+        self.assertTrue(ok, msg)
+        self.assertIn("PROMPT.md", msg)
+        prompt = open(os.path.join(self.root, "PROMPT.md")).read()
+        self.assertIn("add the tax table", prompt)
+
+    def test_build_with_a_fake_builder_runs_and_closes(self):
+        fake = os.path.join(tempfile.mkdtemp(prefix="sbx8f-"), "fakeclaude")
+        with open(fake, "w") as f:
+            f.write("#!/bin/sh\necho built the thing\nprintf 'x' > done.txt\n")
+        os.chmod(fake, 0o755)
+        os.environ[make.CLAUDE_ENV] = fake
+        try:
+            ok, msg = make.build(self.ws, "geardoor", "do the thing")
+        finally:
+            del os.environ[make.CLAUDE_ENV]
+        self.assertTrue(ok, msg)
+        self.assertIn("built the thing", msg)
+        events, _ = journal.read(self.ws)
+        close = [e for e in events if e.get("op") == "make" and e.get("phase") == "close"][-1]
+        self.assertIn("done.txt", close["diff"]["added"])
+
     def test_no_summary_stages_nothing(self):
         make.open_session(self.ws, "geardoor", "quiet pass")
         make.close_session(self.ws, "geardoor")

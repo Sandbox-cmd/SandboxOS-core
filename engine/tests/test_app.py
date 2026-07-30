@@ -83,6 +83,40 @@ class TestApps(unittest.TestCase):
         self.assertTrue(os.path.exists(mine))  # exactly what install placed, nothing else
         self.assertEqual(apps.list_installed(self.ws), [])
 
+    def test_directory_placement_expands(self):
+        d = make_app(name="kit", placements=["apps/kit/"])
+        os.makedirs(os.path.join(d, "payload", "sub"), exist_ok=True)
+        open(os.path.join(d, "payload", "a.py"), "w").write("a\n")
+        open(os.path.join(d, "payload", "sub", "b.py"), "w").write("b\n")
+        ok, msg = apps.install(self.ws, d, key())
+        self.assertTrue(ok, msg)
+        self.assertTrue(os.path.exists(os.path.join(self.ws, "apps", "kit", "a.py")))
+        self.assertTrue(os.path.exists(os.path.join(self.ws, "apps", "kit", "sub", "b.py")))
+        ok, msg = apps.remove(self.ws, "kit")
+        self.assertTrue(ok)
+        self.assertFalse(os.path.exists(os.path.join(self.ws, "apps", "kit", "sub", "b.py")))
+
+    def test_catalog_pin_upgrades_trust_and_tamper_is_named(self):
+        from engine import catalog
+        import json
+        d = make_app(name="tuner")
+        cat = tempfile.mkdtemp(prefix="sbx8cat-")
+        appdir = os.path.join(cat, "apps", "tuner")
+        import shutil as _sh
+        _sh.copytree(d, appdir)
+        with open(os.path.join(cat, "index.json"), "w") as f:
+            json.dump({"apps": catalog.entry_for(appdir)}, f)
+        app_dir, pinned, why = catalog.verify(cat, "tuner")
+        self.assertTrue(pinned, why)
+        ok, msg = apps.install(self.ws, app_dir, key(), source="catalog:tuner")
+        self.assertTrue(ok)
+        self.assertIn("pinned by its index", msg)
+        apps.remove(self.ws, "tuner")
+        open(os.path.join(appdir, "payload", "tuner.py"), "a").write("# tamper\n")
+        app_dir, pinned, why = catalog.verify(cat, "tuner")
+        self.assertFalse(pinned)
+        self.assertIn("disagree", why)
+
     def test_double_install_refused(self):
         d = make_app()
         apps.install(self.ws, d, key())

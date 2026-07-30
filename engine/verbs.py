@@ -163,8 +163,10 @@ def _make(ws, argv):
         rest.remove("--close")
         summary, rest = _flag(rest, "--summary")
         ok, msg = mk.close_session(ws, target, summary or "")
+    elif rest:
+        ok, msg = mk.build(ws, target, " ".join(rest))
     else:
-        print("make --open \"intent\" · make --close [--summary \"...\"]")
+        print("make \"intent\" · make --open \"intent\" · make --close [--summary \"...\"]")
         return 2
     print(msg)
     return 0 if ok else 1
@@ -294,8 +296,17 @@ def _app(ws, argv):
         return 0
     sub, rest = argv[0], argv[1:]
     if sub == "install" and rest:
+        cat, rest = _flag(rest, "--catalog")
         consent = gate.mint_consent(is_real_tty=_tty(), keychar="k" if _tty() else None)
-        ok, msg = apps.install(ws, rest[0], consent)
+        if cat:
+            from . import catalog
+            app_dir, pinned, why = catalog.verify(cat, rest[0])
+            if not pinned:
+                print(why)
+                return 1
+            ok, msg = apps.install(ws, app_dir, consent, source="catalog:%s" % rest[0])
+        else:
+            ok, msg = apps.install(ws, rest[0], consent)
     elif sub == "remove" and rest:
         ok, msg = apps.remove(ws, rest[0])
     else:

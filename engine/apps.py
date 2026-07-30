@@ -57,15 +57,39 @@ def _semver(v):
 
 
 def placement_allowed(ws, app_name, rel):
-    """The allowlist, in code. Only the app's own room and nothing clever."""
+    """The allowlist, in code. Only the app's own room and nothing clever.
+    A line ending in '/' places that whole payload subtree."""
     if os.path.isabs(rel) or rel.startswith("~"):
         return False, "absolute paths never place"
-    parts = rel.replace("\\", "/").split("/")
+    parts = [p for p in rel.replace("\\", "/").split("/") if p]
     if ".." in parts:
         return False, "'..' never places"
     if parts[0] != "apps" or len(parts) < 2 or parts[1] != app_name:
         return False, "an app places only under apps/%s/" % app_name
     return True, ""
+
+
+def _expand(app_dir, name, placements):
+    """Directory placements ('.../') expand to their payload files.
+    Returns (files, error) where files are rel placement paths."""
+    out = []
+    for rel in placements:
+        inner = os.path.relpath(rel.rstrip("/"), os.path.join("apps", name))
+        src = os.path.join(app_dir, "payload", inner)
+        if rel.endswith("/"):
+            if not os.path.isdir(src):
+                return None, "the manifest names %r but the payload does not carry it" % rel
+            for dirpath, dirnames, filenames in os.walk(src):
+                dirnames[:] = [d for d in dirnames if d not in (".git", "__pycache__")]
+                for n in filenames:
+                    out.append(os.path.join(
+                        rel.rstrip("/"),
+                        os.path.relpath(os.path.join(dirpath, n), src)))
+        else:
+            if not os.path.exists(src):
+                return None, "the manifest names %r but the payload does not carry it" % rel
+            out.append(rel)
+    return out, None
 
 
 def install(ws, app_dir, consent, source="local"):
@@ -87,20 +111,24 @@ def install(ws, app_dir, consent, source="local"):
         ok, why = placement_allowed(ws, name, rel)
         if not ok:
             return False, "placement refused by code, before your key: %r — %s" % (rel, why)
-        if not os.path.exists(os.path.join(app_dir, "payload", os.path.relpath(rel, os.path.join("apps", name)))):
-            return False, "the manifest names %r but the payload does not carry it" % rel
+    files, err = _expand(app_dir, name, m["placements"])
+    if err:
+        return False, err
     if os.path.exists(os.path.join(_book_dir(ws), name + ".json")):
         return False, "an app named %s is already installed — remove it first" % name
 
-    trust = ("source: %s — UNVERIFIED unless it is the pinned catalog" % source)
+    if source.startswith("catalog:"):
+        trust = "source: the official catalog — pinned by its index"
+    else:
+        trust = "source: %s — UNVERIFIED (the hash proves consistency, not who made it)" % source
     face = ["%s %s — %s" % (name, m["version"], m["description"]),
             trust,
-            "places %d file(s), all under apps/%s/" % (len(m["placements"]), name)]
+            "places %d file(s), all under apps/%s/" % (len(files), name)]
     if not consent or consent.get("source") != "tty" or consent.get("key") != gate.COMMIT_KEY:
         return False, "\n".join(face + ["installing needs your %r at a real terminal" % gate.COMMIT_KEY])
 
     placed = []
-    for rel in m["placements"]:
+    for rel in files:
         inner = os.path.relpath(rel, os.path.join("apps", name))
         src = os.path.join(app_dir, "payload", inner)
         dest = os.path.join(ws, rel)

@@ -2,6 +2,16 @@
 
 ## 8.1.0 — the constitution rides the body (2026-07-30)
 
+- make grows its AI half: `sandbox make "intent"` runs the builder
+  (SANDBOX_CLAUDE_CMD overrides; without one, the full prompt lands in the
+  project for your own hands), diff computed either way.
+- the catalog: index.json pins every app by hash; `app install --catalog`
+  verifies the pin and says so; a catalog whose bytes disagree with its own
+  index is named loudly. directory placements ('.../') let big apps declare
+  one line instead of a thousand.
+- the face's first tokens: one earned accent, only at a real terminal,
+  never under NO_COLOR. the full design pass stays a named debt.
+
 - the fifteen laws, ratified in sitting, now live in `law/` — one page
   each, clause text hash-pinned by the suite: amending a law means editing
   its pin in the same commit, and only the owner's pen amends.

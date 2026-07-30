@@ -128,8 +128,8 @@ def doctor(ws):
                    "updates are skipping your edited copies: %s — sandbox reset PATH re-baselines"
                    % ", ".join(os.path.basename(d) for d in div) if div else ""))
 
+    from . import face
     lines = []
     for label, ok, note_ in checks:
-        mark = "ok" if ok else "LOOK"
-        lines.append(" %-4s %-26s %s" % (mark, label, note_))
+        lines.append(" %-4s %-26s %s" % (face.mark(ok).strip(), label, note_))
     return all(ok for _, ok, _ in checks), lines
