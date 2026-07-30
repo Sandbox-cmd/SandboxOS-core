@@ -49,8 +49,17 @@ python3 -m unittest discover -s engine/tests -t .   # the whole suite, stdlib on
 ./sandbox verify                                    # sha256 against the manifest
 ```
 
-`verify` proves the copy changed, not who changed it. releases are signed;
-the public key is printed in the release notes, so a swapped key is visible.
+`verify` proves the copy changed, not who changed it. releases are signed —
+turn on strict verification (signature, not just hashes) with the release
+public key:
+
+```
+export SANDBOX_MINISIGN_PUBKEY=RWSSaKTVM7ywEE8f/jL16NcRhOFR1sAtIOd2hAD/ziMRscYAlaGxw+9j
+./sandbox verify
+```
+
+the same key is printed in every release's notes; if this file and the
+release notes ever disagree, trust neither and ask.
 
 ## license
 

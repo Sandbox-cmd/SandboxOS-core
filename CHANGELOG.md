@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 8.0.0 — the eighth body (unreleased)
+## 8.0.0 — the eighth body (2026-07-30)
 
 born release-ready. the whole system rebuilt on a constitution argued from
 scratch (fifteen laws, ratified 2026-07-30), with the seam as its founding
