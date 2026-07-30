@@ -32,9 +32,12 @@ class TestDeclarationParity(unittest.TestCase):
         with self.assertRaises(AssertionError):
             verbs.declaration(writes=("wherever",))
 
-    def test_state_scope_reserved_for_desk_family(self):
-        """No band-A verb writes the record's own directory."""
+    def test_state_scope_reserved(self):
+        """Only init (placing the vessel beside the record) may claim the
+        record's directory; every other verb is fenced out."""
         for name, d in verbs.DECLARATIONS.items():
+            if name == "init":
+                continue
             self.assertNotIn("state", d["writes"],
                              "%s claims the record's directory" % name)
 

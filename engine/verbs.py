@@ -209,7 +209,15 @@ def _doctor(ws, argv):
     return 0 if ok else 1
 
 
+def _init(ws, argv):
+    from . import onboard
+    ok, text = onboard.run(ws)
+    print(text)
+    return 0 if ok else 1
+
+
 TABLE = {
+    "init": _init,
     "version": _version,
     "help": _help,
     "project": _project,
@@ -226,6 +234,8 @@ TABLE = {
 }
 
 DECLARATIONS = {
+    "init": declaration(reads=("core",), writes=("workshop", "state", "settings"),
+                        emits="place"),
     "version": declaration(reads=("VERSION",)),
     "help": declaration(),
     "project": declaration(reads=("project",), writes=("project", "workshop"), emits="assert"),

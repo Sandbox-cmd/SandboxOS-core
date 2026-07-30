@@ -118,6 +118,12 @@ def doctor(ws):
     checks.append(("provisional lane fresh", stale <= 7,
                    "oldest act is %d day(s) old — resume and rule on it" % stale if stale > 7 else ""))
 
+    from . import placement
+    div = placement.diverged(ws)
+    checks.append(("placed files current", not div,
+                   "updates are skipping your edited copies: %s — sandbox reset PATH re-baselines"
+                   % ", ".join(os.path.basename(d) for d in div) if div else ""))
+
     lines = []
     for label, ok, note_ in checks:
         mark = "ok" if ok else "LOOK"
