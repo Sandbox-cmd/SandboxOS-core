@@ -124,21 +124,31 @@ def run(ws, old_root, take_projects):
             skipped.append("%s (already lives here)" % name)
             continue
         root = c.get("root")
+        keep_root = None
         if root:
-            rootp = _relocate(os.path.abspath(os.path.expanduser(root)), old_root)
-            if rootp:
-                # The work moves IN: the project directory becomes the work itself.
-                _copy_tree(rootp, dest)
+            asis = os.path.abspath(os.path.expanduser(root))
+            if os.path.isdir(asis) and not asis.startswith(old_root + os.sep):
+                # The root lives OUTSIDE the old workshop (its own repo, its
+                # own life) — the project directory comes, the root: line
+                # stays, and nothing external is moved in.
+                keep_root = asis
+                _copy_tree(src, dest)
             else:
-                skipped.append("%s (its root %s is gone)" % (name, root))
-                continue
+                rootp = _relocate(asis, old_root)
+                if rootp:
+                    # The work moves IN: the project directory becomes the work.
+                    _copy_tree(rootp, dest)
+                else:
+                    skipped.append("%s (its root %s is gone)" % (name, root))
+                    continue
         else:
             _copy_tree(src, dest)
         # A fresh contract in the new shape; checks carried, ratification void.
         with open(project.contract_path(ws, name), "w", encoding="utf-8") as f:
-            f.write("# %s\ngoal: %s\nstate: %s\n\n## checks\n%s\n\n## notes\n"
-                    % (name, c["goal"], c["state"],
-                       "\n".join(c["checks"])))
+            f.write("# %s\ngoal: %s\nstate: %s\n" % (name, c["goal"], c["state"]))
+            if keep_root:
+                f.write("root: %s\n" % keep_root)
+            f.write("\n## checks\n%s\n\n## notes\n" % "\n".join(c["checks"]))
         carried.append(name)
     if carried:
         lines.append("live projects: %s" % ", ".join(carried))

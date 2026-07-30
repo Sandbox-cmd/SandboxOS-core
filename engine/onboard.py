@@ -54,6 +54,22 @@ def emit_settings(ws):
 
     hooks = settings.setdefault("hooks", {})
     pre = hooks.setdefault("PreToolUse", [])
+
+    # Prune hooks whose placed script is gone (a workshop that moved leaves
+    # dead absolute paths behind — the seventh body's scar, met again by the
+    # eighth on its own migration day).
+    import re as _re
+    pruned = 0
+    for entry in list(pre):
+        for hk in entry.get("hooks", []):
+            m = _re.search(r'"([^"]*guard\.py)"', hk.get("command", ""))
+            if m and not os.path.exists(m.group(1)):
+                pre.remove(entry)
+                pruned += 1
+                break
+    if pruned:
+        lines.append("pruned %d hook(s) pointing at gone paths" % pruned)
+
     if not _wired(pre):
         pre.append({"matcher": "|".join(WRITE_TOOLS) + "|Bash",
                     "hooks": [{"type": "command", "command": guard_cmd}]})

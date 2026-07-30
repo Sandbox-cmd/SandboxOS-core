@@ -385,6 +385,13 @@ def _update(ws, argv):
     return 0 if ok else 1
 
 
+def _release(ws, argv):
+    from . import integrity
+    ok, msg = integrity.release_check()
+    print(msg)
+    return 0 if ok else 1
+
+
 def _verify(ws, argv):
     from . import integrity
     ok, msg = integrity.verify()
@@ -412,6 +419,7 @@ TABLE = {
     "reset": _reset,
     "page": _page,
     "update": _update,
+    "release": _release,
     "verify": _verify,
     "seal": _seal,
     "version": _version,
@@ -447,6 +455,7 @@ DECLARATIONS = {
     "page": declaration(reads=("workshop", "project"), writes=("workshop",)),
     "update": declaration(reads=("core", "workshop"), writes=("workshop", "state", "settings"),
                           emits="place"),
+    "release": declaration(reads=("core",)),
     "verify": declaration(reads=("core",)),
     "seal": declaration(reads=("core",), writes=("core",)),
     "version": declaration(reads=("VERSION",)),

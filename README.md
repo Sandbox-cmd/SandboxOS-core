@@ -61,6 +61,31 @@ export SANDBOX_MINISIGN_PUBKEY=RWSSaKTVM7ywEE8f/jL16NcRhOFR1sAtIOd2hAD/ziMRscYAl
 the same key is printed in every release's notes; if this file and the
 release notes ever disagree, trust neither and ask.
 
+## living with it — the short field guide
+
+- **your workshop is yours.** `~/Sandbox` (or wherever `SANDBOX_HOME`
+  points) holds your projects, builds, apps, and the record. back it up by
+  copying it wholesale. this clone is disposable; your workshop never is.
+- **the rhythm**: arrive with `sandbox resume` (one `k` lands what waited)
+  · look with `sandbox status` · work with `sandbox project on NAME` and
+  `sandbox make "intent"` · capture with `sandbox note "..."` · remember
+  with `sandbox recall QUERY` · finish with checks in PROJECT.md and
+  `sandbox ship`.
+- **your keystroke is the gate.** the machine drafts and stages; only your
+  `k` at a real terminal lands anything durable. a few reversible acts run
+  immediately and confirm at your next resume, snapshot kept.
+- **add things**: `project new` · `save PATH` (a reusable build) ·
+  `app install NAME --catalog <shelf>` · your own agents and skills as
+  files under `.claude/` (updates never touch what's yours).
+- **remove things**: `app remove NAME` takes exactly what install placed;
+  `project done` closes (your next resume confirms); `reset PATH` returns
+  an edited placed file to pristine.
+- **update without fear**: `git pull` here, then `sandbox update` — files
+  you edited are skipped and named, migrations never rewrite the record,
+  and `sandbox doctor` names anything off, with its fix.
+- **when in doubt**: `sandbox doctor`, then `sandbox drafts` — every wall
+  in this system names its door.
+
 ## license
 
 FSL-1.1-Apache-2.0 — free for everything except competing with the

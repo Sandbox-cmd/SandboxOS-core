@@ -63,6 +63,58 @@ def seal():
     return True, "\n".join(lines)
 
 
+def release_check():
+    """The release drill's wall: refuses until everything a release needs
+    actually holds. Born from a recurrence — two releases pushed with the
+    fresh signature uncommitted, caught only by a stranger-path verify.
+    This verb never tags and never pushes; those are the owner's hands. It
+    just refuses to let the ceremony start out of order.
+    """
+    import sys
+    r = root()
+    lines, ok = [], True
+
+    suite = subprocess.run([sys.executable, "-m", "unittest", "discover",
+                            "-s", "engine/tests", "-t", "."],
+                           cwd=r, capture_output=True, text=True, timeout=600)
+    good = suite.returncode == 0
+    ok = ok and good
+    tail = (suite.stderr or "").strip().splitlines()
+    lines.append("%s the suite (%s)" % ("ok  " if good else "FAIL",
+                                        tail[-1] if tail else ""))
+
+    v_ok, v_msg = verify()
+    ok = ok and v_ok
+    lines.append("%s verify: %s" % ("ok  " if v_ok else "FAIL", v_msg.splitlines()[0]))
+
+    mp, sig = manifest_path(), manifest_path() + ".minisig"
+    if not os.path.exists(sig):
+        ok = False
+        lines.append("FAIL no signature — sign the manifest: minisign -Sm manifest.json")
+    elif os.path.getmtime(sig) < os.path.getmtime(mp):
+        ok = False
+        lines.append("FAIL the signature is OLDER than the manifest — re-sign before anything ships")
+    else:
+        lines.append("ok   the signature is fresher than the manifest")
+
+    st = subprocess.run(["git", "-C", r, "status", "--porcelain"],
+                        capture_output=True, text=True)
+    clean = st.returncode == 0 and not st.stdout.strip()
+    ok = ok and clean
+    lines.append("%s the tree is committed%s" % ("ok  " if clean else "FAIL",
+                 "" if clean else " — uncommitted: " + st.stdout.strip().replace("\n", ", ")[:120]))
+
+    if ok:
+        with open(os.path.join(r, "VERSION"), encoding="utf-8") as f:
+            v = f.read().strip()
+        lines.append("the ceremony may start — your hands, in order:")
+        lines.append("  git tag -a v%s -m \"...\"" % v)
+        lines.append("  git push origin main --tags")
+    else:
+        lines.append("the release refuses — fix the FAIL lines first.")
+    return ok, "\n".join(lines)
+
+
 def verify():
     mp = manifest_path()
     if not os.path.exists(mp):

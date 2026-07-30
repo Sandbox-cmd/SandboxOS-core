@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 8.1.2 — the fences learn from the move (2026-07-30)
+
+everything here was found live, on the owner's own migration day.
+
+- `sandbox release` — the ceremony's wall: refuses until the suite, verify,
+  a fresh signature, and a committed tree all hold, then hands you the tag
+  and push commands. born from the same miss twice.
+- init prunes hooks pointing at gone paths — a moved workshop no longer
+  leaves a dead guard blocking every session.
+- import: a root living outside the old workshop stays a `root:`; only
+  trees inside the old workshop move in. moved roots relocate by suffix.
+
 ## 8.1.1 — succession (2026-07-30)
 
 - `sandbox import PATH` — a past body's workshop comes in whole: the

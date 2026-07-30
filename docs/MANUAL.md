@@ -30,6 +30,7 @@ kept, revert path named, and nothing rides into a ship unconfirmed.
 | `play` | runs freely | workshop |
 | `project` | runs freely | project, workshop |
 | `recall` | runs freely | nothing |
+| `release` | runs freely | nothing |
 | `reset` | runs freely | workshop, state |
 | `resume` | needs your k at a real terminal | workshop, project |
 | `save` | runs freely | shelf |

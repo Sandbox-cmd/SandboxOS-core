@@ -118,3 +118,24 @@ class TestImport(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestExternalRoots(unittest.TestCase):
+    def test_external_root_stays_a_root_never_moves_in(self):
+        old = make_seventh_body()
+        external = tempfile.mkdtemp(prefix="sbx8ext-")
+        open(os.path.join(external, "engine.py"), "w").write("# the tool\n")
+        ch = os.path.join(old, "channels", "toolwork")
+        os.makedirs(ch)
+        with open(os.path.join(ch, "CHANNEL.md"), "w") as f:
+            f.write("# toolwork\ngoal: g\nstate: active\nroot: %s\n\n## checks\n" % external)
+        open(os.path.join(ch, "NOTES.md"), "w").write("the project docs\n")
+        ws = tempfile.mkdtemp(prefix="sbx8-")
+        ok, text = succession.run(ws, old, ["toolwork"])
+        self.assertTrue(ok, text)
+        c = project.parse_contract(project.contract_path(ws, "toolwork"))
+        self.assertEqual(c["root"], external)  # the root stays a root
+        self.assertTrue(os.path.exists(
+            os.path.join(project.dirpath(ws, "toolwork"), "NOTES.md")))  # docs came
+        self.assertFalse(os.path.exists(
+            os.path.join(project.dirpath(ws, "toolwork"), "engine.py")))  # tree did not

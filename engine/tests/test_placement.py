@@ -109,3 +109,24 @@ class TestInit(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestHookPruning(unittest.TestCase):
+    def test_dead_hooks_pruned_live_ones_kept(self):
+        import json
+        from engine import onboard
+        ws = tempfile.mkdtemp(prefix="sbx8-")
+        sp = os.path.join(ws, ".claude", "settings.json")
+        os.makedirs(os.path.dirname(sp))
+        dead = {"matcher": "Bash", "hooks": [{"type": "command",
+                "command": 'python3 "/gone/somewhere/vessel/guard.py"'}]}
+        with open(sp, "w") as f:
+            json.dump({"hooks": {"PreToolUse": [dead]}}, f)
+        ok, lines = onboard.emit_settings(ws)
+        self.assertTrue(ok)
+        self.assertTrue(any("pruned 1 hook" in l for l in lines))
+        with open(sp) as f:
+            back = json.load(f)
+        cmds = [hk["command"] for h in back["hooks"]["PreToolUse"] for hk in h["hooks"]]
+        self.assertFalse(any("/gone/" in c for c in cmds))
+        self.assertTrue(any(ws in c for c in cmds))  # the live wiring stands
