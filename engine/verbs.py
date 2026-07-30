@@ -216,8 +216,63 @@ def _init(ws, argv):
     return 0 if ok else 1
 
 
+def _save(ws, argv):
+    from . import shelf
+    note_, rest = _flag(argv, "--note")
+    if not rest:
+        print("save needs a path: sandbox save PATH [--note \"...\"]")
+        return 2
+    ok, msg = shelf.save(ws, rest[0], note=note_ or "")
+    print(msg)
+    return 0 if ok else 1
+
+
+def _builds(ws, argv):
+    from . import shelf
+    cards = shelf.list_all(ws)
+    if not cards:
+        print("the shelf is empty — press one with: sandbox save PATH")
+        return 0
+    for c in cards:
+        print("%-20s %-12s %s" % (c["name"], c.get("origin", ""), c.get("note", "")))
+    return 0
+
+
+def _use(ws, argv):
+    from . import project, shelf
+    target, rest = _target(ws, argv)
+    if not rest:
+        print("use needs a build: sandbox use NAME")
+        return 2
+    if target is None:
+        print("use needs a project: --project NAME (or switch one on)")
+        return 2
+    ok, msg = shelf.use(ws, rest[0], target, project.root_of(ws, target))
+    print(msg)
+    return 0 if ok else 1
+
+
+def _verify(ws, argv):
+    from . import integrity
+    ok, msg = integrity.verify()
+    print(msg)
+    return 0 if ok else 1
+
+
+def _seal(ws, argv):
+    from . import integrity
+    ok, msg = integrity.seal()
+    print(msg)
+    return 0 if ok else 1
+
+
 TABLE = {
     "init": _init,
+    "save": _save,
+    "builds": _builds,
+    "use": _use,
+    "verify": _verify,
+    "seal": _seal,
     "version": _version,
     "help": _help,
     "project": _project,
@@ -236,6 +291,11 @@ TABLE = {
 DECLARATIONS = {
     "init": declaration(reads=("core",), writes=("workshop", "state", "settings"),
                         emits="place"),
+    "save": declaration(reads=("project", "workshop"), writes=("shelf",), emits="assert"),
+    "builds": declaration(reads=("shelf",)),
+    "use": declaration(reads=("shelf",), writes=("project", "shelf")),
+    "verify": declaration(reads=("core",)),
+    "seal": declaration(reads=("core",), writes=("core",)),
     "version": declaration(reads=("VERSION",)),
     "help": declaration(),
     "project": declaration(reads=("project",), writes=("project", "workshop"), emits="assert"),
