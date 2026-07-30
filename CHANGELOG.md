@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 8.1.1 — succession (2026-07-30)
+
+- `sandbox import PATH` — a past body's workshop comes in whole: the
+  journal byte-verbatim (the old genesis stays the genesis — one
+  continuous self), a path-map so old receipts open at new addresses,
+  chosen projects live with their checks (ratifications honestly void,
+  one fresh k each), carts become builds, your own agents ride along.
+  A lived-in workshop refuses to merge selves.
+- `sandbox setup` — one shim, pointing at this copy.
+
 ## 8.1.0 — the constitution rides the body (2026-07-30)
 
 - make grows its AI half: `sandbox make "intent"` runs the builder

@@ -1,9 +1,9 @@
 {
  "files": {
-  "CHANGELOG.md": "da8845573c9e5eb370ae5b7a8e3b79c8c4d3ec502a7487a8a5ab1d8296679eff",
+  "CHANGELOG.md": "b98da8c43582d3ebc765fce5cd794081f6c6626b140978928d84ed5aaa267dcb",
   "LICENSE": "df3bf096d60edaa342cd1b8042c34bf660f40d7be5c1cd5678e351e8d302151f",
   "README.md": "bbdb8d019a58d7ae5060bfccf866006ce342a8e806eba4c1d8a0a4a05a001b57",
-  "VERSION": "14e6eb17bfb2bed74871b7ae972ad0ef1a6fdf08966bf35ec7ef279ad87dff57",
+  "VERSION": "7aeae32cd8e4dd6a657fc2c67b296252886e373524a63fa23b5c3b499a61f112",
   "boot.py": "eca168882b0fa962db928ca19d9bbba539762f3806d3c8fd1217c4396e905695",
   "docs/MANUAL.md": "3c8e3176ee503dbffbb81424cdf49081563480286574aec568c06a513b486660",
   "docs/OPEN.md": "26a03aac78c65ba1aa4c1a804198ade5d0d3eb06fdc51c9c857d018e495f12c3",
@@ -82,5 +82,5 @@
   "vessel/plugin/hooks/hooks.json": "3d6da9fc549f678375ce17f347022aaf7ad2294680b8356babe1254552755a1f",
   "vessel/plugin/output-styles/plain.md": "c6de491632973357b067e494dfb3ee4fe8df6ff99ade65cc04daa6a2156bc475"
  },
- "generated": "2026-07-30T11:45:19Z"
+ "generated": "2026-07-30T11:49:33Z"
 }
