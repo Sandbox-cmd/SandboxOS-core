@@ -31,7 +31,7 @@
   "engine/shelf.py": "6214a4fadcb82f350b300a507406bb90e91ccd4bfdc134260ef02c225ecb3f6d",
   "engine/ship.py": "10afbe183a9689c30c10c48383243ac2726eff2757b7d42b390bfe0cd790838f",
   "engine/status.py": "453156bf9e2657d04388c0f3afae2fb0e019fd20487be552fd7a6b9b15e54bf0",
-  "engine/succession.py": "dfcaf2991b5f1143dcfd9f83ee6a2476d4f5594b0fda54dd0b988fd34a0de834",
+  "engine/succession.py": "6adf7c47cff1e3f499de1d99bc5834cf782faef454c788c6a9bfbcc78453e6ee",
   "engine/tests/__init__.py": "03caf841869d567c8caf431a8db12cf0ac72fb940d643304413afa8a3044649b",
   "engine/tests/test_app.py": "14058db05aed2bf99856284a5dacb914c435f085df5b393cf56b0c6216caf1bf",
   "engine/tests/test_builds.py": "e99c68f2307538a271807e2ae15494065ed73dd6d5e7298677be34e487cb30ac",
@@ -53,7 +53,7 @@
   "engine/tests/test_resume.py": "1099243361f2ee1ad8862004df2006a162d05df9588051b0f81fa40a13080a56",
   "engine/tests/test_share_fetch.py": "fe02054b57060de572fe167e5f1727bac51a4160f3f0fba34d42585a1fe4f8cb",
   "engine/tests/test_ship.py": "fdb309a9c89d2d18e9bf4c3d811d6b6f1a0f18fcad2d99f9dc38a28d6a9a2fff",
-  "engine/tests/test_succession.py": "2a736967c9e505e68d0d0a8aaefa95852999e243f62d09935ade5faf5406f359",
+  "engine/tests/test_succession.py": "f2c618a69124e72bc5fa8669c8758ac3150c36591c735e6e51e0749d8b31c822",
   "engine/tests/test_update_rehearsal.py": "d64bf7ebff51527e80b8268f00913cfb252da88b4620c4dbdb20fe37af297310",
   "engine/tests/test_voice.py": "a57150d76e4672d616bb39fe520766967f1fb2ddf63ffbad756efa8c2ea4324f",
   "engine/update.py": "7382d9aee0d1a1bf36a908967c7b8e91833d1055c343605b71119da5e983354b",
@@ -82,5 +82,5 @@
   "vessel/plugin/hooks/hooks.json": "3d6da9fc549f678375ce17f347022aaf7ad2294680b8356babe1254552755a1f",
   "vessel/plugin/output-styles/plain.md": "c6de491632973357b067e494dfb3ee4fe8df6ff99ade65cc04daa6a2156bc475"
  },
- "generated": "2026-07-30T11:49:33Z"
+ "generated": "2026-07-30T12:00:14Z"
 }

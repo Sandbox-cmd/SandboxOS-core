@@ -81,6 +81,22 @@ class TestImport(unittest.TestCase):
         self.assertTrue(os.path.exists(os.path.join(self.ws, "shelf", "kit", "BUILD.md")))
         self.assertTrue(os.path.exists(os.path.join(self.ws, ".claude", "agents", "keeper.md")))
 
+    def test_moved_roots_relocate_by_suffix(self):
+        """A root recorded before the workshop moved still comes in."""
+        cart = os.path.join(self.old, "cartridges", "shop")
+        os.makedirs(cart)
+        open(os.path.join(cart, "data.json"), "w").write("{}")
+        ch = os.path.join(self.old, "channels", "shop")
+        os.makedirs(ch)
+        with open(os.path.join(ch, "CHANNEL.md"), "w") as f:
+            # The root as it was recorded BEFORE the move — a path that no
+            # longer exists anywhere.
+            f.write("# shop\ngoal: g\nstate: active\nroot: /gone/den/Old/cartridges/shop\n\n## checks\n")
+        ok, text = succession.run(self.ws, self.old, ["shop"])
+        self.assertTrue(ok, text)
+        self.assertTrue(os.path.exists(
+            os.path.join(project.dirpath(self.ws, "shop"), "data.json")))
+
     def test_import_refuses_a_lived_in_workshop(self):
         onboard.run(self.ws)
         notes.note(self.ws, "already mine", target_project=None)

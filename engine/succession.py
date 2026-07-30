@@ -57,6 +57,19 @@ def list_old(old_root):
     return out
 
 
+def _relocate(rootp, old_root):
+    """A root recorded before the old workshop moved: find its suffix under
+    the old workshop's new address. Returns a real dir or None."""
+    if os.path.isdir(rootp):
+        return rootp
+    parts = [p for p in rootp.split(os.sep) if p]
+    for i in range(len(parts)):
+        cand = os.path.join(old_root, *parts[i:])
+        if os.path.isdir(cand):
+            return cand
+    return None
+
+
 def _copy_tree(src, dest):
     shutil.copytree(src, dest, symlinks=True,
                     ignore=shutil.ignore_patterns("__pycache__", ".DS_Store"))
@@ -112,8 +125,8 @@ def run(ws, old_root, take_projects):
             continue
         root = c.get("root")
         if root:
-            rootp = os.path.abspath(os.path.expanduser(root))
-            if os.path.isdir(rootp):
+            rootp = _relocate(os.path.abspath(os.path.expanduser(root)), old_root)
+            if rootp:
                 # The work moves IN: the project directory becomes the work itself.
                 _copy_tree(rootp, dest)
             else:
