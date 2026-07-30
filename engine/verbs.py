@@ -32,7 +32,35 @@ def declaration(reads=(), writes=(), gate="none", emits=None):
             "gate": gate, "emits": emits}
 
 
-# --- the verbs of band A. Each band adds its rows here, never elsewhere. ---
+# --- helpers ------------------------------------------------------------
+
+def _flag(argv, name):
+    """Pop --name VALUE from argv. Returns (value, rest)."""
+    argv = list(argv)
+    if name in argv:
+        i = argv.index(name)
+        val = argv[i + 1] if i + 1 < len(argv) else None
+        return val, argv[:i] + argv[i + 2:]
+    return None, argv
+
+
+def _target(ws, argv):
+    """The project a bare verb lands on: --project NAME, else the single
+    on-project, else None (workshop-level)."""
+    from . import project
+    name, rest = _flag(argv, "--project")
+    if name:
+        return name, rest
+    on = project.on_list(ws)
+    return (on[0] if len(on) == 1 else None), rest
+
+
+def _tty():
+    import sys
+    return sys.stdin.isatty()
+
+
+# --- the verbs. Each band adds its rows here, never elsewhere. -----------
 
 def _version(ws, argv):
     from .cli import version_line
@@ -50,14 +78,169 @@ def _help(ws, argv):
     return 0
 
 
+def _project(ws, argv):
+    from . import project
+    if not argv:
+        for p in project.list_all(ws):
+            print("%-20s %-8s %s" % (p["dir"], p["state"], p["goal"]))
+        return 0
+    sub, rest = argv[0], argv[1:]
+    if sub == "new" and rest:
+        ok, msg = project.new(ws, rest[0], " ".join(rest[1:]))
+    elif sub in ("on", "off") and rest:
+        ok, msg = project.switch(ws, rest[0], sub == "on")
+    elif sub == "done" and rest:
+        ok, msg = project.done(ws, rest[0])
+    else:
+        print("project new NAME [goal] · on NAME · off NAME · done NAME")
+        return 2
+    print(msg)
+    return 0 if ok else 1
+
+
+def _note(ws, argv):
+    from . import notes
+    target, rest = _target(ws, argv)
+    if "--workshop" in rest:
+        rest.remove("--workshop")
+        target = None
+    if not rest:
+        print("note needs words: sandbox note \"what you found\"")
+        return 2
+    disp, msg = notes.note(ws, " ".join(rest), target_project=target)
+    print(msg)
+    return 0
+
+
+def _drafts(ws, argv):
+    from . import desk
+    pile, scars = desk.drafts(ws)
+    if not pile and not scars:
+        print("i found nothing waiting — no notes need your approval.")
+        return 0
+    for d in pile:
+        print("waiting: [%s] %s" % (d.get("cls", "note"), (d.get("body") or "")[:90]))
+    for s in scars:
+        print(s)
+    print("approve them at a real terminal:  sandbox approve")
+    return 0
+
+
+def _approve(ws, argv):
+    from . import notes
+    n, msg = notes.approve(ws, is_real_tty=_tty(), keychar="k" if _tty() else None)
+    print(msg)
+    return 0
+
+
+def _recall(ws, argv):
+    from . import notes
+    target, rest = _target(ws, argv)
+    if "--why" in rest:
+        rest.remove("--why")
+        for line in notes.why(ws, " ".join(rest)):
+            print(line)
+        return 0
+    hits = notes.recall(ws, " ".join(rest), target_project=target)
+    for h in hits:
+        print(h)
+    if not hits:
+        print("nothing landed matches — the record is honest about that.")
+    return 0
+
+
+def _make(ws, argv):
+    from . import make as mk
+    target, rest = _target(ws, argv)
+    if target is None:
+        print("make needs a project: --project NAME (or switch one on)")
+        return 2
+    intent, rest = _flag(rest, "--open")
+    if intent is not None:
+        ok, msg = mk.open_session(ws, target, intent)
+    elif "--close" in rest:
+        rest.remove("--close")
+        summary, rest = _flag(rest, "--summary")
+        ok, msg = mk.close_session(ws, target, summary or "")
+    else:
+        print("make --open \"intent\" · make --close [--summary \"...\"]")
+        return 2
+    print(msg)
+    return 0 if ok else 1
+
+
+def _ship(ws, argv):
+    from . import gate, ship as sh
+    target, rest = _target(ws, argv)
+    name = rest[0] if rest else target
+    if name is None:
+        print("ship needs a project: sandbox ship NAME")
+        return 2
+    consent = gate.mint_consent(is_real_tty=_tty(), keychar="k" if _tty() else None)
+    ok, msg = sh.ship(ws, name, consent)
+    print(msg)
+    return 0 if ok else 1
+
+
+def _status(ws, argv):
+    from . import status as st
+    print(st.status(ws))
+    return 0
+
+
+def _resume(ws, argv):
+    from . import status as st
+    text, _n = st.resume(ws, is_real_tty=_tty(), keychar="k" if _tty() else None)
+    print(text)
+    return 0
+
+
+def _play(ws, argv):
+    from . import status as st
+    print(st.play(ws))
+    return 0
+
+
+def _doctor(ws, argv):
+    from . import status as st
+    ok, lines = st.doctor(ws)
+    for line in lines:
+        print(line)
+    return 0 if ok else 1
+
+
 TABLE = {
     "version": _version,
     "help": _help,
+    "project": _project,
+    "note": _note,
+    "drafts": _drafts,
+    "approve": _approve,
+    "recall": _recall,
+    "make": _make,
+    "ship": _ship,
+    "status": _status,
+    "resume": _resume,
+    "play": _play,
+    "doctor": _doctor,
 }
 
 DECLARATIONS = {
     "version": declaration(reads=("VERSION",)),
     "help": declaration(),
+    "project": declaration(reads=("project",), writes=("project", "workshop"), emits="assert"),
+    "note": declaration(reads=("project",), writes=("workshop",), gate="keystroke", emits="assert"),
+    "drafts": declaration(reads=("workshop",)),
+    "approve": declaration(reads=("workshop",), writes=("workshop", "project"),
+                           gate="tty-keystroke", emits="assert"),
+    "recall": declaration(reads=("workshop", "project")),
+    "make": declaration(reads=("project",), writes=("workshop",), emits="make"),
+    "ship": declaration(reads=("project",), writes=("workshop",), gate="keystroke", emits="ship"),
+    "status": declaration(reads=("workshop", "project")),
+    "resume": declaration(reads=("workshop",), writes=("workshop", "project"),
+                          gate="tty-keystroke", emits="assert"),
+    "play": declaration(writes=("workshop",)),
+    "doctor": declaration(reads=("workshop", "project")),
 }
 
 
