@@ -68,6 +68,19 @@ class TestBuilds(unittest.TestCase):
 
 
 class TestIntegrity(unittest.TestCase):
+    """Seal writes the REAL manifest — snapshot and restore it, or every
+    suite run dirties the tree (the release verb's first catch)."""
+
+    def setUp(self):
+        from engine import integrity
+        self._mp = integrity.manifest_path()
+        self._saved = open(self._mp, "rb").read() if os.path.exists(self._mp) else None
+
+    def tearDown(self):
+        if self._saved is not None:
+            with open(self._mp, "wb") as f:
+                f.write(self._saved)
+
     def test_seal_verify_cycle_and_drift_naming(self):
         from engine import integrity
         ok, msg = integrity.seal()
