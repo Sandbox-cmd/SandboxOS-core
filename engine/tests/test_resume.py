@@ -65,8 +65,16 @@ class TestPlayDoctor(unittest.TestCase):
         self.assertEqual(len(before), len(after))  # uncounted, by construction
 
     def test_doctor_green_on_a_fresh_workshop(self):
-        ok, lines = status.doctor(self.ws)
+        from engine import onboard
+        ws = tempfile.mkdtemp(prefix="sbx8-")
+        onboard.run(ws)
+        ok, lines = status.doctor(ws)
         self.assertTrue(ok, "\n".join(lines))
+
+    def test_doctor_names_a_workshop_the_core_never_met(self):
+        ok, lines = status.doctor(self.ws)  # genesis without init
+        self.assertFalse(ok)
+        self.assertTrue(any("never met this core" in l for l in lines))
 
     def test_doctor_names_a_torn_record(self):
         with open(journal.path(self.ws), "a") as f:

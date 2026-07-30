@@ -107,6 +107,8 @@ def run(ws):
 
     ok, wire_lines = emit_settings(ws)
     lines.extend(wire_lines)
+    from . import update
+    update.record_version(ws)
     if not alive:
         lines.append("ready. nobody's tool.")
     return ok, "\n".join(lines)

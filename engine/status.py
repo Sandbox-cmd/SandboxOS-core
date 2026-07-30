@@ -118,6 +118,10 @@ def doctor(ws):
     checks.append(("provisional lane fresh", stale <= 7,
                    "oldest act is %d day(s) old — resume and rule on it" % stale if stale > 7 else ""))
 
+    from . import update
+    s = update.skew(ws)
+    checks.append(("core and workshop agree", s is None, s or ""))
+
     from . import placement
     div = placement.diverged(ws)
     checks.append(("placed files current", not div,

@@ -252,6 +252,13 @@ def _use(ws, argv):
     return 0 if ok else 1
 
 
+def _update(ws, argv):
+    from . import update
+    ok, text = update.run(ws)
+    print(text)
+    return 0 if ok else 1
+
+
 def _verify(ws, argv):
     from . import integrity
     ok, msg = integrity.verify()
@@ -271,6 +278,7 @@ TABLE = {
     "save": _save,
     "builds": _builds,
     "use": _use,
+    "update": _update,
     "verify": _verify,
     "seal": _seal,
     "version": _version,
@@ -294,6 +302,8 @@ DECLARATIONS = {
     "save": declaration(reads=("project", "workshop"), writes=("shelf",), emits="assert"),
     "builds": declaration(reads=("shelf",)),
     "use": declaration(reads=("shelf",), writes=("project", "shelf")),
+    "update": declaration(reads=("core", "workshop"), writes=("workshop", "state", "settings"),
+                          emits="place"),
     "verify": declaration(reads=("core",)),
     "seal": declaration(reads=("core",), writes=("core",)),
     "version": declaration(reads=("VERSION",)),
