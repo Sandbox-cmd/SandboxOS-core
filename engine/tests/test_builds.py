@@ -75,11 +75,15 @@ class TestIntegrity(unittest.TestCase):
         from engine import integrity
         self._mp = integrity.manifest_path()
         self._saved = open(self._mp, "rb").read() if os.path.exists(self._mp) else None
+        self._stat = os.stat(self._mp) if self._saved is not None else None
 
     def tearDown(self):
         if self._saved is not None:
             with open(self._mp, "wb") as f:
                 f.write(self._saved)
+            # bytes AND clock — a restored file that looks newer than the
+            # signature would make every release check refuse forever
+            os.utime(self._mp, (self._stat.st_atime, self._stat.st_mtime))
 
     def test_seal_verify_cycle_and_drift_naming(self):
         from engine import integrity
