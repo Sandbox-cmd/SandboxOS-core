@@ -252,6 +252,65 @@ def _use(ws, argv):
     return 0 if ok else 1
 
 
+def _share(ws, argv):
+    from . import share as sh
+    staging, rest = _flag(argv, "--to")
+    if not rest or not staging:
+        print("share needs a build and a staging dir: sandbox share NAME --to DIR")
+        return 2
+    ok, msg = sh.share(ws, rest[0], staging)
+    print(msg)
+    return 0 if ok else 1
+
+
+def _fetch(ws, argv):
+    from . import gate, share as sh
+    source, rest = _flag(argv, "--from")
+    if not source:
+        print("fetch needs a source: sandbox fetch --from DIR [NAME]")
+        return 2
+    if not rest:
+        names = sh.list_source(source)
+        for n in names:
+            print(n)
+        if not names:
+            print("nothing at that source in shelf shape.")
+        return 0
+    consent = gate.mint_consent(is_real_tty=_tty(), keychar="k" if _tty() else None)
+    ok, msg = sh.fetch(ws, source, rest[0], consent)
+    print(msg)
+    return 0 if ok else 1
+
+
+def _app(ws, argv):
+    from . import apps, gate
+    if not argv:
+        installed = apps.list_installed(ws)
+        for a in installed:
+            print("%-20s %-10s %s" % (a["name"], a["version"], a["source"]))
+        if not installed:
+            print("no apps installed.")
+        return 0
+    sub, rest = argv[0], argv[1:]
+    if sub == "install" and rest:
+        consent = gate.mint_consent(is_real_tty=_tty(), keychar="k" if _tty() else None)
+        ok, msg = apps.install(ws, rest[0], consent)
+    elif sub == "remove" and rest:
+        ok, msg = apps.remove(ws, rest[0])
+    else:
+        print("app install DIR · app remove NAME · app (list)")
+        return 2
+    print(msg)
+    return 0 if ok else 1
+
+
+def _page(ws, argv):
+    from . import page
+    out = page.render(ws)
+    print("rendered: %s — open it in any browser; it asks the network for nothing." % out)
+    return 0
+
+
 def _update(ws, argv):
     from . import update
     ok, text = update.run(ws)
@@ -278,6 +337,10 @@ TABLE = {
     "save": _save,
     "builds": _builds,
     "use": _use,
+    "share": _share,
+    "fetch": _fetch,
+    "app": _app,
+    "page": _page,
     "update": _update,
     "verify": _verify,
     "seal": _seal,
@@ -302,6 +365,12 @@ DECLARATIONS = {
     "save": declaration(reads=("project", "workshop"), writes=("shelf",), emits="assert"),
     "builds": declaration(reads=("shelf",)),
     "use": declaration(reads=("shelf",), writes=("project", "shelf")),
+    "share": declaration(reads=("shelf",), writes=("workshop",)),
+    "fetch": declaration(reads=("workshop",), writes=("shelf",), gate="keystroke",
+                         emits="assert"),
+    "app": declaration(reads=("workshop", "apps"), writes=("apps", "workshop"),
+                       gate="keystroke", emits="place"),
+    "page": declaration(reads=("workshop", "project"), writes=("workshop",)),
     "update": declaration(reads=("core", "workshop"), writes=("workshop", "state", "settings"),
                           emits="place"),
     "verify": declaration(reads=("core",)),

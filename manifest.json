@@ -14,6 +14,7 @@
   "engine/make.py": "6cf85fca87480f84de6543a28cef61991b40b158c5b19b5d563ac27ae80ceb13",
   "engine/notes.py": "5e70245882d41d71796ab35010ab129c14ab06696d39ce145c37aa2af1d4e01c",
   "engine/onboard.py": "dd0a83fa9056f5324518e319396c161188346bf089d168a62ba8b9af9e397520",
+  "engine/page.py": "100f7b3c14fe61f55ae63e60eec604ac7e8a1881672214d77ddd4f27c70e94a6",
   "engine/placement.py": "cf1abe8ba5cccd14b0923302bab1503331b158367926c689339147a60bddb55e",
   "engine/project.py": "7928a3461bbd2282c58c70a185c0d05456292a593381dd0bc4389b651eb05d95",
   "engine/provisional.py": "badc88fab8f572d745ce9231f1e5e78cba82536b9e42f4cac084428a68618789",
@@ -41,8 +42,9 @@
   "engine/tests/test_share_fetch.py": "fe02054b57060de572fe167e5f1727bac51a4160f3f0fba34d42585a1fe4f8cb",
   "engine/tests/test_ship.py": "fdb309a9c89d2d18e9bf4c3d811d6b6f1a0f18fcad2d99f9dc38a28d6a9a2fff",
   "engine/tests/test_update_rehearsal.py": "d64bf7ebff51527e80b8268f00913cfb252da88b4620c4dbdb20fe37af297310",
+  "engine/tests/test_voice.py": "a57150d76e4672d616bb39fe520766967f1fb2ddf63ffbad756efa8c2ea4324f",
   "engine/update.py": "7382d9aee0d1a1bf36a908967c7b8e91833d1055c343605b71119da5e983354b",
-  "engine/verbs.py": "8b6ec20ad106a74fa2cc02a2c1ab71d28381d602292d8f8e5f17e0f3d126280e",
+  "engine/verbs.py": "65a31aa9237bb1c509bc424d7efa9a281ced2f96985d271e59348c1a8c17bb4d",
   "sandbox": "a3f97bc6170c5a05b8cab8dccb105d54faac896ee6da2741263bd1990b2b82b5",
   "vessel/claude-code/CLAUDE.md": "2c34a1acc504d14988b3884b5125fcadd22eb6226ffb78724009f14c9483dcbc",
   "vessel/claude-code/guard.py": "a750e2b6a9f18d92a2a62216012ab9ed2bf76f1f2cfb03555cc0ac86c271c157",
@@ -50,5 +52,5 @@
   "vessel/plugin/hooks/hooks.json": "3d6da9fc549f678375ce17f347022aaf7ad2294680b8356babe1254552755a1f",
   "vessel/plugin/output-styles/plain.md": "c6de491632973357b067e494dfb3ee4fe8df6ff99ade65cc04daa6a2156bc475"
  },
- "generated": "2026-07-30T10:42:29Z"
+ "generated": "2026-07-30T10:44:44Z"
 }
