@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 8.1.0 — the constitution rides the body (2026-07-30)
+
+- the fifteen laws, ratified in sitting, now live in `law/` — one page
+  each, clause text hash-pinned by the suite: amending a law means editing
+  its pin in the same commit, and only the owner's pen amends.
+- the crew ships: checker and challenger board every fresh instance at
+  init, placed with provenance.
+- the release chain is live: signed manifest, strict verify, the public
+  key in the README and every release note.
+
+
 ## 8.0.0 — the eighth body (2026-07-30)
 
 born release-ready. the whole system rebuilt on a constitution argued from

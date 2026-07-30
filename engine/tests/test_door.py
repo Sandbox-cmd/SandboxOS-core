@@ -29,9 +29,11 @@ class TestDoor(unittest.TestCase):
         self.assertIn("sandbox help", got.stdout)
 
     def test_help_promises_nothing_unbuilt(self):
+        with open(os.path.join(REPO, "VERSION"), encoding="utf-8") as f:
+            version = f.read().strip()
         got = run_cli("help")
         self.assertEqual(got.returncode, 0)
-        self.assertIn("Sandbox OS 8.0.0", got.stdout)
+        self.assertIn("Sandbox OS " + version, got.stdout)
 
 
 class TestPersonClean(unittest.TestCase):
