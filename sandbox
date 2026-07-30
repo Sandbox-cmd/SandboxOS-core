@@ -1,0 +1,8 @@
+#!/bin/sh
+# Sandbox OS — the one door. Self-locating; carries no personal path, ever.
+# Never cd: the caller's working directory is load-bearing (it binds a verb
+# to the project you are standing in).
+HERE=$(cd "$(dirname "$0")" && pwd)
+SANDBOX_CALLED_AS="$0"
+export SANDBOX_CALLED_AS
+exec python3 "$HERE/boot.py" "$@"
