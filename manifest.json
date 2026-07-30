@@ -1,8 +1,13 @@
 {
  "files": {
+  "CHANGELOG.md": "bdd7ecbb90c0c52dc0ec3251b9a37de58d858cdfd31761e51ef27905e2aac941",
   "LICENSE": "df3bf096d60edaa342cd1b8042c34bf660f40d7be5c1cd5678e351e8d302151f",
+  "README.md": "79afe5d24d0159b3c589d47c93d8ec9db3944bb4c8be1dcc019a3cbb3e33b4f9",
   "VERSION": "462c9aaa608fb2014cd9649af1c5c009485c60b9c8b15b89401fdc10cf6161c6",
   "boot.py": "eca168882b0fa962db928ca19d9bbba539762f3806d3c8fd1217c4396e905695",
+  "docs/MANUAL.md": "4ccfdbeac4e55027e9c148591a654d8b7fbfb1b45f19e057a60825337cecf418",
+  "docs/OPEN.md": "d58a435a0e25c554f9de6190f96bab13d9a748cf31f513676e3b96b1ea2a1b4c",
+  "docs/START-HERE.md": "bfe3bf2c1f009139f888f0c046312b97eefa016399f7398bf4b91da9d3167453",
   "engine/__init__.py": "bbf025736696572bc3947dafebe76a5071d2add853a707fc1dd6310c3af0ae27",
   "engine/apps.py": "0d9ce6c93355990a8264a553629335e026a243a8895da40d53a19b7dfecc7765",
   "engine/clean.py": "6d762c8689c837ea396376b11f52e34a1f84584ca6f05505f39da713aa0539f0",
@@ -19,6 +24,7 @@
   "engine/project.py": "7928a3461bbd2282c58c70a185c0d05456292a593381dd0bc4389b651eb05d95",
   "engine/provisional.py": "badc88fab8f572d745ce9231f1e5e78cba82536b9e42f4cac084428a68618789",
   "engine/registry.py": "22e96e4ca506009eef460be6cdfa66b8222c13b0f6d9e11b7913a87c12efd029",
+  "engine/selfmap.py": "7211269eb5cb1f6e887edbafe9d0d5598e2f583d1d89ca4e2a875ae616f0514c",
   "engine/share.py": "a6b3f2b383955deb6a0e6aa164fa35efdf97377a2c0f4c98d3f2cf9c0b5c11fe",
   "engine/shelf.py": "6214a4fadcb82f350b300a507406bb90e91ccd4bfdc134260ef02c225ecb3f6d",
   "engine/ship.py": "10afbe183a9689c30c10c48383243ac2726eff2757b7d42b390bfe0cd790838f",
@@ -26,8 +32,10 @@
   "engine/tests/__init__.py": "03caf841869d567c8caf431a8db12cf0ac72fb940d643304413afa8a3044649b",
   "engine/tests/test_app.py": "0d7a376a88a27ee29b26212f2a77a83e0c963ef89b5168324da365860c9e7f52",
   "engine/tests/test_builds.py": "e99c68f2307538a271807e2ae15494065ed73dd6d5e7298677be34e487cb30ac",
-  "engine/tests/test_declarations.py": "ca6666e3301416b9b5a1bfbd48990c7cafcfd10b02ecdd042146ad6980e2915b",
+  "engine/tests/test_declarations.py": "f11f748848ac5072a7e72d0dbf3b96c558a37293d2d5649281f0483899244837",
+  "engine/tests/test_doc_claims.py": "aa2bad5a6fcbf2b7610ff55149f219f5fbcb0a615f5a65a69b626b6b48a81474",
   "engine/tests/test_door.py": "dafc2b93c81c671a57e79ab77f4d6435bbb8285f8bbd46ccb050a464a5839413",
+  "engine/tests/test_drill.py": "f3cc8f315634d060cd56d174f296431f86ecedd4e76715e1eb3aeed7580bf9f8",
   "engine/tests/test_gate.py": "e9243e91eba6bcac7a965324c73edf92353fb01cc2bd6bdda2d65116266c228c",
   "engine/tests/test_guard.py": "395d426b902099aaf3adce0c291e8f34b72431dfff172fc4e209d30b5e23d9b1",
   "engine/tests/test_journal.py": "8a41368bcb8381d57196bf876b7cd0d5abae7db7d6dedfa2cdfbce078e5bb5a0",
@@ -44,7 +52,7 @@
   "engine/tests/test_update_rehearsal.py": "d64bf7ebff51527e80b8268f00913cfb252da88b4620c4dbdb20fe37af297310",
   "engine/tests/test_voice.py": "a57150d76e4672d616bb39fe520766967f1fb2ddf63ffbad756efa8c2ea4324f",
   "engine/update.py": "7382d9aee0d1a1bf36a908967c7b8e91833d1055c343605b71119da5e983354b",
-  "engine/verbs.py": "65a31aa9237bb1c509bc424d7efa9a281ced2f96985d271e59348c1a8c17bb4d",
+  "engine/verbs.py": "ab1935f3dbe3392af017c076694122d761e2a361aec978e75c34830ee5811934",
   "sandbox": "a3f97bc6170c5a05b8cab8dccb105d54faac896ee6da2741263bd1990b2b82b5",
   "vessel/claude-code/CLAUDE.md": "2c34a1acc504d14988b3884b5125fcadd22eb6226ffb78724009f14c9483dcbc",
   "vessel/claude-code/guard.py": "a750e2b6a9f18d92a2a62216012ab9ed2bf76f1f2cfb03555cc0ac86c271c157",
@@ -52,5 +60,5 @@
   "vessel/plugin/hooks/hooks.json": "3d6da9fc549f678375ce17f347022aaf7ad2294680b8356babe1254552755a1f",
   "vessel/plugin/output-styles/plain.md": "c6de491632973357b067e494dfb3ee4fe8df6ff99ade65cc04daa6a2156bc475"
  },
- "generated": "2026-07-30T10:44:44Z"
+ "generated": "2026-07-30T10:47:55Z"
 }

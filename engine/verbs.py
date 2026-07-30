@@ -10,6 +10,7 @@ neither claiming the other's coverage (spec §2).
 The same table serves every surface: the CLI dispatches through it, and the
 agent tool-surface is generated from it — no surface re-implements a verb.
 """
+import os
 
 # The record's op set. Eight inherited, one born with the seam.
 OPS = ("genesis", "session", "assert", "invalidate", "make",
@@ -304,6 +305,26 @@ def _app(ws, argv):
     return 0 if ok else 1
 
 
+def _reset(ws, argv):
+    from . import onboard, placement
+    if not argv:
+        print("reset needs a placed file: sandbox reset PATH")
+        return 2
+    dest = os.path.abspath(os.path.expanduser(argv[0]))
+    b = placement.book(ws)
+    if dest not in b:
+        print("that file was never placed by the system — nothing to reset to.")
+        return 1
+    src_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                           "vessel", "claude-code")
+    src = os.path.join(src_dir, os.path.basename(dest))
+    if not os.path.exists(src):
+        print("no pristine copy of %s in this core." % os.path.basename(dest))
+        return 1
+    print(placement.reset(ws, dest, src))
+    return 0
+
+
 def _page(ws, argv):
     from . import page
     out = page.render(ws)
@@ -340,6 +361,7 @@ TABLE = {
     "share": _share,
     "fetch": _fetch,
     "app": _app,
+    "reset": _reset,
     "page": _page,
     "update": _update,
     "verify": _verify,
@@ -370,6 +392,7 @@ DECLARATIONS = {
                          emits="assert"),
     "app": declaration(reads=("workshop", "apps"), writes=("apps", "workshop"),
                        gate="keystroke", emits="place"),
+    "reset": declaration(reads=("core",), writes=("workshop", "state"), emits="place"),
     "page": declaration(reads=("workshop", "project"), writes=("workshop",)),
     "update": declaration(reads=("core", "workshop"), writes=("workshop", "state", "settings"),
                           emits="place"),

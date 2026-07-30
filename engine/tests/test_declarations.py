@@ -36,7 +36,7 @@ class TestDeclarationParity(unittest.TestCase):
         """Only init (placing the vessel beside the record) may claim the
         record's directory; every other verb is fenced out."""
         for name, d in verbs.DECLARATIONS.items():
-            if name in ("init", "update"):  # the placement family
+            if name in ("init", "update", "reset"):  # the placement family
                 continue
             self.assertNotIn("state", d["writes"],
                              "%s claims the record's directory" % name)
