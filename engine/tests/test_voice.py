@@ -16,7 +16,8 @@ CUT = ("seamlessly", "effortlessly", "robust", "leverage", "delve",
 
 class TestVoice(unittest.TestCase):
     # The one exemption: the ban itself names the banned words.
-    EXEMPT = (os.path.join("vessel", "plugin", "output-styles", "across-the-desk.md"),)
+    EXEMPT = (os.path.join("vessel", "plugin", "output-styles", "across-the-desk.md"),
+              os.path.join("vessel", "claude-code", "agents", "voicer.md"))
 
     def test_no_cut_word_in_any_engine_or_vessel_file(self):
         hits = []

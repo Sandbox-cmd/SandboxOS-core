@@ -55,7 +55,7 @@
   "engine/tests/test_ship.py": "fdb309a9c89d2d18e9bf4c3d811d6b6f1a0f18fcad2d99f9dc38a28d6a9a2fff",
   "engine/tests/test_succession.py": "39b5d2d2a6c2d2bf0ba63226c732aa6137fd9fdb0ccfe6d945f2acf82a254d16",
   "engine/tests/test_update_rehearsal.py": "d64bf7ebff51527e80b8268f00913cfb252da88b4620c4dbdb20fe37af297310",
-  "engine/tests/test_voice.py": "d67f0dab91b8a57a40427768fadc4c7987724a64d1df57de9815d891fccc7de0",
+  "engine/tests/test_voice.py": "bcf6bff4980c9d23cec034b788cb9d43831243f697fecfd8b015c0bf860cd196",
   "engine/update.py": "7382d9aee0d1a1bf36a908967c7b8e91833d1055c343605b71119da5e983354b",
   "engine/verbs.py": "045e6c8d07d445ad70a0a4b9c8c589093c2da8fabab14c3825cc29d9bb9f5581",
   "law/01-truth-unfakeable.md": "e0e9af11f0f5ac09f1bac236e15e8518cf7d95d8a70b267c1e0b1bed4a3364d7",
@@ -80,12 +80,16 @@
   "soul/values.md": "0fbcd92fb07fa1ab394d41cda05f0771f17c589ba2f5053998a70fe3b637f78a",
   "soul/voice.md": "947f03aae32cddd456c4ccd823dc60da5eaee2ebb72fa40ad9e76c92d4496f14",
   "vessel/claude-code/CLAUDE.md": "a62cd06737d754ec121f1f24680a397933e12fe18cd760318f82b8a368496a72",
-  "vessel/claude-code/agents/challenger.md": "86cb1aad70fa434255988604a576cbe5c42d96dd134504370befedb96480ee0e",
-  "vessel/claude-code/agents/checker.md": "0ea94722f3ba410c2b6988c987b7572ace40c7601e5b84eb6cc061c29b9b60b9",
+  "vessel/claude-code/agents/challenger.md": "eda45c18a0733592a5a9db5fe0597e42d324b2bf44b1d13fe266ccc5b51449f1",
+  "vessel/claude-code/agents/checker.md": "ae72492cdfacd4d7de4929898cebc811e391bc32d11f867c523c49829d8ed41a",
+  "vessel/claude-code/agents/keeper.md": "610e08b869ecea029a1e94fc56bde3b902a9ab6ecfc4561a0a4063fb96a2e13f",
+  "vessel/claude-code/agents/producer.md": "5a533285dc1031b57af455bcc6cb2bc19877eba6dce894dfcc9e627f3f28f1f3",
+  "vessel/claude-code/agents/surveyor.md": "9c96ddd7a5dc8877f60f918628ded7b9ab8dc11b8ed3d605215dc284d2223113",
+  "vessel/claude-code/agents/voicer.md": "74473e8ab84df64164e79dd58fbe58933b8a81777eb3ebebbc5eae8a9c127d64",
   "vessel/claude-code/guard.py": "b0314225cede7b02320108f9190f08e12003e88e9bc8de74b3ca981fb8ec6d8a",
   "vessel/plugin/.claude-plugin/plugin.json": "44740aa88e4a55fea669c61c1838b679c68a1d9d0e4866ebc7340c44a6f52087",
   "vessel/plugin/hooks/hooks.json": "3d6da9fc549f678375ce17f347022aaf7ad2294680b8356babe1254552755a1f",
   "vessel/plugin/output-styles/across-the-desk.md": "5a1ae329abad0b528bdf7376a42e7839d8332387a9e013d577fd900e768e36e6"
  },
- "generated": "2026-07-31T09:48:21Z"
+ "generated": "2026-07-31T09:54:35Z"
 }
