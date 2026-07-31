@@ -6,7 +6,7 @@
   "VERSION": "cfafbd8ce8cdca50d618b6c3ebb4e2252a5030349d41e98b39031f41c4bf3226",
   "boot.py": "eca168882b0fa962db928ca19d9bbba539762f3806d3c8fd1217c4396e905695",
   "docs/MANUAL.md": "1baf85d99ab2946cf80d086708bf34b12bc66c209831ed5b14f316e089427268",
-  "docs/OPEN.md": "26a03aac78c65ba1aa4c1a804198ade5d0d3eb06fdc51c9c857d018e495f12c3",
+  "docs/OPEN.md": "dadca610df07ec29f59ee0a80bfd56e0a39498487e8f85c94c77bf8340c5c82c",
   "docs/START-HERE.md": "bfe3bf2c1f009139f888f0c046312b97eefa016399f7398bf4b91da9d3167453",
   "engine/__init__.py": "bbf025736696572bc3947dafebe76a5071d2add853a707fc1dd6310c3af0ae27",
   "engine/apps.py": "a2f5eada9469d9bd5fde9ecb7451f39fbd51b61247f1951461e640c858ad2e46",
@@ -43,6 +43,7 @@
   "engine/tests/test_guard.py": "395d426b902099aaf3adce0c291e8f34b72431dfff172fc4e209d30b5e23d9b1",
   "engine/tests/test_journal.py": "8a41368bcb8381d57196bf876b7cd0d5abae7db7d6dedfa2cdfbce078e5bb5a0",
   "engine/tests/test_law_pins.py": "677d5e43440bbdf1ff2d71b10d8bc538d4acfe633f74707fa305b9cc841a1ab7",
+  "engine/tests/test_layer.py": "ac34710798ddd5745f28819192a336773bcf1e7265a0fb6acae622e6ace08e17",
   "engine/tests/test_make.py": "f1994fabdb23e978bdb49f7b23458c5fbe20eb77f5260499af22bd81747dbe89",
   "engine/tests/test_notes.py": "3c43d2666a6c120e389074ab103c76af2d9610dd384ea89359f60e46a9c5b4da",
   "engine/tests/test_person_clean.py": "17411a22a79c224caa924c788b819b59f2d84f046d9b77f634f2148f7cf36790",
@@ -53,6 +54,7 @@
   "engine/tests/test_resume.py": "1099243361f2ee1ad8862004df2006a162d05df9588051b0f81fa40a13080a56",
   "engine/tests/test_share_fetch.py": "fe02054b57060de572fe167e5f1727bac51a4160f3f0fba34d42585a1fe4f8cb",
   "engine/tests/test_ship.py": "fdb309a9c89d2d18e9bf4c3d811d6b6f1a0f18fcad2d99f9dc38a28d6a9a2fff",
+  "engine/tests/test_soul.py": "1c7b034423b2d1e746a30c18b549977d3b57dd3fae963523c392f6db91956715",
   "engine/tests/test_succession.py": "39b5d2d2a6c2d2bf0ba63226c732aa6137fd9fdb0ccfe6d945f2acf82a254d16",
   "engine/tests/test_update_rehearsal.py": "d64bf7ebff51527e80b8268f00913cfb252da88b4620c4dbdb20fe37af297310",
   "engine/tests/test_voice.py": "bcf6bff4980c9d23cec034b788cb9d43831243f697fecfd8b015c0bf860cd196",
@@ -91,5 +93,5 @@
   "vessel/plugin/hooks/hooks.json": "3d6da9fc549f678375ce17f347022aaf7ad2294680b8356babe1254552755a1f",
   "vessel/plugin/output-styles/across-the-desk.md": "5a1ae329abad0b528bdf7376a42e7839d8332387a9e013d577fd900e768e36e6"
  },
- "generated": "2026-07-31T09:54:35Z"
+ "generated": "2026-07-31T09:56:58Z"
 }
