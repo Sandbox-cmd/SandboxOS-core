@@ -1,12 +1,12 @@
 {
  "files": {
-  "CHANGELOG.md": "d6f9e7531c77d3ad0168e99c1ac03366d6ecacb7f8df4411cc7ca97fbc6bcbc8",
+  "CHANGELOG.md": "f376c0d6c8223fdd1b20693192a0294f22cb9b6ec767e3c7907e547be0b23238",
   "LICENSE": "df3bf096d60edaa342cd1b8042c34bf660f40d7be5c1cd5678e351e8d302151f",
   "README.md": "a36611e355d90e8fcf5bf49451d6579353d1306b503b7206362d3be120d04ed5",
-  "VERSION": "cfafbd8ce8cdca50d618b6c3ebb4e2252a5030349d41e98b39031f41c4bf3226",
+  "VERSION": "f922c99da0270b7f7f991fab950ea9e8989b1cd6dac55ef7d7180c1724095548",
   "boot.py": "eca168882b0fa962db928ca19d9bbba539762f3806d3c8fd1217c4396e905695",
   "docs/MANUAL.md": "1baf85d99ab2946cf80d086708bf34b12bc66c209831ed5b14f316e089427268",
-  "docs/OPEN.md": "5e8b7d0f5c12961196cd5e2316dafbd4917432ddac5632b4cb1d7850918f567d",
+  "docs/OPEN.md": "79e0cf64c00ae02e171040280e967dddbd2cdf1152b57435db85af3cd0e1807f",
   "docs/START-HERE.md": "b2befaba33632825a4eca590414be931ca16ade641df67655185a1a0d2162043",
   "engine/__init__.py": "bbf025736696572bc3947dafebe76a5071d2add853a707fc1dd6310c3af0ae27",
   "engine/apps.py": "a2f5eada9469d9bd5fde9ecb7451f39fbd51b61247f1951461e640c858ad2e46",
@@ -89,9 +89,9 @@
   "vessel/claude-code/agents/surveyor.md": "9c96ddd7a5dc8877f60f918628ded7b9ab8dc11b8ed3d605215dc284d2223113",
   "vessel/claude-code/agents/voicer.md": "74473e8ab84df64164e79dd58fbe58933b8a81777eb3ebebbc5eae8a9c127d64",
   "vessel/claude-code/guard.py": "b0314225cede7b02320108f9190f08e12003e88e9bc8de74b3ca981fb8ec6d8a",
-  "vessel/plugin/.claude-plugin/plugin.json": "44740aa88e4a55fea669c61c1838b679c68a1d9d0e4866ebc7340c44a6f52087",
+  "vessel/plugin/.claude-plugin/plugin.json": "734bcd828626b79e192591833e7a5be1894f12a2d14157dbe364bda37eed6d58",
   "vessel/plugin/hooks/hooks.json": "3d6da9fc549f678375ce17f347022aaf7ad2294680b8356babe1254552755a1f",
   "vessel/plugin/output-styles/across-the-desk.md": "5a1ae329abad0b528bdf7376a42e7839d8332387a9e013d577fd900e768e36e6"
  },
- "generated": "2026-07-31T09:58:10Z"
+ "generated": "2026-07-31T10:17:41Z"
 }

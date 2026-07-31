@@ -1,5 +1,35 @@
 # CHANGELOG
 
+## 8.2.0 — one soul, many projections (2026-07-31)
+
+the instruction layer rebuilt from its foundation: what the machine is
+told and what it believes can no longer drift apart unseen.
+
+- `soul/` is born — the ten axioms with their anchors, the seven
+  convictions with their organs and projection map, the voice, the
+  partnership, and the eight bodies' lineage. public, sealed, tested.
+- the workshop contract becomes the charter: 60 lines, identity and
+  convictions instead of a rule list, placed by init as before.
+- one output style, `across the desk`, ships in the plugin and lands in
+  every workshop at init; `plain.md` retires with its silent
+  keep-coding-instructions bug.
+- the whole crew ships: six briefs, each its worker's entire world —
+  role, scope, report shape, two convictions — pinned to the model its
+  judgment needs (sonnet where literalism is the job, opus where taste is).
+- the engine learns the layer: init places the style and writes the
+  session voice (your own pick always wins) · `sandbox reset` resolves
+  pristine copies from the real payload · the guard fences agent-memory
+  at any depth — the ungated-memory lesson, closed at its third door ·
+  `sandbox help` prints one honest line per verb.
+- the layer is tested like code: 16 new tests hold the budgets, the
+  banned words, the dead paths, the model pins, and the two hand-carried
+  version numbers — one of which was already drifted when the pin first
+  ran, which is the argument for the pin.
+- the deny floor emits one Edit rule and heals workshops carrying the
+  old four (the launch-warning fix, folded into this release).
+- docs catch up: the wider-crew debt retires as done, README teaches
+  both forms of make and points at the honest register.
+
 ## 8.1.2 — the fences learn from the move (2026-07-30)
 
 everything here was found live, on the owner's own migration day.

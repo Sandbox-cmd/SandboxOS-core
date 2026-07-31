@@ -1,6 +1,6 @@
 # OPEN — what is still open, said plainly
 
-Sandbox OS 8.1.2. the honest register: what this body does not do yet, who
+Sandbox OS 8.2.0. the honest register: what this body does not do yet, who
 closes each item, and the known limits.
 
 ## named debts (built next, not silently absent)
