@@ -55,7 +55,7 @@
   "engine/tests/test_ship.py": "fdb309a9c89d2d18e9bf4c3d811d6b6f1a0f18fcad2d99f9dc38a28d6a9a2fff",
   "engine/tests/test_succession.py": "39b5d2d2a6c2d2bf0ba63226c732aa6137fd9fdb0ccfe6d945f2acf82a254d16",
   "engine/tests/test_update_rehearsal.py": "d64bf7ebff51527e80b8268f00913cfb252da88b4620c4dbdb20fe37af297310",
-  "engine/tests/test_voice.py": "a57150d76e4672d616bb39fe520766967f1fb2ddf63ffbad756efa8c2ea4324f",
+  "engine/tests/test_voice.py": "d67f0dab91b8a57a40427768fadc4c7987724a64d1df57de9815d891fccc7de0",
   "engine/update.py": "7382d9aee0d1a1bf36a908967c7b8e91833d1055c343605b71119da5e983354b",
   "engine/verbs.py": "d9b31d73c327c0eeabd5f9fbb94da2274eb1c698db5878f9b571964c909b6895",
   "law/01-truth-unfakeable.md": "e0e9af11f0f5ac09f1bac236e15e8518cf7d95d8a70b267c1e0b1bed4a3364d7",
@@ -79,13 +79,13 @@
   "soul/partner.md": "c7f7b5917ca4407f0f61540e2c07104fd2891ccf6853f54e1d67304c54b6bd99",
   "soul/values.md": "0fbcd92fb07fa1ab394d41cda05f0771f17c589ba2f5053998a70fe3b637f78a",
   "soul/voice.md": "947f03aae32cddd456c4ccd823dc60da5eaee2ebb72fa40ad9e76c92d4496f14",
-  "vessel/claude-code/CLAUDE.md": "2c34a1acc504d14988b3884b5125fcadd22eb6226ffb78724009f14c9483dcbc",
+  "vessel/claude-code/CLAUDE.md": "a62cd06737d754ec121f1f24680a397933e12fe18cd760318f82b8a368496a72",
   "vessel/claude-code/agents/challenger.md": "86cb1aad70fa434255988604a576cbe5c42d96dd134504370befedb96480ee0e",
   "vessel/claude-code/agents/checker.md": "0ea94722f3ba410c2b6988c987b7572ace40c7601e5b84eb6cc061c29b9b60b9",
   "vessel/claude-code/guard.py": "a750e2b6a9f18d92a2a62216012ab9ed2bf76f1f2cfb03555cc0ac86c271c157",
   "vessel/plugin/.claude-plugin/plugin.json": "181a670d748935dadfd0620f9f4108b787bf638d74b11dd5663081fafe4836d4",
   "vessel/plugin/hooks/hooks.json": "3d6da9fc549f678375ce17f347022aaf7ad2294680b8356babe1254552755a1f",
-  "vessel/plugin/output-styles/plain.md": "c6de491632973357b067e494dfb3ee4fe8df6ff99ade65cc04daa6a2156bc475"
+  "vessel/plugin/output-styles/across-the-desk.md": "5a1ae329abad0b528bdf7376a42e7839d8332387a9e013d577fd900e768e36e6"
  },
- "generated": "2026-07-31T09:43:17Z"
+ "generated": "2026-07-31T09:45:16Z"
 }
