@@ -13,7 +13,13 @@ import os
 
 from . import journal, placement, project, status
 
-WRITE_TOOLS = ("Edit", "Write", "MultiEdit", "NotebookEdit")
+# The hook matcher is a regex over live tool names. MultiEdit is retired.
+WRITE_TOOLS = ("Edit", "Write", "NotebookEdit")
+
+# The deny floor is matched on Edit() alone — Edit(path) covers every
+# file-editing tool. A Write()/NotebookEdit() path rule matches nothing and
+# Claude Code warns about it at every launch.
+DENY_TOOLS = ("Edit",)
 
 
 def _repo_root():
@@ -24,9 +30,14 @@ def _vessel_src():
     return os.path.join(_repo_root(), "vessel", "claude-code")
 
 
-def deny_floor_rules(ws):
+def deny_floor_target(ws):
+    """The tail every deny-floor rule shares: the record's directory."""
     state = os.path.join(os.path.abspath(ws), journal.STATE_DIR)
-    return ["%s(//%s/**)" % (tool, state.lstrip("/")) for tool in WRITE_TOOLS]
+    return "(//%s/**)" % state.lstrip("/")
+
+
+def deny_floor_rules(ws):
+    return ["%s%s" % (tool, deny_floor_target(ws)) for tool in DENY_TOOLS]
 
 
 def _settings_path(ws):
@@ -77,10 +88,23 @@ def emit_settings(ws):
 
     perms = settings.setdefault("permissions", {})
     deny = perms.setdefault("deny", [])
-    for rule in deny_floor_rules(ws):
+
+    # Prune rules on the record's directory that name a tool the floor no
+    # longer emits — a workshop onboarded under an older floor carries them
+    # forever otherwise, and Claude Code warns once per dead name at every
+    # launch. Same scar as the hooks above: append-only wiring never heals.
+    floor = deny_floor_rules(ws)
+    tail = deny_floor_target(ws)
+    stale = [r for r in deny if r.endswith(tail) and r not in floor]
+    for rule in stale:
+        deny.remove(rule)
+    if stale:
+        lines.append("pruned %d dead deny rule(s) on the record's directory" % len(stale))
+
+    for rule in floor:
         if rule not in deny:
             deny.append(rule)
-    lines.append("deny floor: %d rule(s) on the record's directory" % len(deny_floor_rules(ws)))
+    lines.append("deny floor: %d rule(s) on the record's directory" % len(floor))
 
     with open(sp, "w", encoding="utf-8") as f:
         json.dump(settings, f, indent=1)

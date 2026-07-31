@@ -93,7 +93,12 @@ class TestInit(unittest.TestCase):
         import json
         with open(os.path.join(ws, ".claude", "settings.json")) as f:
             settings = json.load(f)
-        self.assertEqual(len([r for r in settings["permissions"]["deny"]]), 4)
+        # Claude Code matches file-permission rules on Edit() alone, and
+        # Edit(path) already covers every file-editing tool. One rule, no
+        # dead tool names — a Write()/MultiEdit() rule earns a launch warning.
+        deny = settings["permissions"]["deny"]
+        self.assertEqual(deny, ["Edit(//%s/**)"
+                                % os.path.join(os.path.abspath(ws), ".sandbox").lstrip("/")])
 
     def test_init_idempotent_never_touches_the_living(self):
         from engine import journal as j, onboard
@@ -130,3 +135,26 @@ class TestHookPruning(unittest.TestCase):
         cmds = [hk["command"] for h in back["hooks"]["PreToolUse"] for hk in h["hooks"]]
         self.assertFalse(any("/gone/" in c for c in cmds))
         self.assertTrue(any(ws in c for c in cmds))  # the live wiring stands
+
+    def test_dead_deny_rules_pruned_foreign_ones_kept(self):
+        """A workshop onboarded under the old floor carried a rule per write
+        tool. Claude Code retired MultiEdit and matches file rules on Edit()
+        alone, so three of the four became launch warnings. Re-init heals it.
+        """
+        import json
+        from engine import onboard
+        ws = tempfile.mkdtemp(prefix="sbx8-")
+        sp = os.path.join(ws, ".claude", "settings.json")
+        os.makedirs(os.path.dirname(sp))
+        tail = onboard.deny_floor_target(ws)
+        old = ["%s%s" % (t, tail)
+               for t in ("Edit", "Write", "MultiEdit", "NotebookEdit")]
+        keep = "Edit(//somewhere/else/**)"  # not ours — never swept
+        with open(sp, "w") as f:
+            json.dump({"permissions": {"deny": old + [keep]}}, f)
+        ok, lines = onboard.emit_settings(ws)
+        self.assertTrue(ok)
+        self.assertTrue(any("pruned 3 dead deny rule" in l for l in lines))
+        with open(sp) as f:
+            deny = json.load(f)["permissions"]["deny"]
+        self.assertEqual(sorted(deny), sorted(onboard.deny_floor_rules(ws) + [keep]))
