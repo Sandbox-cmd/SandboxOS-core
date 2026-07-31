@@ -9,9 +9,13 @@ import unittest
 from engine import journal, page, project
 from engine.tests import REPO
 
-# Law 15's cut-list. A surface never says these.
-CUT = ("seamlessly", "effortlessly", "robust", "leverage", "delve",
-       "unlock", "elevate", "game-changing", "revolutionary", "supercharge")
+# Law 15's cut-list — the discovery format's closed banned list, minus
+# "harness" (this repo's honest name for Claude Code, the named exception).
+CUT = ("seamless", "seamlessly", "effortless", "effortlessly", "robust",
+       "leverage", "empower", "unlock", "elevate", "cutting-edge",
+       "game-changing", "revolutionary", "delve", "unleash", "supercharge",
+       "foster", "realm", "tapestry", "comprehensive", "ultimately",
+       "it's worth noting", "in essence", "at its core", "simply put")
 
 
 class TestVoice(unittest.TestCase):

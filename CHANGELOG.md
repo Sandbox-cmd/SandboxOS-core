@@ -1,5 +1,22 @@
 # CHANGELOG
 
+## 8.2.1 — the plugin tells the truth (2026-07-31)
+
+the plugin's first live install — the never-met-a-live-session debt paid
+out on the machine that shipped it, before any stranger's.
+
+- the guard hook leaves the plugin (ruled): its command pointed one
+  directory above the plugin root, a file no installed copy carries, and
+  a missing guard reads as BLOCK — every write in every new session. the
+  guard stays placement-delivered: `sandbox init` wires it into the
+  workshop it protects, and sessions outside the workshop stay unfenced.
+- the plugin's descriptions now name only what it ships: the voice.
+- the release wall speaks all four moves — sign, commit the signature,
+  tag, push — so the ceremony can never again be summarized one short.
+- the cut-list grows from ten entries to twenty-four (the discovery
+  format's closed list, minus this repo's one named exception) and the
+  doc lint now reads README.md, which lived outside its walk.
+
 ## 8.2.0 — one soul, many projections (2026-07-31)
 
 the instruction layer rebuilt from its foundation: what the machine is

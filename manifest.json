@@ -1,12 +1,12 @@
 {
  "files": {
-  "CHANGELOG.md": "f376c0d6c8223fdd1b20693192a0294f22cb9b6ec767e3c7907e547be0b23238",
+  "CHANGELOG.md": "6735652815f3c7d08876475095c8c4c820dd76d62e371bb1e0b6cfcd4598ff22",
   "LICENSE": "df3bf096d60edaa342cd1b8042c34bf660f40d7be5c1cd5678e351e8d302151f",
   "README.md": "a36611e355d90e8fcf5bf49451d6579353d1306b503b7206362d3be120d04ed5",
-  "VERSION": "f922c99da0270b7f7f991fab950ea9e8989b1cd6dac55ef7d7180c1724095548",
+  "VERSION": "4fa9948d0ae7007cbd1cc05768bc3e7cc6ec46ad0ea84c87df79e7a0c48d76b4",
   "boot.py": "eca168882b0fa962db928ca19d9bbba539762f3806d3c8fd1217c4396e905695",
   "docs/MANUAL.md": "1baf85d99ab2946cf80d086708bf34b12bc66c209831ed5b14f316e089427268",
-  "docs/OPEN.md": "79e0cf64c00ae02e171040280e967dddbd2cdf1152b57435db85af3cd0e1807f",
+  "docs/OPEN.md": "5b55ef7d21c1df07a88c0ea9534d70b488a6f0ab09906cdd97302ec519243d7e",
   "docs/START-HERE.md": "b2befaba33632825a4eca590414be931ca16ade641df67655185a1a0d2162043",
   "engine/__init__.py": "bbf025736696572bc3947dafebe76a5071d2add853a707fc1dd6310c3af0ae27",
   "engine/apps.py": "a2f5eada9469d9bd5fde9ecb7451f39fbd51b61247f1951461e640c858ad2e46",
@@ -16,7 +16,7 @@
   "engine/desk.py": "195663a2cf4b36f9a3b949cd2f1ad92090e853ef7cc2a185e0a26519eed42db4",
   "engine/face.py": "d5ec699db56bbf1ae9d0c574b2387db5fca32eed18e194e6f75d943165fbe4d8",
   "engine/gate.py": "6be24713695d972303f1f5afc920dd4b2447965feacbe26a68c4b63ff1a2645c",
-  "engine/integrity.py": "ea4b409c4e1318f61a5da94d3af58237c8cc8ce10f5f8f6dd6848b363a6e97ca",
+  "engine/integrity.py": "8698d6118e87e7063299f292cace5ad2ed0afca1507b408c27d57bea9f5c6dab",
   "engine/journal.py": "a06302185b9b4cc496e8761806d0bde0457c9a8bdac9761113a03443155f782b",
   "engine/make.py": "9fd7e3d5b1418e9dfb8d0858d2cf74227829161eff53981bef72c787b3531cce",
   "engine/notes.py": "5e70245882d41d71796ab35010ab129c14ab06696d39ce145c37aa2af1d4e01c",
@@ -36,7 +36,7 @@
   "engine/tests/test_app.py": "14058db05aed2bf99856284a5dacb914c435f085df5b393cf56b0c6216caf1bf",
   "engine/tests/test_builds.py": "236db1f783f11c519f53eb7856c25ef5486949719b23588ec1f796423e640656",
   "engine/tests/test_declarations.py": "11812051f527e3d672148c0b9a1f1e5eeaef658122979f57263f217590d98fac",
-  "engine/tests/test_doc_claims.py": "aa2bad5a6fcbf2b7610ff55149f219f5fbcb0a615f5a65a69b626b6b48a81474",
+  "engine/tests/test_doc_claims.py": "0de468688765a6464b5e321e265abf83589fb52a9452b68de5aff7dbc9c1920c",
   "engine/tests/test_door.py": "dc023457d795f2f6f10c055babc34f9eb626f0fd13cc061c2f052df3b4b53198",
   "engine/tests/test_drill.py": "f3cc8f315634d060cd56d174f296431f86ecedd4e76715e1eb3aeed7580bf9f8",
   "engine/tests/test_gate.py": "e9243e91eba6bcac7a965324c73edf92353fb01cc2bd6bdda2d65116266c228c",
@@ -57,7 +57,7 @@
   "engine/tests/test_soul.py": "1c7b034423b2d1e746a30c18b549977d3b57dd3fae963523c392f6db91956715",
   "engine/tests/test_succession.py": "39b5d2d2a6c2d2bf0ba63226c732aa6137fd9fdb0ccfe6d945f2acf82a254d16",
   "engine/tests/test_update_rehearsal.py": "d64bf7ebff51527e80b8268f00913cfb252da88b4620c4dbdb20fe37af297310",
-  "engine/tests/test_voice.py": "bcf6bff4980c9d23cec034b788cb9d43831243f697fecfd8b015c0bf860cd196",
+  "engine/tests/test_voice.py": "ffaa593c12b7778164431d52024a86eeba85f39dd9acc5f6fabfdcbbcdbae1c2",
   "engine/update.py": "7382d9aee0d1a1bf36a908967c7b8e91833d1055c343605b71119da5e983354b",
   "engine/verbs.py": "045e6c8d07d445ad70a0a4b9c8c589093c2da8fabab14c3825cc29d9bb9f5581",
   "law/01-truth-unfakeable.md": "e0e9af11f0f5ac09f1bac236e15e8518cf7d95d8a70b267c1e0b1bed4a3364d7",
@@ -89,9 +89,8 @@
   "vessel/claude-code/agents/surveyor.md": "9c96ddd7a5dc8877f60f918628ded7b9ab8dc11b8ed3d605215dc284d2223113",
   "vessel/claude-code/agents/voicer.md": "74473e8ab84df64164e79dd58fbe58933b8a81777eb3ebebbc5eae8a9c127d64",
   "vessel/claude-code/guard.py": "b0314225cede7b02320108f9190f08e12003e88e9bc8de74b3ca981fb8ec6d8a",
-  "vessel/plugin/.claude-plugin/plugin.json": "734bcd828626b79e192591833e7a5be1894f12a2d14157dbe364bda37eed6d58",
-  "vessel/plugin/hooks/hooks.json": "3d6da9fc549f678375ce17f347022aaf7ad2294680b8356babe1254552755a1f",
+  "vessel/plugin/.claude-plugin/plugin.json": "9ce0d456707ad3c5c1740edac137b33b98824a6f7d7440d0418f332bbe94fb2c",
   "vessel/plugin/output-styles/across-the-desk.md": "5a1ae329abad0b528bdf7376a42e7839d8332387a9e013d577fd900e768e36e6"
  },
- "generated": "2026-07-31T10:17:41Z"
+ "generated": "2026-07-31T12:10:28Z"
 }

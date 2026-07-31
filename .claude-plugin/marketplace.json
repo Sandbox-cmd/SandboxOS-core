@@ -7,7 +7,7 @@
     {
       "name": "sandbox-os",
       "source": "./vessel/plugin",
-      "description": "Sandbox OS \u2014 the workshop's hooks, skills, agents, and voice, versioned with the core."
+      "description": "Sandbox OS \u2014 the workshop's voice, versioned with the core."
     }
   ]
 }

@@ -20,10 +20,14 @@ class TestDocClaims(unittest.TestCase):
 
     def test_docs_speak_no_cut_words(self):
         from engine.tests.test_voice import CUT
-        for name in os.listdir(os.path.join(REPO, "docs")):
-            text = open(os.path.join(REPO, "docs", name), encoding="utf-8").read().lower()
+        pages = [os.path.join(REPO, "docs", n)
+                 for n in os.listdir(os.path.join(REPO, "docs"))]
+        pages.append(os.path.join(REPO, "README.md"))  # root-level, same voice
+        for path in pages:
+            text = open(path, encoding="utf-8").read().lower()
             for w in CUT:
-                self.assertNotIn(w, text, "%s says %r" % (name, w))
+                self.assertNotIn(w, text,
+                                 "%s says %r" % (os.path.relpath(path, REPO), w))
 
     def test_version_is_read_not_written(self):
         """The version appears in VERSION and CHANGELOG (its birthplace) and

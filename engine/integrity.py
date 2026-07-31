@@ -90,7 +90,8 @@ def release_check():
     mp, sig = manifest_path(), manifest_path() + ".minisig"
     if not os.path.exists(sig):
         ok = False
-        lines.append("FAIL no signature — sign the manifest: minisign -Sm manifest.json")
+        lines.append("FAIL no signature — sign the manifest: minisign -Sm manifest.json"
+                     " — then COMMIT the signature before tagging")
     elif os.path.getmtime(sig) < os.path.getmtime(mp):
         ok = False
         lines.append("FAIL the signature is OLDER than the manifest — re-sign before anything ships")
@@ -107,9 +108,13 @@ def release_check():
     if ok:
         with open(os.path.join(r, "VERSION"), encoding="utf-8") as f:
             v = f.read().strip()
-        lines.append("the ceremony may start — your hands, in order:")
-        lines.append("  git tag -a v%s -m \"...\"" % v)
-        lines.append("  git push origin main --tags")
+        lines.append("the ceremony is four moves — this wall verified 1 and 2; 3 and 4 are your hands:")
+        lines.append("  1. sign      minisign -Sm manifest.json            (done — fresher than the manifest)")
+        lines.append("  2. commit    the signature is IN the committed tree (done — the tree is clean)")
+        lines.append("  3. tag       git tag -a v%s -m \"...\"" % v)
+        lines.append("  4. push      git push origin main --tags")
+        lines.append("re-sign for any reason after this wall, and moves 2-4 start over —")
+        lines.append("a tag must never point at a tree whose signature came later.")
     else:
         lines.append("the release refuses — fix the FAIL lines first.")
     return ok, "\n".join(lines)
