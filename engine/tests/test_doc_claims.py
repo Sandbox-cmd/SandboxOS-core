@@ -46,6 +46,38 @@ class TestDocClaims(unittest.TestCase):
         text = open(os.path.join(REPO, "README.md"), encoding="utf-8").read()
         self.assertIn("Sandbox-cmd/SandboxOS-core", text)
 
+    def test_readme_line_citations_resolve(self):
+        """The page cites source by file and line; the cited line must say it.
+
+        A README that points at `engine/ship.py`, line 45 is making a claim a
+        stranger will check. When the source moves, this fails here instead of
+        lying there.
+        """
+        text = open(os.path.join(REPO, "README.md"), encoding="utf-8").read()
+        cites = re.findall(r"`(engine/[a-z_]+\.py)`, line (\d+)", text)
+        self.assertTrue(cites, "no line citations found — did the page stop citing source?")
+        for rel, lineno in cites:
+            lines = open(os.path.join(REPO, rel), encoding="utf-8").read().splitlines()
+            n = int(lineno)
+            self.assertLessEqual(n, len(lines), "%s has no line %d" % (rel, n))
+            self.assertIn("return False", lines[n - 1],
+                          "%s:%d is not the refusal the README says it is" % (rel, n))
+
+    def test_readme_install_block_obeys_its_three_laws(self):
+        """The install gate: the bill is named before the clone, and the block
+        ends in the health check. The website byte-locks this block, so drift
+        here breaks two surfaces."""
+        lines = open(os.path.join(REPO, "README.md"), encoding="utf-8").read().splitlines()
+        clone = next(i for i, l in enumerate(lines) if l.startswith("git clone"))
+        caveat = next((i for i, l in enumerate(lines) if "claude" in l.lower()), None)
+        self.assertIsNotNone(caveat, "the README never names the one paid command")
+        self.assertLess(caveat, clone,
+                        "the paid-command caveat sits below the clone line — "
+                        "a stranger types before they learn the bill")
+        end = next(i for i, l in enumerate(lines[clone:], clone) if l.startswith("```"))
+        self.assertIn("./sandbox doctor", lines[end - 1],
+                      "the install block must end in the health check, with the ./")
+
     def test_the_lint_fires(self):
         self.assertNotEqual("stale block", selfmap.render_verbs().strip())
 

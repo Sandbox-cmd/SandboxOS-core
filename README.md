@@ -1,94 +1,122 @@
 # Sandbox OS
 
-a maker's operating system for your own machine. you don't chat with it —
-you build on it, and it keeps an honest record of what you built while your
-hands stay busy.
+a terminal workshop for the things you build with an AI. the machine drafts;
+your keypress decides what the record keeps. what you leave a session with is
+not a transcript — it is a project on your disk, the checks it has to pass,
+and an append-only record of what actually happened.
 
-what that means in practice:
+every claim on this page names the command that opens it. run them in any
+order. nothing here asks you to take its word.
 
-- **projects** — one directory per thing you're making, each with a goal,
-  its checks, and its own local git history.
-- **the record** — an append-only history that fills as a side effect of
-  working. nothing durable lands without your keystroke; the machine
-  drafts, you approve.
-- **builds and apps** — save reusable pieces on your shelf, share them as
-  files with checksums, install add-ons that declare exactly what they
-  place and remove exactly that.
-- **updates that respect you** — the system updates from its repo; your
-  workshop, your projects, and anything you edited are never overwritten.
-  files you changed are skipped and named, never clobbered.
-- **local first** — plain text on your own disk, no server, no account, no
-  telemetry, no network in any default path. the one optional bill is a
-  Claude subscription, for the AI-assisted building.
+## open any of it
+
+| the claim | open it |
+|---|---|
+| every verb says what it writes, and whether it needs your key, before you type it | `./sandbox help` |
+| nothing durable lands without your keypress at a real terminal | `echo k \| ./sandbox approve` — it refuses, and says why |
+| a ship happens only when your project's own checks pass | `./sandbox ship` with no checks in PROJECT.md |
+| what got built is measured off your files, never taken from the model's word | `./sandbox make --close` prints the diff it computed, not the summary it was handed |
+| every count is computed the moment it is shown | any number on a CANON page — nothing stores it, so nothing can forge it |
+| the laws ride inside the seal, not beside it | `./sandbox verify` — fifteen files in `law/`, five in `soul/` |
+| no dependencies, no network | `grep -rhoE "^(import\|from) [a-z_]+" engine/*.py \| sort -u` |
+
+> ### A SHIP WITH NOTHING UNDER IT IS A COSTUME.
+
+that is not a slogan. it is the sentence `sandbox ship` prints when your
+project has no checks to stand on — `engine/ship.py`, line 45. go read it
+there before you believe it here.
 
 ## get it running
 
-you need a terminal, macOS or Linux, and python 3.9+. nothing else.
+you need a terminal, macOS or Linux, and python 3.9 or newer — the health
+check grades that one itself. one thing here costs money and it is not this
+repo: the `make` verb shells out to the `claude` command, so building with an
+AI wants a Claude subscription. every other verb runs with the network off.
 
 ```
 git clone https://github.com/Sandbox-cmd/SandboxOS-core
 cd SandboxOS-core
-./sandbox init      # opens your workshop at ~/Sandbox (SANDBOX_HOME moves it)
-./sandbox doctor    # the health check names anything missing
+./sandbox init      # your workshop at ~/Sandbox — SANDBOX_HOME moves it
+./sandbox doctor    # the health check names anything missing, with its fix
 ```
 
-then your first project:
+then the first project:
 
 ```
 sandbox project new hello "try this thing out"
 sandbox status
 ```
 
-`docs/START-HERE.md` walks the first hour step by step. `docs/MANUAL.md`
-has every command. `docs/OPEN.md` says plainly what this copy does not do
-yet — read it before you trust a claim you have not checked.
+`docs/START-HERE.md` walks the first hour with a stopwatch on it.
+`docs/MANUAL.md` carries a page per verb. `docs/OPEN.md` says plainly what
+this copy does not do yet — read that one before you trust anything here you
+have not run.
 
-## check this copy yourself
+## a session, end to end
+
+- **arrive** — `sandbox resume`. one `k` approves whatever waited for you.
+- **look** — `sandbox status`.
+- **work** — `sandbox project on NAME`, then `sandbox make "intent"`, or
+  `--open` … `--close` around something longer.
+- **capture** — `sandbox note "..."` the moment a finding surfaces. it waits
+  on your key; nothing gets written behind your back.
+- **remember** — `sandbox recall QUERY`. when the record has nothing it says
+  so, rather than guessing.
+- **finish** — put your checks in PROJECT.md, then `sandbox ship`.
+- **keep and swap** — `sandbox save PATH` puts a reusable build on your
+  shelf. github.com/Sandbox-cmd/SandboxOS is where people trade them, with
+  checksums on the cards and your key still the gate.
+
+`sandbox help` names all of them, each with what it touches.
+
+## what it will not do
+
+- no account, no server, no telemetry, no network in any default path.
+- one bill, and it is not to us — `make` shells out to `claude`.
+- macOS and Linux, at a real terminal. a pipe cannot approve anything, ever.
+- one person's machine. this is not a team tool.
+- it will not overwrite what you edited. updates skip your changed files and
+  name them; `sandbox reset PATH` returns one to pristine.
+- it will not grade its own work. anything on the record wears `[claimed]`
+  until something else checks it.
+
+## what it runs under
+
+`law/` holds fifteen laws, one file each. `soul/` holds the five pages this
+workshop's character is written on. they are not notes about the code — they
+travel inside the seal with it, so touching one moves the manifest:
 
 ```
-python3 -m unittest discover -s engine/tests -t .   # the whole suite, stdlib only
+python3 -m unittest discover -s engine/tests -t .   # the suite, stdlib only
 ./sandbox verify                                    # sha256 against the manifest
 ```
 
 `verify` proves the copy changed, not who changed it. releases are signed —
-turn on strict verification (signature, not just hashes) with the release
-public key:
+for the stronger check, hand it the release key:
 
 ```
 export SANDBOX_MINISIGN_PUBKEY=RWSSaKTVM7ywEE8f/jL16NcRhOFR1sAtIOd2hAD/ziMRscYAlaGxw+9j
 ./sandbox verify
 ```
 
-the same key is printed in every release's notes; if this file and the
-release notes ever disagree, trust neither and ask.
+the same key is printed in every release's notes. if this file and the notes
+ever disagree, trust neither and ask.
 
-## living with it — the short field guide
+you install by cloning and you update by pulling, which means you track
+`main`. so main only ever moves to a state that verifies against that key:
+work happens on branches, and main moves once per release. that rule exists
+because this page told you to pull.
 
-- **your workshop is yours.** `~/Sandbox` (or wherever `SANDBOX_HOME`
-  points) holds your projects, builds, apps, and the record. back it up by
-  copying it wholesale. this clone is disposable; your workshop never is.
-- **the rhythm**: arrive with `sandbox resume` (one `k` lands what waited)
-  · look with `sandbox status` · work with `sandbox project on NAME` and
-  `sandbox make "intent"` (or `--open` … `--close` around longer work) ·
-  capture with `sandbox note "..."` · remember
-  with `sandbox recall QUERY` · finish with checks in PROJECT.md and
-  `sandbox ship`.
-- **your keystroke is the gate.** the machine drafts and stages; only your
-  `k` at a real terminal lands anything durable. a few reversible acts run
-  immediately and confirm at your next resume, snapshot kept.
-- **add things**: `project new` · `save PATH` (a reusable build) ·
-  `app install NAME --catalog <shelf>` · your own agents and skills as
-  files under `.claude/` (updates never touch what's yours).
-- **remove things**: `app remove NAME` takes exactly what install placed;
-  `project done` closes (your next resume confirms); `reset PATH` returns
-  an edited placed file to pristine.
-- **update without fear**: `git pull` here, then `sandbox update` — files
-  you edited are skipped and named, migrations never rewrite the record,
-  and `sandbox doctor` names anything off, with its fix.
-- **when in doubt**: `sandbox doctor`, then `sandbox drafts` — every wall
-  in this system names its door.
+## your workshop is yours
+
+`~/Sandbox`, or wherever `SANDBOX_HOME` points, holds your projects, your
+builds, your apps, and the record. back it up by copying the folder. this
+clone is disposable; that folder never is.
+
+when something looks wrong: `sandbox doctor`, then `sandbox drafts`. every
+wall in here names its door.
 
 ## license
 
-FSL-1.1-Apache-2.0 — free for everything except competing with the
-software, and it converts to Apache 2.0 two years after each release.
+FSL-1.1-Apache-2.0 — free for everything except competing with the software,
+and it converts to Apache 2.0 two years after each release.
