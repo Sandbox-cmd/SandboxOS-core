@@ -59,6 +59,16 @@ class TestNotes(unittest.TestCase):
         out = notes.why(self.ws, "ghost")
         self.assertIn("nothing landed", out[0])
 
+    def test_recall_verb_refuses_unknown_flags(self):
+        import contextlib
+        import io
+        from engine import verbs
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rc = verbs.TABLE["recall"](self.ws, ["--recent"])
+        self.assertEqual(rc, 2)
+        self.assertIn("recall doesn't know --recent", buf.getvalue())
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -142,6 +142,10 @@ def _approve(ws, argv):
 def _recall(ws, argv):
     from . import notes
     target, rest = _target(ws, argv)
+    unknown = [t for t in rest if t.startswith("--") and t != "--why"]
+    if unknown:
+        print("recall doesn't know %s — its flags are --project NAME and --why." % unknown[0])
+        return 2
     if "--why" in rest:
         rest.remove("--why")
         for line in notes.why(ws, " ".join(rest)):
