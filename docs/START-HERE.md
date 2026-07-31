@@ -34,7 +34,9 @@ sandbox project on hello
 sandbox status
 ```
 SEE — the project listed, active, with a `*` for on. bare verbs now land
-on it.
+on it. the project's folder got two pages: PROJECT.md (the goal, and the
+checks a ship rests on) and CANON.md (what the record knows about it —
+regenerated, never hand-edited).
 
 ## 4 · put something on the record
 

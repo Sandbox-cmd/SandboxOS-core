@@ -2,12 +2,12 @@
  "files": {
   "CHANGELOG.md": "d6f9e7531c77d3ad0168e99c1ac03366d6ecacb7f8df4411cc7ca97fbc6bcbc8",
   "LICENSE": "df3bf096d60edaa342cd1b8042c34bf660f40d7be5c1cd5678e351e8d302151f",
-  "README.md": "65aaad8d4bbe087548a13af123c38817674c1b293b2c40836fa7f8f6602bf772",
+  "README.md": "a36611e355d90e8fcf5bf49451d6579353d1306b503b7206362d3be120d04ed5",
   "VERSION": "cfafbd8ce8cdca50d618b6c3ebb4e2252a5030349d41e98b39031f41c4bf3226",
   "boot.py": "eca168882b0fa962db928ca19d9bbba539762f3806d3c8fd1217c4396e905695",
   "docs/MANUAL.md": "1baf85d99ab2946cf80d086708bf34b12bc66c209831ed5b14f316e089427268",
-  "docs/OPEN.md": "dadca610df07ec29f59ee0a80bfd56e0a39498487e8f85c94c77bf8340c5c82c",
-  "docs/START-HERE.md": "bfe3bf2c1f009139f888f0c046312b97eefa016399f7398bf4b91da9d3167453",
+  "docs/OPEN.md": "5e8b7d0f5c12961196cd5e2316dafbd4917432ddac5632b4cb1d7850918f567d",
+  "docs/START-HERE.md": "b2befaba33632825a4eca590414be931ca16ade641df67655185a1a0d2162043",
   "engine/__init__.py": "bbf025736696572bc3947dafebe76a5071d2add853a707fc1dd6310c3af0ae27",
   "engine/apps.py": "a2f5eada9469d9bd5fde9ecb7451f39fbd51b61247f1951461e640c858ad2e46",
   "engine/catalog.py": "8df04c5ecb4a916b177f810218a22042862ae00241ba7ded0dc3061ff9635e74",
@@ -93,5 +93,5 @@
   "vessel/plugin/hooks/hooks.json": "3d6da9fc549f678375ce17f347022aaf7ad2294680b8356babe1254552755a1f",
   "vessel/plugin/output-styles/across-the-desk.md": "5a1ae329abad0b528bdf7376a42e7839d8332387a9e013d577fd900e768e36e6"
  },
- "generated": "2026-07-31T09:56:58Z"
+ "generated": "2026-07-31T09:58:10Z"
 }

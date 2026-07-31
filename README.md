@@ -40,7 +40,8 @@ sandbox status
 ```
 
 `docs/START-HERE.md` walks the first hour step by step. `docs/MANUAL.md`
-has every command.
+has every command. `docs/OPEN.md` says plainly what this copy does not do
+yet — read it before you trust a claim you have not checked.
 
 ## check this copy yourself
 
@@ -68,7 +69,8 @@ release notes ever disagree, trust neither and ask.
   copying it wholesale. this clone is disposable; your workshop never is.
 - **the rhythm**: arrive with `sandbox resume` (one `k` lands what waited)
   · look with `sandbox status` · work with `sandbox project on NAME` and
-  `sandbox make "intent"` · capture with `sandbox note "..."` · remember
+  `sandbox make "intent"` (or `--open` … `--close` around longer work) ·
+  capture with `sandbox note "..."` · remember
   with `sandbox recall QUERY` · finish with checks in PROJECT.md and
   `sandbox ship`.
 - **your keystroke is the gate.** the machine drafts and stages; only your
