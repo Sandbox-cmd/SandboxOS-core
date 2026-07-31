@@ -20,11 +20,12 @@ order. nothing here asks you to take its word.
 | the laws ride inside the seal, not beside it | `./sandbox verify` — fifteen files in `law/`, five in `soul/` |
 | no dependencies, no network | `grep -rhoE "^(import\|from) [a-z_]+" engine/*.py \| sort -u` |
 
-> ### A SHIP WITH NOTHING UNDER IT IS A COSTUME.
+> ### A PIPE CANNOT APPROVE ANYTHING.
 
-that is not a slogan. it is the sentence `sandbox ship` prints when your
-project has no checks to stand on — `engine/ship.py`, line 45. go read it
-there before you believe it here.
+not a policy you can switch off — the shape of the thing. try it before you
+install anything: `echo k | ./sandbox approve` refuses every time, and the
+refusal itself lives at `engine/desk.py`, line 95. read it there before you
+believe it here.
 
 ## get it running
 
@@ -47,8 +48,9 @@ sandbox project new hello "try this thing out"
 sandbox status
 ```
 
-`docs/START-HERE.md` walks the first hour with a stopwatch on it.
-`docs/MANUAL.md` carries a page per verb. `docs/OPEN.md` says plainly what
+`docs/START-HERE.md` walks one sitting end to end and finishes with your own
+receipt open in an editor. `docs/MANUAL.md` carries a page per verb.
+`docs/OPEN.md` says plainly what
 this copy does not do yet — read that one before you trust anything here you
 have not run.
 

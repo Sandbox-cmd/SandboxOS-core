@@ -60,8 +60,23 @@ class TestDocClaims(unittest.TestCase):
             lines = open(os.path.join(REPO, rel), encoding="utf-8").read().splitlines()
             n = int(lineno)
             self.assertLessEqual(n, len(lines), "%s has no line %d" % (rel, n))
-            self.assertIn("return False", lines[n - 1],
-                          "%s:%d is not the refusal the README says it is" % (rel, n))
+            self.assertTrue(lines[n - 1].lstrip().startswith("return"),
+                            "%s:%d is not the refusal the README says it is" % (rel, n))
+
+    def test_readme_loud_line_is_true(self):
+        """The page's one loud line says a pipe cannot approve. Prove it.
+
+        Cited behaviour, not a cited line number — this is the claim a stranger
+        is most likely to actually try.
+        """
+        from engine import desk
+        text = open(os.path.join(REPO, "README.md"), encoding="utf-8").read()
+        self.assertIn("A PIPE CANNOT APPROVE ANYTHING", text,
+                      "the loud line changed — re-point this pin at whatever replaced it")
+        for consent in (None, {}, {"source": "pipe", "key": "k"}, {"source": "tty", "key": "x"}):
+            n, msg = desk.land_all(REPO, consent)
+            self.assertEqual(0, n, "land_all landed %d without a real key" % n)
+            self.assertIn("real terminal", msg)
 
     def test_readme_install_block_obeys_its_three_laws(self):
         """The install gate: the bill is named before the clone, and the block

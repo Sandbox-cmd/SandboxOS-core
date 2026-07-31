@@ -2,12 +2,12 @@
  "files": {
   "CHANGELOG.md": "6735652815f3c7d08876475095c8c4c820dd76d62e371bb1e0b6cfcd4598ff22",
   "LICENSE": "df3bf096d60edaa342cd1b8042c34bf660f40d7be5c1cd5678e351e8d302151f",
-  "README.md": "57868bd25f4652f0cfc5092917519ef092728fa231f7879b9b1482332cea8062",
+  "README.md": "bfdd89000bc17ad3ee02b81fa40c8f2039b4c54b4c3a796f4239abc069b5a790",
   "VERSION": "4fa9948d0ae7007cbd1cc05768bc3e7cc6ec46ad0ea84c87df79e7a0c48d76b4",
   "boot.py": "eca168882b0fa962db928ca19d9bbba539762f3806d3c8fd1217c4396e905695",
   "docs/MANUAL.md": "1baf85d99ab2946cf80d086708bf34b12bc66c209831ed5b14f316e089427268",
   "docs/OPEN.md": "5b55ef7d21c1df07a88c0ea9534d70b488a6f0ab09906cdd97302ec519243d7e",
-  "docs/START-HERE.md": "b2befaba33632825a4eca590414be931ca16ade641df67655185a1a0d2162043",
+  "docs/START-HERE.md": "a1dab37f4862ccb56f9a8599501d88c0b843cf8c8d69c572e4a7a9382e67edeb",
   "engine/__init__.py": "bbf025736696572bc3947dafebe76a5071d2add853a707fc1dd6310c3af0ae27",
   "engine/apps.py": "a2f5eada9469d9bd5fde9ecb7451f39fbd51b61247f1951461e640c858ad2e46",
   "engine/catalog.py": "8df04c5ecb4a916b177f810218a22042862ae00241ba7ded0dc3061ff9635e74",
@@ -36,7 +36,7 @@
   "engine/tests/test_app.py": "14058db05aed2bf99856284a5dacb914c435f085df5b393cf56b0c6216caf1bf",
   "engine/tests/test_builds.py": "236db1f783f11c519f53eb7856c25ef5486949719b23588ec1f796423e640656",
   "engine/tests/test_declarations.py": "11812051f527e3d672148c0b9a1f1e5eeaef658122979f57263f217590d98fac",
-  "engine/tests/test_doc_claims.py": "5fef06e8d24b5e459bf2157691e45d96767de9ff7c61150acf0072a4b2f45026",
+  "engine/tests/test_doc_claims.py": "37802855175921289c121bf52eb1a9aeaa61f505c0944a9828e184dccdd39309",
   "engine/tests/test_door.py": "dc023457d795f2f6f10c055babc34f9eb626f0fd13cc061c2f052df3b4b53198",
   "engine/tests/test_drill.py": "f3cc8f315634d060cd56d174f296431f86ecedd4e76715e1eb3aeed7580bf9f8",
   "engine/tests/test_gate.py": "e9243e91eba6bcac7a965324c73edf92353fb01cc2bd6bdda2d65116266c228c",
@@ -92,5 +92,5 @@
   "vessel/plugin/.claude-plugin/plugin.json": "9ce0d456707ad3c5c1740edac137b33b98824a6f7d7440d0418f332bbe94fb2c",
   "vessel/plugin/output-styles/across-the-desk.md": "5a1ae329abad0b528bdf7376a42e7839d8332387a9e013d577fd900e768e36e6"
  },
- "generated": "2026-07-31T12:53:41Z"
+ "generated": "2026-07-31T13:04:30Z"
 }
