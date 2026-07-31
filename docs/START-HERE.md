@@ -72,17 +72,25 @@ record keeps.
 
 this is the one step that costs money, and not to us — `make` shells out to
 the `claude` command, so it wants a Claude subscription. **every other step
-on this page runs with the network off.** if you do not have one, skip to 6;
-nothing below depends on it.
+on this page runs with the network off.**
 
 DO
 ```
 sandbox make "add a README to this project saying what it is for"
 ```
-SEE — the session opens, the builder runs, and on close you get
-`confirmed — N file(s) changed on hello` followed by the files themselves.
-that count is computed by comparing your files before and after. it is not
-the model's summary of what it did.
+SEE — the session opens, the builder runs in your project folder, and you get
+its own four closing lines, then `confirmed — N file(s) changed on hello` with
+the files named, then a summary staged and waiting on your key.
+
+that count is not the model's account of its work. it comes from comparing
+your files before and after, so a session that changed nothing says so no
+matter what the summary claims.
+
+IF-NOT — no `claude` on your PATH is not a dead end. make writes the whole
+prompt to `PROMPT.md` in the project and tells you so: run it however you
+like, then close the session yourself with
+`sandbox make --close --summary "what happened"`. the bookkeeping is the
+same either way.
 
 ## 6 · give it checks, and ship
 
@@ -103,9 +111,9 @@ sandbox ship hello
 SEE — the first ship asks for your `k` on those exact check lines:
 `these checks are new or changed since your last k`. press it, and you get
 `shipped — 1 check(s) green, on the record`, with a journal id.
-IF-NOT — `nothing to ship on — PROJECT.md has no checks` means the section is
-still empty. `the checks are red — no ship` prints the failing line and its
-output; nothing ships until you fix it.
+IF-NOT — `a ship with nothing under it is a costume` means the `## checks`
+section is still empty. `the checks are red — no ship` prints the failing line
+and its output; nothing ships until you fix it.
 
 ## 7 · open your receipt
 

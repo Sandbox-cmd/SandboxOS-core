@@ -1,5 +1,29 @@
 # CHANGELOG
 
+## 8.2.2 — the stranger's first meeting, opened (2026-07-31)
+
+the two pages a stranger reads first were rebuilt against what this body
+actually does, and every claim on them was run before it was written.
+
+- the README is re-derived under the ruled framing: it leads with what
+  you leave a session with, pairs seven claims 1:1 with the command that
+  opens each, and names `soul/` and `law/` as riding inside the seal.
+  the paid-`claude` caveat moves above the clone line, and the reason
+  main only ever holds a verifiable state is stated in public.
+- `docs/START-HERE.md` walks one sitting end to end and finishes with
+  the reader opening their own journal line — the receipt, not a
+  promise about one. the old page claimed two strings the engine never
+  printed; the whole walkthrough was dry-run in a throwaway workshop.
+- a ship with no checks now says so in the tool's own voice: *"a ship
+  with nothing under it is a costume"* — the better sentence moved from
+  a nearly unreachable path to the one every stranger meets, and it
+  still names its door.
+- `recall` refuses a typo'd flag instead of searching it as text.
+- three pins on the docs: line citations must resolve to a real refusal,
+  the install block must name the bill before the clone and end in the
+  health check, and the README's loud line is tested as behaviour —
+  `land_all` gets four bad consents and must land nothing every time.
+
 ## 8.2.1 — the plugin tells the truth (2026-07-31)
 
 the plugin's first live install — the never-met-a-live-session debt paid

@@ -79,7 +79,8 @@ def ship(ws, name, consent=None):
     if c is None:
         return False, "no project named %s" % name
     if not c["checks"]:
-        return False, "nothing to ship on — PROJECT.md has no checks"
+        return False, ("a ship with nothing under it is a costume — "
+                       "put one command per line under ## checks in PROJECT.md")
 
     waiting = provisional.pending(ws, name)
     if waiting:

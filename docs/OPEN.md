@@ -1,6 +1,6 @@
 # OPEN — what is still open, said plainly
 
-Sandbox OS 8.2.1. the honest register: what this body does not do yet, who
+Sandbox OS 8.2.2. the honest register: what this body does not do yet, who
 closes each item, and the known limits.
 
 ## named debts (built next, not silently absent)
@@ -10,22 +10,27 @@ closes each item, and the known limits.
   surface) is a deliberate design pass with the taste rulings in the room —
   not yet run. the living page carries a first face; the CLI wears work
   clothes.
-- **the make verb's AI half.** `make --open/--close` is the honest
-  bookkeeping; launching the AI build session through the claude seam is
-  the next pull on this verb. until then, make wraps your own hands.
+- **a gate refusal exits 0.** piping into `approve` refuses in words —
+  *"landing needs your 'k' at a real terminal"* — and nothing lands, so no
+  wrong thing happens. but the process exits 0, so a script reading the
+  exit status is told success. the seventh body exited 1 here; this is a
+  regression, found by auditing the README's own claims.
+- **`make` says "confirmed" over an empty diff.** the file count is real
+  and computed, never taken from the model's word. but a session that
+  changed nothing still prints `confirmed — 0 file(s) changed`; there is
+  no *attempted* verdict to fall back to. the word grades itself
+  generously in exactly the place this system claims it does not.
 - **the catalog reader.** fetch labels every source UNVERIFIED unless
   catalog-pinned; the reader for the official catalog's index (pin by
   commit sha) is not built. the labeling is honest today; the pinning
   lands with the catalog.
-- **the plugin against a live session.** hooks are wired directly into the
-  workshop settings by init (proven path). the plugin directory ships for
-  marketplace distribution and has not yet met a live claude session.
+## always the owner's hands (not a debt — the design)
 
-## waits on the first release (the owner's hands)
-
-- the minisign keypair — minted at first release, printed in the release
-  notes, pinned at install. ruled a release line item; not before.
-- the first tag, the first push, the repo's public birth.
+- the tag and the push. `sandbox release` refuses until the suite, the
+  integrity check, a fresh signature and a committed tree all hold, and
+  then it hands over the commands rather than running them.
+- approving anything durable. no flag, no environment variable and no
+  agent can stand in for the keypress.
 
 ## known limits, said plainly
 

@@ -51,9 +51,13 @@ class TestShip(unittest.TestCase):
         self.assertIn("FAIL false", msg)
 
     def test_no_checks_refuses_the_costume(self):
+        """The refusal a stranger is most likely to meet says the loud thing,
+        and still names its door."""
         self._set_checks([])
         ok, msg = ship.ship(self.ws, "geardoor", key())
         self.assertFalse(ok)
+        self.assertIn("costume", msg)
+        self.assertIn("PROJECT.md", msg)
 
     def test_provisional_fence_holds(self):
         ship.ship(self.ws, "geardoor", key())  # ratified + green

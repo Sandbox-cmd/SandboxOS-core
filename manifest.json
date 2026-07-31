@@ -1,13 +1,13 @@
 {
  "files": {
-  "CHANGELOG.md": "6735652815f3c7d08876475095c8c4c820dd76d62e371bb1e0b6cfcd4598ff22",
+  "CHANGELOG.md": "2d6bb1b83a7e5264b7ea699eea0d94fb60a07c727b0129b5140613fc9e4d0ac6",
   "LICENSE": "df3bf096d60edaa342cd1b8042c34bf660f40d7be5c1cd5678e351e8d302151f",
   "README.md": "bfdd89000bc17ad3ee02b81fa40c8f2039b4c54b4c3a796f4239abc069b5a790",
-  "VERSION": "4fa9948d0ae7007cbd1cc05768bc3e7cc6ec46ad0ea84c87df79e7a0c48d76b4",
+  "VERSION": "166fdc98da72f65c69e5dcbb852ba63f5569c2fa29b2a712813828499647ba7c",
   "boot.py": "eca168882b0fa962db928ca19d9bbba539762f3806d3c8fd1217c4396e905695",
   "docs/MANUAL.md": "1baf85d99ab2946cf80d086708bf34b12bc66c209831ed5b14f316e089427268",
-  "docs/OPEN.md": "5b55ef7d21c1df07a88c0ea9534d70b488a6f0ab09906cdd97302ec519243d7e",
-  "docs/START-HERE.md": "a1dab37f4862ccb56f9a8599501d88c0b843cf8c8d69c572e4a7a9382e67edeb",
+  "docs/OPEN.md": "63e6ef36c36f553830aa8a65712598837af2b5e341738a66928debc85039fd69",
+  "docs/START-HERE.md": "6270df5a5935aabc4d6e0fded153080164122abb60ff1425f0d81d28a1c0b4a1",
   "engine/__init__.py": "bbf025736696572bc3947dafebe76a5071d2add853a707fc1dd6310c3af0ae27",
   "engine/apps.py": "a2f5eada9469d9bd5fde9ecb7451f39fbd51b61247f1951461e640c858ad2e46",
   "engine/catalog.py": "8df04c5ecb4a916b177f810218a22042862ae00241ba7ded0dc3061ff9635e74",
@@ -29,7 +29,7 @@
   "engine/selfmap.py": "7211269eb5cb1f6e887edbafe9d0d5598e2f583d1d89ca4e2a875ae616f0514c",
   "engine/share.py": "a6b3f2b383955deb6a0e6aa164fa35efdf97377a2c0f4c98d3f2cf9c0b5c11fe",
   "engine/shelf.py": "6214a4fadcb82f350b300a507406bb90e91ccd4bfdc134260ef02c225ecb3f6d",
-  "engine/ship.py": "10afbe183a9689c30c10c48383243ac2726eff2757b7d42b390bfe0cd790838f",
+  "engine/ship.py": "b9efa8b475dd300f5ca569befac235335b2d0f0979b28687855c43a132721f74",
   "engine/status.py": "453156bf9e2657d04388c0f3afae2fb0e019fd20487be552fd7a6b9b15e54bf0",
   "engine/succession.py": "0b37bedca71d314915a2950db154e5d9dd2a7149d0e24104664b50f367892d08",
   "engine/tests/__init__.py": "03caf841869d567c8caf431a8db12cf0ac72fb940d643304413afa8a3044649b",
@@ -53,7 +53,7 @@
   "engine/tests/test_registry.py": "eee339e15cc7afd4b7f351be7ea63a8959c3b437e9b374ee78b0a5f410678961",
   "engine/tests/test_resume.py": "1099243361f2ee1ad8862004df2006a162d05df9588051b0f81fa40a13080a56",
   "engine/tests/test_share_fetch.py": "fe02054b57060de572fe167e5f1727bac51a4160f3f0fba34d42585a1fe4f8cb",
-  "engine/tests/test_ship.py": "fdb309a9c89d2d18e9bf4c3d811d6b6f1a0f18fcad2d99f9dc38a28d6a9a2fff",
+  "engine/tests/test_ship.py": "18ba989fa7a2b6c974b01a7e4ad47d066cfef7c323d5530356cbe6326d42f5ad",
   "engine/tests/test_soul.py": "1c7b034423b2d1e746a30c18b549977d3b57dd3fae963523c392f6db91956715",
   "engine/tests/test_succession.py": "39b5d2d2a6c2d2bf0ba63226c732aa6137fd9fdb0ccfe6d945f2acf82a254d16",
   "engine/tests/test_update_rehearsal.py": "d64bf7ebff51527e80b8268f00913cfb252da88b4620c4dbdb20fe37af297310",
@@ -89,8 +89,8 @@
   "vessel/claude-code/agents/surveyor.md": "9c96ddd7a5dc8877f60f918628ded7b9ab8dc11b8ed3d605215dc284d2223113",
   "vessel/claude-code/agents/voicer.md": "74473e8ab84df64164e79dd58fbe58933b8a81777eb3ebebbc5eae8a9c127d64",
   "vessel/claude-code/guard.py": "b0314225cede7b02320108f9190f08e12003e88e9bc8de74b3ca981fb8ec6d8a",
-  "vessel/plugin/.claude-plugin/plugin.json": "9ce0d456707ad3c5c1740edac137b33b98824a6f7d7440d0418f332bbe94fb2c",
+  "vessel/plugin/.claude-plugin/plugin.json": "2a63db0a684659ca00ff3bd47e710fc6ce8f27866edcc28c0f5035527528aa53",
   "vessel/plugin/output-styles/across-the-desk.md": "5a1ae329abad0b528bdf7376a42e7839d8332387a9e013d577fd900e768e36e6"
  },
- "generated": "2026-07-31T13:04:30Z"
+ "generated": "2026-07-31T13:10:37Z"
 }
