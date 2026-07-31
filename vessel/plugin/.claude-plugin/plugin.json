@@ -1,6 +1,8 @@
 {
   "name": "sandbox-os",
-  "description": "Sandbox OS — the workshop's hooks, skills, and voice, versioned with the core.",
-  "version": "8.0.0",
-  "author": {"name": "Sandbox-cmd"}
+  "description": "Sandbox OS \u2014 the workshop's hooks, skills, and voice, versioned with the core.",
+  "version": "8.1.2",
+  "author": {
+    "name": "Sandbox-cmd"
+  }
 }

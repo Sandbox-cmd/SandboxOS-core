@@ -44,6 +44,30 @@ def _settings_path(ws):
     return os.path.join(ws, ".claude", "settings.json")
 
 
+STYLE_FILE = "across-the-desk.md"
+
+
+def shipped_payload(ws):
+    """Everything init places, as {dest: src}. One source for run(), the
+    reset verb, and the layer tests — a hand-typed second list would drift."""
+    src = _vessel_src()
+    vdir = os.path.join(ws, journal.STATE_DIR, "vessel")
+    payload = {
+        os.path.join(ws, "CLAUDE.md"): os.path.join(src, "CLAUDE.md"),
+        os.path.join(vdir, "guard.py"): os.path.join(src, "guard.py"),
+    }
+    agents_src = os.path.join(src, "agents")
+    if os.path.isdir(agents_src):
+        for name in sorted(os.listdir(agents_src)):
+            payload[os.path.join(ws, ".claude", "agents", name)] = \
+                os.path.join(agents_src, name)
+    style_src = os.path.join(_repo_root(), "vessel", "plugin",
+                             "output-styles", STYLE_FILE)
+    if os.path.exists(style_src):
+        payload[os.path.join(ws, ".claude", "output-styles", STYLE_FILE)] = style_src
+    return payload
+
+
 def emit_settings(ws):
     """Merge hooks + deny floor. Returns (ok, report_lines)."""
     lines = []
@@ -106,6 +130,12 @@ def emit_settings(ws):
             deny.append(rule)
     lines.append("deny floor: %d rule(s) on the record's directory" % len(floor))
 
+    # The shipped voice, on by default — the owner's own setting always wins:
+    # setdefault never touches an existing choice, and settings.local.json
+    # (what /config writes) outranks this file anyway.
+    if settings.setdefault("outputStyle", STYLE_FILE[:-3]) == STYLE_FILE[:-3]:
+        lines.append("voice: %s is the session style unless you pick another" % STYLE_FILE[:-3])
+
     with open(sp, "w", encoding="utf-8") as f:
         json.dump(settings, f, indent=1)
 
@@ -133,20 +163,11 @@ def run(ws):
         lines.append("day 0. nothing on the record yet.")
 
     # The vessel: contract at the root, guard beside the record, engine-root pointer.
-    src = _vessel_src()
     vdir = os.path.join(ws, journal.STATE_DIR, "vessel")
     os.makedirs(vdir, exist_ok=True)
     with open(os.path.join(vdir, "engine-root"), "w", encoding="utf-8") as f:
         f.write(_repo_root())
-    payload = {
-        os.path.join(ws, "CLAUDE.md"): os.path.join(src, "CLAUDE.md"),
-        os.path.join(vdir, "guard.py"): os.path.join(src, "guard.py"),
-    }
-    agents_src = os.path.join(src, "agents")
-    if os.path.isdir(agents_src):
-        for name in sorted(os.listdir(agents_src)):
-            payload[os.path.join(ws, ".claude", "agents", name)] = \
-                os.path.join(agents_src, name)
+    payload = shipped_payload(ws)
     for line in placement.sync(ws, payload):
         lines.append(line)
 

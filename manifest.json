@@ -20,7 +20,7 @@
   "engine/journal.py": "a06302185b9b4cc496e8761806d0bde0457c9a8bdac9761113a03443155f782b",
   "engine/make.py": "9fd7e3d5b1418e9dfb8d0858d2cf74227829161eff53981bef72c787b3531cce",
   "engine/notes.py": "5e70245882d41d71796ab35010ab129c14ab06696d39ce145c37aa2af1d4e01c",
-  "engine/onboard.py": "d63fef80561a30252908fd52f4789d44c38516ca69e75c40f990e34a81dd8ff8",
+  "engine/onboard.py": "009a8bfcd3908f6fcaededd8db6a3fb3ad9d41e48d0e7103706744b1172a4c91",
   "engine/page.py": "100f7b3c14fe61f55ae63e60eec604ac7e8a1881672214d77ddd4f27c70e94a6",
   "engine/placement.py": "cf1abe8ba5cccd14b0923302bab1503331b158367926c689339147a60bddb55e",
   "engine/project.py": "7928a3461bbd2282c58c70a185c0d05456292a593381dd0bc4389b651eb05d95",
@@ -57,7 +57,7 @@
   "engine/tests/test_update_rehearsal.py": "d64bf7ebff51527e80b8268f00913cfb252da88b4620c4dbdb20fe37af297310",
   "engine/tests/test_voice.py": "d67f0dab91b8a57a40427768fadc4c7987724a64d1df57de9815d891fccc7de0",
   "engine/update.py": "7382d9aee0d1a1bf36a908967c7b8e91833d1055c343605b71119da5e983354b",
-  "engine/verbs.py": "d9b31d73c327c0eeabd5f9fbb94da2274eb1c698db5878f9b571964c909b6895",
+  "engine/verbs.py": "045e6c8d07d445ad70a0a4b9c8c589093c2da8fabab14c3825cc29d9bb9f5581",
   "law/01-truth-unfakeable.md": "e0e9af11f0f5ac09f1bac236e15e8518cf7d95d8a70b267c1e0b1bed4a3364d7",
   "law/02-becoming.md": "8ec892bd20a66fb71d1fcf339b26124e4e74912cf36272f5b32e9a5ea85d3f49",
   "law/03-amana.md": "16dedf1093ee55f63c643314a535a637a24d2d62f68092cb084da97326d553e1",
@@ -82,10 +82,10 @@
   "vessel/claude-code/CLAUDE.md": "a62cd06737d754ec121f1f24680a397933e12fe18cd760318f82b8a368496a72",
   "vessel/claude-code/agents/challenger.md": "86cb1aad70fa434255988604a576cbe5c42d96dd134504370befedb96480ee0e",
   "vessel/claude-code/agents/checker.md": "0ea94722f3ba410c2b6988c987b7572ace40c7601e5b84eb6cc061c29b9b60b9",
-  "vessel/claude-code/guard.py": "a750e2b6a9f18d92a2a62216012ab9ed2bf76f1f2cfb03555cc0ac86c271c157",
-  "vessel/plugin/.claude-plugin/plugin.json": "181a670d748935dadfd0620f9f4108b787bf638d74b11dd5663081fafe4836d4",
+  "vessel/claude-code/guard.py": "b0314225cede7b02320108f9190f08e12003e88e9bc8de74b3ca981fb8ec6d8a",
+  "vessel/plugin/.claude-plugin/plugin.json": "44740aa88e4a55fea669c61c1838b679c68a1d9d0e4866ebc7340c44a6f52087",
   "vessel/plugin/hooks/hooks.json": "3d6da9fc549f678375ce17f347022aaf7ad2294680b8356babe1254552755a1f",
   "vessel/plugin/output-styles/across-the-desk.md": "5a1ae329abad0b528bdf7376a42e7839d8332387a9e013d577fd900e768e36e6"
  },
- "generated": "2026-07-31T09:45:16Z"
+ "generated": "2026-07-31T09:48:21Z"
 }

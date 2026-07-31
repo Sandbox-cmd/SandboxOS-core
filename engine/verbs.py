@@ -71,11 +71,16 @@ def _version(ws, argv):
 
 def _help(ws, argv):
     from .cli import version_line
+    from .selfmap import GATE_WORDS
     print(version_line())
     print("a maker's operating system for your own machine.")
     print()
-    print("verbs so far: " + " ".join(sorted(TABLE)))
-    print("this copy is early — verbs land band by band, each with its check.")
+    for name in sorted(TABLE):
+        d = DECLARATIONS[name]
+        writes = ", ".join(d["writes"]) if d["writes"] else "nothing"
+        print("  %-10s %s · writes: %s" % (name, GATE_WORDS[d["gate"]], writes))
+    print()
+    print("docs/MANUAL.md carries the full page per verb.")
     return 0
 
 
@@ -361,10 +366,11 @@ def _reset(ws, argv):
     if dest not in b:
         print("that file was never placed by the system — nothing to reset to.")
         return 1
-    src_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                           "vessel", "claude-code")
-    src = os.path.join(src_dir, os.path.basename(dest))
-    if not os.path.exists(src):
+    # The pristine copy comes from the same payload init places — never from
+    # a guessed path (the old basename guess could not reach agents/ or the
+    # style, one directory down).
+    src = onboard.shipped_payload(ws).get(dest)
+    if src is None or not os.path.exists(src):
         print("no pristine copy of %s in this core." % os.path.basename(dest))
         return 1
     print(placement.reset(ws, dest, src))

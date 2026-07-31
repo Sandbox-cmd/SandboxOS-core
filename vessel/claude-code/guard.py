@@ -67,6 +67,8 @@ def decide(event, ws=None, cwd=None):
         ap = os.path.abspath(path)
         if (os.sep + ".claude" + os.sep) in ap and (os.sep + "memory" + os.sep) in ap:
             return _deny("durable memory lands on the owner's key — stage it instead: sandbox note")
+        if (os.sep + ".claude" + os.sep + "agent-memory") in ap:
+            return _deny("agent memory is a second record nobody audits — put it in your report or stage it: sandbox note")
         target_proj = _project_of(ap, ws)
         cwd_proj = _project_of(cwd, ws)
         if target_proj and cwd_proj and target_proj != cwd_proj:
