@@ -16,7 +16,7 @@
   "engine/desk.py": "195663a2cf4b36f9a3b949cd2f1ad92090e853ef7cc2a185e0a26519eed42db4",
   "engine/face.py": "d5ec699db56bbf1ae9d0c574b2387db5fca32eed18e194e6f75d943165fbe4d8",
   "engine/gate.py": "6be24713695d972303f1f5afc920dd4b2447965feacbe26a68c4b63ff1a2645c",
-  "engine/integrity.py": "c3a7e5a0b4f08c26e767b827ee961247869e4932a6d71a18c042c751cfe88141",
+  "engine/integrity.py": "ea4b409c4e1318f61a5da94d3af58237c8cc8ce10f5f8f6dd6848b363a6e97ca",
   "engine/journal.py": "a06302185b9b4cc496e8761806d0bde0457c9a8bdac9761113a03443155f782b",
   "engine/make.py": "9fd7e3d5b1418e9dfb8d0858d2cf74227829161eff53981bef72c787b3531cce",
   "engine/notes.py": "5e70245882d41d71796ab35010ab129c14ab06696d39ce145c37aa2af1d4e01c",
@@ -74,6 +74,11 @@
   "law/14-two-strata.md": "34b9b28bcb284c0f8f7d89714d6042a2d38bcbf32db5fae0fe4d1fa47f79be67",
   "law/15-plain-first.md": "8179bee177c7ef5e68d2947a5fd6ed7ec393d52f01b10117cdd2f3fb5f48c662",
   "sandbox": "a3f97bc6170c5a05b8cab8dccb105d54faac896ee6da2741263bd1990b2b82b5",
+  "soul/ground-truth.md": "ab331559766ed7c007fd9a6a903b9cbca50a49a0f51936f4c29b25e6a2716dc3",
+  "soul/lineage.md": "6f07d105cd31d2d2d947457e500ab125599fa48a38f2dd2d60be9f9faa6e9c63",
+  "soul/partner.md": "c7f7b5917ca4407f0f61540e2c07104fd2891ccf6853f54e1d67304c54b6bd99",
+  "soul/values.md": "0fbcd92fb07fa1ab394d41cda05f0771f17c589ba2f5053998a70fe3b637f78a",
+  "soul/voice.md": "947f03aae32cddd456c4ccd823dc60da5eaee2ebb72fa40ad9e76c92d4496f14",
   "vessel/claude-code/CLAUDE.md": "2c34a1acc504d14988b3884b5125fcadd22eb6226ffb78724009f14c9483dcbc",
   "vessel/claude-code/agents/challenger.md": "86cb1aad70fa434255988604a576cbe5c42d96dd134504370befedb96480ee0e",
   "vessel/claude-code/agents/checker.md": "0ea94722f3ba410c2b6988c987b7572ace40c7601e5b84eb6cc061c29b9b60b9",
@@ -82,5 +87,5 @@
   "vessel/plugin/hooks/hooks.json": "3d6da9fc549f678375ce17f347022aaf7ad2294680b8356babe1254552755a1f",
   "vessel/plugin/output-styles/plain.md": "c6de491632973357b067e494dfb3ee4fe8df6ff99ade65cc04daa6a2156bc475"
  },
- "generated": "2026-07-31T07:05:07Z"
+ "generated": "2026-07-31T09:43:17Z"
 }

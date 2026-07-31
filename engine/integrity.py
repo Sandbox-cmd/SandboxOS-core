@@ -14,7 +14,7 @@ import os
 import shutil
 import subprocess
 
-DIRS = ("engine", "vessel", "law", "docs")
+DIRS = ("engine", "vessel", "law", "docs", "soul")
 FILES = ("sandbox", "boot.py", "README.md", "LICENSE", "VERSION", "CHANGELOG.md")
 SKIP_DIRS = {"__pycache__"}
 PUBKEY_ENV = "SANDBOX_MINISIGN_PUBKEY"
