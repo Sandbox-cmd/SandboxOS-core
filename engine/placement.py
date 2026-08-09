@@ -68,6 +68,13 @@ def sync(ws, payload):
             continue
         cur_sha = _sha_file(dest)
         if rec is None:
+            if cur_sha == new_sha:
+                # Identical to what ships — adopting it into the book costs
+                # the owner nothing and lets future updates see it.
+                b[dest] = {"sha": new_sha}
+                _event(ws, "adopted", dest, new_sha)
+                report.append("adopted (yours, and it matches what ships): %s" % dest)
+                continue
             # Never recorded → never touched. The user's file wins, said plainly.
             report.append("kept (yours, never placed by me): %s" % dest)
             continue
@@ -107,6 +114,21 @@ def sync(ws, payload):
 def diverged(ws):
     """The files updates are skipping — doctor names these at every run."""
     return [d for d, rec in book(ws).items() if rec.get("diverged")]
+
+
+def unrecorded_drift(ws, payload):
+    """Placement destinations the book never recorded whose content differs
+    from what ships. This is the hole two honest surfaces left between them:
+    update said "kept (yours)", doctor said "placed files current", and the
+    live guard held at a version three releases old."""
+    b = book(ws)
+    out = []
+    for dest, src in payload.items():
+        if dest in b or not os.path.exists(dest) or not os.path.exists(src):
+            continue
+        if _sha_file(dest) != _sha_file(src):
+            out.append(dest)
+    return sorted(out)
 
 
 def reset(ws, dest, src):

@@ -25,7 +25,7 @@ class TestNotes(unittest.TestCase):
     def test_approve_headless_lands_nothing(self):
         notes.note(self.ws, "x", target_project="geardoor")
         n, msg = notes.approve(self.ws, is_real_tty=False, keychar="k")
-        self.assertEqual(n, 0)
+        self.assertIsNone(n)  # a refusal, not an empty pile — the verb exits 1 on it
 
     def test_canon_is_disposable_and_rebuilds(self):
         notes.note(self.ws, "a landed fact", target_project="geardoor")
@@ -65,7 +65,7 @@ class TestNotes(unittest.TestCase):
         from engine import verbs
         buf = io.StringIO()
         with contextlib.redirect_stdout(buf):
-            rc = verbs.TABLE["recall"](self.ws, ["--recent"])
+            rc = verbs.dispatch(self.ws, "recall", ["--recent"])
         self.assertEqual(rc, 2)
         self.assertIn("recall doesn't know --recent", buf.getvalue())
 

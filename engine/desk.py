@@ -85,6 +85,35 @@ def drafts(ws):
     return out, scars
 
 
+def drop(ws, n):
+    """Retract the Nth waiting draft (as `drafts` numbers them) — the exit
+    for an accidental staging. The dropped body is said in full, so the
+    retraction happens in the open; torn lines stay on disk untouched."""
+    p = staging_path(ws)
+    raws = []
+    if os.path.exists(p):
+        with open(p, "rb") as f:
+            raws = [r for r in f.readlines() if r.strip()]
+    parseable = []
+    for i, raw in enumerate(raws):
+        try:
+            record = json.loads(raw.decode("utf-8"))
+            parseable.append((i, record))
+        except (UnicodeDecodeError, ValueError):
+            continue
+    if not 1 <= n <= len(parseable):
+        return False, "nothing at %d — %d draft(s) wait. see them: sandbox drafts" % (n, len(parseable))
+    idx, record = parseable[n - 1]
+    del raws[idx]
+    if raws:
+        with open(p, "wb") as f:
+            f.writelines(raws)
+    else:
+        os.remove(p)
+    return True, "dropped, in the open: [%s] %s" % (record.get("cls", "note"),
+                                                    record.get("body") or "")
+
+
 def land_all(ws, consent):
     """The owner's keystroke lands the pile. Headless lands nothing.
 

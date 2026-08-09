@@ -38,7 +38,9 @@ def approve(ws, is_real_tty=None, keychar=None):
     """The keystroke lands the pile and refreshes every touched canon."""
     consent = gate.mint_consent(is_real_tty=is_real_tty, keychar=keychar)
     if consent is None:
-        return 0, "landing needs your %r at a real terminal" % gate.COMMIT_KEY
+        # None, not 0 — a refusal and an empty pile are different facts,
+        # and the verb turns None into a nonzero exit for scripts.
+        return None, "landing needs your %r at a real terminal" % gate.COMMIT_KEY
     pile, _ = desk.drafts(ws)
     touched = {d.get("project") for d in pile}
     n, msg = desk.land_all(ws, consent)

@@ -24,7 +24,7 @@ order. nothing here asks you to take its word.
 
 not a policy you can switch off — the shape of the thing. try it before you
 install anything: `echo k | ./sandbox approve` refuses every time, and the
-refusal itself lives at `engine/desk.py`, line 95. read it there before you
+refusal itself lives at `engine/desk.py`, line 124. read it there before you
 believe it here.
 
 ## get it running

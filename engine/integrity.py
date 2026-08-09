@@ -63,12 +63,67 @@ def seal():
     return True, "\n".join(lines)
 
 
+def _release_key():
+    """The signing key the notes must carry: the env's word, else the
+    README's. Two copies that must agree is the anti-tamper story."""
+    key = os.environ.get(PUBKEY_ENV, "").strip()
+    if key:
+        return key
+    import re
+    readme = os.path.join(root(), "README.md")
+    if os.path.exists(readme):
+        m = re.search(r"\b(RWS[A-Za-z0-9+/=]{20,})", open(readme, encoding="utf-8").read())
+        if m:
+            return m.group(1)
+    return None
+
+
+def _changelog_section(version):
+    """(tagline, body) for this version's CHANGELOG entry, or (None, None).
+    The heading shape is `## <version> — <tagline> (<date>)`."""
+    p = os.path.join(root(), "CHANGELOG.md")
+    if not os.path.exists(p):
+        return None, None
+    tagline, body, inside = None, [], False
+    for line in open(p, encoding="utf-8").read().splitlines():
+        if line.startswith("## "):
+            if inside:
+                break
+            head = line[3:]
+            if head.startswith(version + " ") and "—" in head:
+                tagline = head.split("—", 1)[1].rsplit("(", 1)[0].strip()
+                inside = True
+            continue
+        if inside:
+            body.append(line)
+    return tagline, "\n".join(body).strip() if body else None
+
+
+def release_notes(version):
+    """Write this release's notes where nothing seals them: the CHANGELOG
+    section plus the key line, so the README's cross-check ('the same key is
+    printed in every release's notes') is true by construction. Returns
+    (path, tagline) or (None, why)."""
+    tagline, body = _changelog_section(version)
+    if not tagline or not body:
+        return None, "CHANGELOG.md has no section for %s" % version
+    key = _release_key()
+    if not key:
+        return None, "no signing key found — set %s or keep it in README.md" % PUBKEY_ENV
+    import tempfile
+    p = os.path.join(tempfile.gettempdir(), "sandbox-release-notes-v%s.md" % version)
+    with open(p, "w", encoding="utf-8") as f:
+        f.write("Sandbox OS %s — %s\n\n%s\n\nrelease public key: %s\n"
+                % (version, tagline, body, key))
+    return p, tagline
+
+
 def release_check():
     """The release drill's wall: refuses until everything a release needs
     actually holds. Born from a recurrence — two releases pushed with the
     fresh signature uncommitted, caught only by a stranger-path verify.
-    This verb never tags and never pushes; those are the owner's hands. It
-    just refuses to let the ceremony start out of order.
+    This verb never tags, never pushes and never publishes; those are the
+    owner's hands. It just refuses to let the ceremony start out of order.
     """
     import sys
     r = root()
@@ -105,16 +160,28 @@ def release_check():
     lines.append("%s the tree is committed%s" % ("ok  " if clean else "FAIL",
                  "" if clean else " — uncommitted: " + st.stdout.strip().replace("\n", ", ")[:120]))
 
+    with open(os.path.join(r, "VERSION"), encoding="utf-8") as f:
+        v = f.read().strip()
+    notes_path, tagline = release_notes(v)  # tagline is the refusal's why when None
+    notes_ok = notes_path is not None
+    ok = ok and notes_ok
+    lines.append("%s the notes carry the key%s" % ("ok  " if notes_ok else "FAIL",
+                 "" if notes_ok else " — " + tagline))
+
     if ok:
-        with open(os.path.join(r, "VERSION"), encoding="utf-8") as f:
-            v = f.read().strip()
-        lines.append("the ceremony is four moves — this wall verified 1 and 2; 3 and 4 are your hands:")
+        lines.append("the ceremony is five moves — this wall verified 1 and 2; 3 to 5 are your hands:")
         lines.append("  1. sign      minisign -Sm manifest.json            (done — fresher than the manifest)")
         lines.append("  2. commit    the signature is IN the committed tree (done — the tree is clean)")
-        lines.append("  3. tag       git tag -a v%s -m \"...\"" % v)
+        lines.append("  3. tag       git tag -a v%s -m \"%s\"" % (v, tagline))
         lines.append("  4. push      git push origin main --tags")
-        lines.append("re-sign for any reason after this wall, and moves 2-4 start over —")
+        lines.append("  5. publish   gh release create v%s --title \"Sandbox OS %s — %s\" --notes-file %s"
+                     % (v, v, tagline, notes_path))
+        lines.append("re-sign for any reason after this wall, and moves 2-5 start over —")
         lines.append("a tag must never point at a tree whose signature came later.")
+        lines.append("a tag without its published notes leaves the key's cross-check unbacked —")
+        lines.append("the ceremony ends at the Releases page, not at the push.")
+        if shutil.which("gh") is None:
+            lines.append("(gh is not installed here — publish from any machine that has it)")
     else:
         lines.append("the release refuses — fix the FAIL lines first.")
     return ok, "\n".join(lines)

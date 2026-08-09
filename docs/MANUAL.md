@@ -19,7 +19,7 @@ kept, revert path named, and nothing rides into a ship unconfirmed.
 | `approve` | needs your k at a real terminal | workshop, project |
 | `builds` | runs freely | nothing |
 | `doctor` | runs freely | nothing |
-| `drafts` | runs freely | nothing |
+| `drafts` | runs freely | workshop |
 | `fetch` | needs your k | shelf |
 | `help` | runs freely | nothing |
 | `import` | runs freely | workshop, state, project, shelf |
@@ -51,7 +51,9 @@ kept, revert path named, and nothing rides into a ship unconfirmed.
 - work: `sandbox project on NAME`, then build; wrap AI-assisted or heavy
   passes in `sandbox make --open "intent"` … `make --close --summary "…"`
   — the diff is computed, the summary staged.
-- capture: `sandbox note "what you found"` the moment it happens.
+- capture: `sandbox note "what you found"` the moment it happens. staged
+  by mistake? `sandbox drafts --drop N` retracts it, saying the dropped
+  body in full — the retraction happens in the open.
 - ship: fill `## checks` in PROJECT.md, `sandbox ship` — your k ratifies
   those exact check lines once; green re-ships need no ceremony.
 - leave: nothing required. drafts wait; the next resume lands them.
@@ -79,7 +81,9 @@ kept, revert path named, and nothing rides into a ship unconfirmed.
 - `sandbox verify` / `sandbox seal` — the copy against its manifest.
   strict verification (a signature, not just hashes) turns on when you set
   `SANDBOX_MINISIGN_PUBKEY` to the key from the release notes.
-- `sandbox reset PATH` — return one placed file to pristine, on your word.
+- `sandbox reset PATH-or-NAME` — return one placed file to pristine, on
+  your word. a short name (`sandbox reset guard.py`) resolves against what
+  init places, even when an older core placed the file without recording it.
 - `sandbox doctor` — health, skew, staleness, skipped placements; every
   failing line names its fix.
 

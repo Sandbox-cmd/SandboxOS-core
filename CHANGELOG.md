@@ -1,5 +1,39 @@
 # CHANGELOG
 
+## 8.2.3 — the class closed, the ceremony finished (2026-08-09)
+
+three findings landed the same morning on 8.2.2, and every one traced to a
+class closed at one instance. this release closes the classes.
+
+- unknown flags refuse at the one door, for every verb: `dispatch` holds
+  each verb's flag table, so no verb can ever swallow a `--flag` as
+  content again. `note --help` once staged a draft whose whole body was
+  the flag; now it refuses with exit 2, and so does everything else.
+- `drafts --drop N` retracts a waiting draft — the exit the accidental
+  staging never had. the dropped body prints in full, so the retraction
+  happens in the open; torn staging lines stay on disk untouched.
+- the release ceremony ends at the Releases page, not at the push: the
+  wall's fifth move is `publish`, with notes the wall itself writes from
+  the CHANGELOG plus the key line — the README's "the same key is printed
+  in every release's notes" is now true by construction. the wall also
+  refuses when the CHANGELOG has no section for the version, or no key is
+  findable.
+- doctor sees the drift a green check used to hide: a placement
+  destination the book never recorded, holding content older than what
+  ships, is named — this is how the live guard sat three releases old
+  while `update` said "kept (yours)" and doctor said "placed files
+  current", both honest about their own scope. a never-recorded copy that
+  matches what ships is adopted into the book on sync.
+- `sandbox reset` reaches those files: a short name resolves against the
+  payload, and the book is not required — a destination init places is
+  restorable on your word even when an older core placed it silently.
+- a gate refusal exits 1: piping into `approve` still refuses in words,
+  and now a script reading the exit status is told the truth too. the
+  seventh body had this right; the regression retires.
+- `make --close` over an empty diff says "attempted", never "confirmed" —
+  the verdict word stops grading itself generously in exactly the place
+  this system claims it does not.
+
 ## 8.2.2 — the stranger's first meeting, opened (2026-07-31)
 
 the two pages a stranger reads first were rebuilt against what this body

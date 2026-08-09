@@ -1,8 +1,8 @@
 {
-  "name": "sandbox-os",
-  "description": "Sandbox OS \u2014 the workshop's voice, versioned with the core.",
-  "version": "8.2.2",
-  "author": {
-    "name": "Sandbox-cmd"
-  }
+ "name": "sandbox-os",
+ "description": "Sandbox OS \u2014 the workshop's voice, versioned with the core.",
+ "version": "8.2.3",
+ "author": {
+  "name": "Sandbox-cmd"
+ }
 }

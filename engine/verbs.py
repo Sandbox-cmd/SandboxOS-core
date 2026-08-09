@@ -45,6 +45,49 @@ def _flag(argv, name):
     return None, argv
 
 
+# Every verb's flags, at the one door — a verb that treats an unknown
+# --flag as content is the bug (note --help once staged a draft whose whole
+# body was the flag). Values are the placeholder the refusal shows; None
+# means the flag stands alone.
+FLAGS = {
+    "note": {"--project": "NAME", "--workshop": None},
+    "drafts": {"--drop": "N"},
+    "recall": {"--project": "NAME", "--why": None},
+    "make": {"--project": "NAME", "--open": '"intent"',
+             "--close": None, "--summary": '"..."'},
+    "ship": {"--project": "NAME"},
+    "use": {"--project": "NAME"},
+    "save": {"--note": '"..."'},
+    "share": {"--to": "DIR"},
+    "fetch": {"--from": "DIR"},
+    "app": {"--catalog": "DIR"},
+    "import": {"--projects": "a,b,c"},
+}
+
+
+def _unknown_flags(argv, spec):
+    """Tokens that look like flags and are not this verb's. A known flag's
+    value is skipped, so a value that happens to start with -- passes."""
+    unknown, i = [], 0
+    while i < len(argv):
+        t = argv[i]
+        if t in spec:
+            i += 2 if spec[t] is not None else 1
+            continue
+        if t.startswith("--"):
+            unknown.append(t)
+        i += 1
+    return unknown
+
+
+def _flags_refusal(verb, flag, spec):
+    if not spec:
+        return "%s doesn't know %s — it takes no flags." % (verb, flag)
+    shown = [k + (" " + v if v else "") for k, v in spec.items()]
+    listed = shown[0] if len(shown) == 1 else ", ".join(shown[:-1]) + " and " + shown[-1]
+    return "%s doesn't know %s — its flags are %s." % (verb, flag, listed)
+
+
 def _target(ws, argv):
     """The project a bare verb lands on: --project NAME, else the single
     on-project, else None (workshop-level)."""
@@ -120,12 +163,22 @@ def _note(ws, argv):
 
 def _drafts(ws, argv):
     from . import desk
+    drop, rest = _flag(argv, "--drop")
+    if drop is not None:
+        try:
+            n = int(drop)
+        except ValueError:
+            print("drop needs the draft's number: sandbox drafts --drop N")
+            return 2
+        ok, msg = desk.drop(ws, n)
+        print(msg)
+        return 0 if ok else 1
     pile, scars = desk.drafts(ws)
     if not pile and not scars:
         print("i found nothing waiting — no notes need your approval.")
         return 0
-    for d in pile:
-        print("waiting: [%s] %s" % (d.get("cls", "note"), (d.get("body") or "")[:90]))
+    for i, d in enumerate(pile, 1):
+        print("%2d. waiting: [%s] %s" % (i, d.get("cls", "note"), (d.get("body") or "")[:90]))
     for s in scars:
         print(s)
     print("approve them at a real terminal:  sandbox approve")
@@ -136,16 +189,13 @@ def _approve(ws, argv):
     from . import notes
     n, msg = notes.approve(ws, is_real_tty=_tty(), keychar="k" if _tty() else None)
     print(msg)
-    return 0
+    # A gate refusal is not a success — scripts read the exit, not the words.
+    return 1 if n is None else 0
 
 
 def _recall(ws, argv):
     from . import notes
     target, rest = _target(ws, argv)
-    unknown = [t for t in rest if t.startswith("--") and t != "--why"]
-    if unknown:
-        print("recall doesn't know %s — its flags are --project NAME and --why." % unknown[0])
-        return 2
     if "--why" in rest:
         rest.remove("--why")
         for line in notes.why(ws, " ".join(rest)):
@@ -363,18 +413,32 @@ def _setup(ws, argv):
 def _reset(ws, argv):
     from . import onboard, placement
     if not argv:
-        print("reset needs a placed file: sandbox reset PATH")
+        print("reset needs a placed file: sandbox reset PATH-or-NAME")
         return 2
+    payload = onboard.shipped_payload(ws)
     dest = os.path.abspath(os.path.expanduser(argv[0]))
-    b = placement.book(ws)
-    if dest not in b:
+    if dest not in payload:
+        # A short name resolves against the payload's destinations — the
+        # book is not required: a destination the payload knows is placeable
+        # even when an older core placed it without recording (the guard's
+        # three-release drift hid exactly there).
+        matches = [d for d in payload
+                   if os.path.basename(d) == argv[0] or d.endswith(os.sep + argv[0])]
+        if len(matches) == 1:
+            dest = matches[0]
+        elif len(matches) > 1:
+            print("%s names %d placed files — say more of the path:" % (argv[0], len(matches)))
+            for m in sorted(matches):
+                print("  " + m)
+            return 2
+    if dest not in payload:
         print("that file was never placed by the system — nothing to reset to.")
         return 1
     # The pristine copy comes from the same payload init places — never from
     # a guessed path (the old basename guess could not reach agents/ or the
     # style, one directory down).
-    src = onboard.shipped_payload(ws).get(dest)
-    if src is None or not os.path.exists(src):
+    src = payload[dest]
+    if not os.path.exists(src):
         print("no pristine copy of %s in this core." % os.path.basename(dest))
         return 1
     print(placement.reset(ws, dest, src))
@@ -472,7 +536,7 @@ DECLARATIONS = {
     "help": declaration(),
     "project": declaration(reads=("project",), writes=("project", "workshop"), emits="assert"),
     "note": declaration(reads=("project",), writes=("workshop",), gate="keystroke", emits="assert"),
-    "drafts": declaration(reads=("workshop",)),
+    "drafts": declaration(reads=("workshop",), writes=("workshop",)),
     "approve": declaration(reads=("workshop",), writes=("workshop", "project"),
                            gate="tty-keystroke", emits="assert"),
     "recall": declaration(reads=("workshop", "project")),
@@ -487,9 +551,15 @@ DECLARATIONS = {
 
 
 def dispatch(ws, verb, argv):
-    """The one door's hand-off. Unknown verbs refuse plainly."""
+    """The one door's hand-off. Unknown verbs and unknown flags refuse
+    plainly — no verb ever swallows a --flag as content."""
     fn = TABLE.get(verb)
     if fn is None:
         print("no verb named %r yet — this copy is early. try: sandbox help" % verb)
+        return 2
+    spec = FLAGS.get(verb, {})
+    unknown = _unknown_flags(argv, spec)
+    if unknown:
+        print(_flags_refusal(verb, unknown[0], spec))
         return 2
     return fn(ws, argv)

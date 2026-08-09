@@ -127,7 +127,13 @@ def close_session(ws, name, summary=""):
         desk.submit(ws, {"body": "make: %s: %s" % (name, summary),
                          "cls": "make-summary", "origin": "machine",
                          "project": name, "receipt": "journal:%s" % event["id"]})
-    lines = ["confirmed — %d file(s) changed on %s" % (n, name)]
+    # "confirmed" is earned by a real diff; an empty one says "attempted" —
+    # the word must not grade itself generously in exactly the place this
+    # system claims it does not.
+    if n:
+        lines = ["confirmed — %d file(s) changed on %s" % (n, name)]
+    else:
+        lines = ["attempted — nothing changed on %s (the diff is empty, and says so)" % name]
     for rel in (added + changed + removed)[:20]:
         lines.append("  " + rel)
     if summary:
