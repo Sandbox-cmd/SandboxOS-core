@@ -1,26 +1,24 @@
 # SPDX-License-Identifier: FSL-1.1-Apache-2.0
-"""make: the co-builder verb — AI hands on a project, honestly bookkept.
+"""make: a piece of building wrapped so the diff is the receipt.
 
-`make "intent"` opens the session, runs the builder (the claude command, or
-whatever SANDBOX_CLAUDE_CMD names), and closes with a code-computed diff.
-Without a builder installed, make still works: it writes the full prompt to
-the project and tells you where — your hands, your way. `--open`/`--close`
-are the same bookkeeping for building with your own hands: open snapshots
-the file listing so close can COMPUTE what changed — the diff is code's
-word, never the builder's. The summary stages behind the owner's key: what
-happened is fact (event), what it meant is a claim (staged note).
+`make --open "intent"` snapshots the project's file listing; `make --close`
+walks it again and lands what actually changed, so the count is computed
+from the files rather than taken from anyone's account of the work. The
+close re-runs the project's own checks first: green ends by naming the ship,
+red refuses and the make stays open (R11). The summary stages behind the
+owner's key — what happened is a fact the record keeps, what it meant is a
+claim that waits for a keypress.
+
+The building itself happens in the session the owner already sits in. This
+module runs no builder and writes no file into the project.
 """
 import hashlib
 import json
 import os
-import shutil
-import subprocess
 
-from . import desk, journal, project
+from . import check, desk, journal, project
 
 SKIP = {".git", "__pycache__", ".DS_Store", ".make"}
-CLAUDE_ENV = "SANDBOX_CLAUDE_CMD"
-TIMEOUT_ENV = "SANDBOX_MAKE_TIMEOUT"
 
 
 def _listing(root):
@@ -44,9 +42,11 @@ def _open_path(ws, name):
 
 def open_session(ws, name, intent):
     if not os.path.exists(project.contract_path(ws, name)):
+        # surface: 3a
         return False, "no project named %s" % name
     p = _open_path(ws, name)
     if os.path.exists(p):
+        # surface: 3a
         return False, "a make session is already open on %s — close it first" % name
     root = project.root_of(ws, name)
     snap = {"intent": intent, "root": root, "listing": _listing(root),
@@ -57,58 +57,29 @@ def open_session(ws, name, intent):
     journal.append(ws, {"op": "make", "phase": "open", "project": name,
                         "body": intent, "origin": "machine",
                         "triggered": "session"})
+    # surface: 2
     return True, "session open on %s — %s" % (name, intent)
 
 
-def _prompt(ws, name, intent):
-    c = project.parse_contract(project.contract_path(ws, name))
-    canon_path = os.path.join(project.dirpath(ws, name), "CANON.md")
-    canon = open(canon_path, encoding="utf-8").read() if os.path.exists(canon_path) else ""
-    return ("You are building on the project %r (goal: %s).\n"
-            "The intent for this session: %s\n\n"
-            "What the record already knows about this project:\n%s\n"
-            "Work in the current directory. When done, print four lines: what "
-            "you made, what changed, what to check next, one risk you see."
-            % (name, c["goal"] if c else "", intent, canon))
-
-
-def build(ws, name, intent):
-    """The full verb: open → run the builder → close. Honest without one."""
-    ok, msg = open_session(ws, name, intent)
-    if not ok:
-        return False, msg
-    root = project.root_of(ws, name)
-    env_cmd = os.environ.get(CLAUDE_ENV, "").strip()
-    if env_cmd == "none":
-        cmd = None  # the explicit no-builder switch, for tests and preference
-    else:
-        cmd = env_cmd or ("claude" if shutil.which("claude") else None)
-    prompt = _prompt(ws, name, intent)
-    if cmd is None:
-        out = os.path.join(root, "PROMPT.md")
-        with open(out, "w", encoding="utf-8") as f:
-            f.write(prompt + "\n")
-        close_session(ws, name)  # nothing built; the diff says so honestly
-        return True, ("no builder installed — the full prompt is at %s; run it "
-                      "your way, then: sandbox make --close --summary \"...\"" % out)
-    timeout = int(os.environ.get(TIMEOUT_ENV, "1800"))
-    try:
-        r = subprocess.run([cmd, "-p", prompt], cwd=root, capture_output=True,
-                           text=True, timeout=timeout)
-        tail = (r.stdout or "").strip()[-2000:]
-    except subprocess.TimeoutExpired:
-        close_session(ws, name, "builder timed out after %ds" % timeout)
-        return False, "the builder ran past %ds and was stopped — the diff is on the record" % timeout
-    ok2, close_msg = close_session(ws, name, tail[-400:] if tail else "")
-    verdict = "the builder finished" if r.returncode == 0 else \
-              "the builder exited %d — read its words before trusting the diff" % r.returncode
-    return r.returncode == 0, "%s\n%s\n%s" % (verdict, tail, close_msg)
-
-
 def close_session(ws, name, summary=""):
+    """the close: the checks first, then the diff, then the staged summary.
+
+    The order is the 08-01 scar's rule — a close that claims a piece of work
+    re-runs what the work rests on before it says a word about it.
+    """
     p = _open_path(ws, name)
     if not os.path.exists(p):
+        # surface: 3a
         return False, "no make session open on %s" % name
+    c = project.parse_contract(project.contract_path(ws, name))
+    checks = c["checks"] if c else []
+    if checks:
+        green, results = check.run_checks(ws, name)
+        if not green:
+            red = [line for line, _said, rc in results if rc != 0]
+            # surface: 30
+            return False, ("%d red — no close: FAIL %s. fix them, then: "
+                           "sandbox make --close %s" % (len(red), red[0], name))
     with open(p, encoding="utf-8") as f:
         snap = json.load(f)
     now_listing = _listing(snap["root"])
@@ -120,7 +91,7 @@ def close_session(ws, name, summary=""):
     event = journal.append(ws, {
         "op": "make", "phase": "close", "project": name,
         "body": snap["intent"], "origin": "machine", "triggered": "session",
-        "diff": diff})
+        "diff": diff, "checks": "green" if checks else "none"})
     os.remove(p)
     n = len(added) + len(removed) + len(changed)
     if summary:
@@ -130,6 +101,7 @@ def close_session(ws, name, summary=""):
     # "confirmed" is earned by a real diff; an empty one says "attempted" —
     # the word must not grade itself generously in exactly the place this
     # system claims it does not.
+    # surface: 2
     if n:
         lines = ["confirmed — %d file(s) changed on %s" % (n, name)]
     else:
@@ -138,4 +110,9 @@ def close_session(ws, name, summary=""):
         lines.append("  " + rel)
     if summary:
         lines.append("1 summary staged, waiting on your keypress. approve it:  sandbox approve")
+    if checks:
+        lines.append("checks green — ship it: sandbox ship %s" % name)
+    else:
+        lines.append("nothing under ## checks — a ship with nothing under it "
+                     "is a costume; add one line there")
     return True, "\n".join(lines)

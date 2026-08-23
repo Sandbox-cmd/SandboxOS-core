@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: FSL-1.1-Apache-2.0
-"""The record itself. Append-only JSONL; durable history no one rewrites.
+"""the record itself. Append-only JSONL; durable history no one rewrites.
 
 A landed event is never rewritten (law 1). A torn final line (a crash
 mid-append) is skipped and scarred, never fatal, and never poisons the next
@@ -22,7 +22,7 @@ def now():
 
 
 def ensure_genesis(ws):
-    """Write the genesis line only when no journal exists. Never truncates.
+    """write the genesis line only when no journal exists. Never truncates.
 
     Re-running init over a living workshop must leave the record untouched —
     a past body wiped it here; every body since refuses to.
@@ -39,13 +39,16 @@ def ensure_genesis(ws):
 
 
 def append(ws, event):
-    """Append one event. Stamps ts and an id if absent. Flushes before returning.
+    """append one event. Stamps ts and an id if absent. Flushes before returning.
 
     Every event carries an id so any later record can name it as a receipt
     (`journal:<id>`) — ink depends on events being addressable.
     """
     if not isinstance(event, dict) or not event.get("op"):
         raise ValueError("journal.append: event needs an 'op'")
+    if event.get("ink") == "checked":
+        raise ValueError("journal.append: nothing marks itself checked — "
+                         "a green check raises it, at the read")
     event = dict(event)
     event.setdefault("ts", now())
     if not event.get("id"):
@@ -69,8 +72,35 @@ def append(ws, event):
     return event
 
 
+def agent_counts(spec):
+    """`--agents keeper=3,voicer=1` → {keeper: 3, voicer: 1}. A pair that does
+    not parse is dropped rather than guessed at: a count nobody can trust is
+    worse on the record than no count."""
+    out = {}
+    for pair in (spec or "").split(","):
+        name, _, n = pair.partition("=")
+        if name.strip() and n.strip().isdigit():
+            out[name.strip()] = int(n.strip())
+    return out
+
+
+def session(ws, phase, key, project=None, agents=None):
+    """one session line, opened or closed. Returns the landed event.
+
+    The close carries the agent-invocation counts when the caller has them,
+    so doctor can say how much of the crew a body actually used.
+    """
+    event = {"op": "session", "phase": phase, "key": key, "origin": "machine",
+             "triggered": "session", "body": "session %s" % phase}
+    if project:
+        event["project"] = project
+    if phase == "close" and agents:
+        event["agents"] = agent_counts(agents)
+    return append(ws, event)
+
+
 def read(ws):
-    """Read every event. Returns (events, scars).
+    """read every event. Returns (events, scars).
 
     A line that does not parse is skipped and reported as a scar — a read
     must never crash on a torn write, and must never hide that it saw one.

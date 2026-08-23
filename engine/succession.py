@@ -33,6 +33,35 @@ def _old_projects_dir(old):
     return None
 
 
+def _record_of(old):
+    """the record inside a past workshop, or inside a leaving directory.
+
+    a workshop keeps it under its state directory; `export --portable` writes
+    it at the leaving directory's own root. one reader finds either, so the
+    thing export writes is the thing import takes, with no second verb.
+    """
+    for p in (os.path.join(old, journal.STATE_DIR, "journal.jsonl"),
+              os.path.join(old, "journal.jsonl")):
+        if os.path.exists(p):
+            return p
+    return None
+
+
+def _carried_map(old, ws):
+    """the addresses a leaving directory brought with it: the workshop it left
+    maps onto the one it arrives in, so an old receipt opens here."""
+    p = os.path.join(old, "path-map.json")
+    if not os.path.exists(p):
+        return []
+    import json
+    try:
+        with open(p, encoding="utf-8") as f:
+            pairs = json.load(f)
+    except (OSError, ValueError):
+        return []
+    return [(o, ws if n == "." else n) for o, n in pairs if o]
+
+
 def _old_contract(pdir):
     for name in OLD_CONTRACTS:
         p = os.path.join(pdir, name)
@@ -42,7 +71,7 @@ def _old_contract(pdir):
 
 
 def list_old(old_root):
-    """What the old workshop offers: (name, state, goal, root) per project."""
+    """what the old workshop offers: (name, state, goal, root) per project."""
     base = _old_projects_dir(old_root)
     if base is None:
         return []
@@ -58,7 +87,7 @@ def list_old(old_root):
 
 
 def _relocate(rootp, old_root):
-    """A root recorded before the old workshop moved: find its suffix under
+    """a root recorded before the old workshop moved: find its suffix under
     the old workshop's new address. Returns a real dir or None."""
     if os.path.isdir(rootp):
         return rootp
@@ -76,20 +105,20 @@ def _copy_tree(src, dest):
 
 
 def run(ws, old_root, take_projects):
-    """The import. `ws` must not already carry a landed record of its own.
+    """the import. `ws` must not already carry a landed record of its own.
 
     Returns (ok, report_text).
     """
     old_root = os.path.abspath(os.path.expanduser(old_root))
-    old_journal = os.path.join(old_root, journal.STATE_DIR, "journal.jsonl")
-    if not os.path.exists(old_journal):
+    old_journal = _record_of(old_root)
+    if old_journal is None:
         return False, "no record at %s — is that really a workshop?" % old_root
     new_journal = journal.path(ws)
     if os.path.exists(new_journal):
         events, _ = journal.read(ws)
         if any(e.get("op") == "assert" for e in events):
-            return False, ("this workshop already has a landed record of its own — "
-                           "import only fills an empty one, and never merges selves")
+            return False, ("this workshop already has a record — import fills "
+                           "an empty one and never merges selves")
     lines = []
 
     # 1 · the record, verbatim. The old genesis stays the genesis.
@@ -104,7 +133,7 @@ def run(ws, old_root, take_projects):
 
     # 2 · the path-map: old receipts open at new addresses.
     old_projects = _old_projects_dir(old_root) or os.path.join(old_root, "channels")
-    update.set_path_map(ws, [
+    update.set_path_map(ws, _carried_map(old_root, ws) + [
         (old_projects, os.path.join(ws, project.DIRNAME)),
         (old_root, ws),
     ])
@@ -148,7 +177,13 @@ def run(ws, old_root, take_projects):
             f.write("# %s\ngoal: %s\nstate: %s\n" % (name, c["goal"], c["state"]))
             if keep_root:
                 f.write("root: %s\n" % keep_root)
-            f.write("\n## checks\n%s\n\n## notes\n" % "\n".join(c["checks"]))
+            f.write("\n## checks\n%s\n%s\n\n## notes\n"
+                    % (project.CHECKS_HINT, "\n".join(c["checks"])))
+        if keep_root:
+            # the root came with the project and kept its own life; the two
+            # briefs say which project this directory belongs to, and neither
+            # is written over a page that is already there.
+            lines.extend(project.write_briefs(ws, name, keep_root))
         carried.append(name)
     if carried:
         lines.append("live projects: %s" % ", ".join(carried))
@@ -190,15 +225,15 @@ def run(ws, old_root, take_projects):
             lines.append("your agents came along: %d" % n)
 
     # 6 · ratifications void, out loud.
-    lines.append(update.void_ratifications(ws, "the move to the eighth body")
+    lines.append(update.void_ratifications(ws, "the move into this workshop")
                  if os.path.exists(os.path.join(ws, journal.STATE_DIR, "ratified.json"))
                  else "no carried ratifications — each project's checks await your first k here")
 
     # 7 · what did not come, said plainly.
     old_staging = os.path.join(old_root, journal.STATE_DIR, "staging.jsonl")
     if os.path.exists(old_staging) and os.path.getsize(old_staging) > 0:
-        lines.append("PLAIN: the old workshop has staged drafts that did NOT come — "
-                     "land them there, or they die with it")
+        lines.append("the old workshop still holds staged drafts, and they stayed "
+                     "there — land them at the old one, or they die with it")
     lines.append("everything not chosen stays in %s — the cold store, yours to keep or delete"
                  % old_root)
     return True, "\n".join(lines)

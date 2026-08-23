@@ -1,0 +1,14 @@
+#!/bin/sh
+# the fast no on main. placed by: sandbox release --hook, at commit-msg
+#
+# this file holds no shape of its own: it asks the tool whether the message it
+# is looking at is a release commit, and the tool is the only place that knows.
+# the release check re-derives the same fact from git log, so a hook that is
+# bypassed, missing or stale changes nothing about what a release accepts.
+branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) || exit 0
+[ "$branch" = "main" ] || exit 0
+root=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
+msg="$1"
+[ -n "$msg" ] || msg="$(git rev-parse --git-dir)/COMMIT_EDITMSG"
+[ -f "$msg" ] || exit 0
+exec "$root/sandbox" release --is-release-commit "$msg"

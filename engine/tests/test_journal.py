@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: FSL-1.1-Apache-2.0
-"""The record: append-only, addressable, honest about its tears."""
+"""the record: append-only, addressable, honest about its tears."""
 import json
 import os
 import tempfile

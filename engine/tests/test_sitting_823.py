@@ -1,8 +1,11 @@
 # SPDX-License-Identifier: FSL-1.1-Apache-2.0
-"""The 8.2.3 sitting's pins: the unknown-flag class closed at the one door,
-the drop exit for accidental drafts, honest exit codes and verdicts, the
-kept-file drift a green doctor used to hide, and the release wall's fifth
-move. Each of these was found live on 8.2.2 before it was fixed here."""
+"""the 8.2.3 sitting's pins: the unknown-flag class closed at the one door,
+the drop exit for accidental drafts, honest exit codes and verdicts, and the
+kept-file drift a green doctor used to hide. Each of these was found live on
+8.2.2 before it was fixed here.
+
+the fifth move's two pins moved to `test_release_wall.py` at 9.0, under the
+same names: the release check's rows are read in one file now."""
 import contextlib
 import io
 import json
@@ -11,6 +14,8 @@ import tempfile
 import unittest
 
 from engine import desk, journal, make, notes, placement, project, verbs
+
+from . import no_terminal, pressing
 
 
 def _run(ws, verb, argv):
@@ -28,19 +33,23 @@ class Workshop(unittest.TestCase):
 
 
 class TestUnknownFlagClass(Workshop):
-    """A verb that treats an unknown --flag as content is the bug — the
+    """a verb that treats an unknown --flag as content is the bug — the
     class, not the instance. note --help once staged a junk draft; drafts
     --drop 10 was silently ignored."""
 
     def test_every_verb_refuses_an_unknown_flag(self):
-        for verb in verbs.TABLE:
+        for verb in verbs.TABLE:  # answered at the door, above every body
             rc, out = _run(self.ws, verb, ["--no-such-flag"])
             self.assertEqual(rc, 2, "%s swallowed an unknown flag" % verb)
             self.assertIn("doesn't know --no-such-flag", out, verb)
 
     def test_note_dash_dash_help_stages_nothing(self):
+        # The scar is the staging, not the refusal: --help is answered at the
+        # door now (exit 0, the generated page), and the body still never
+        # sees it, so nothing lands in the pile either way.
         rc, out = _run(self.ws, "note", ["--help"])
-        self.assertEqual(rc, 2)
+        self.assertEqual(rc, 0)
+        self.assertIn("the page: docs/MANUAL.md", out)
         pile, _ = desk.drafts(self.ws)
         self.assertEqual(pile, [])
 
@@ -95,8 +104,17 @@ class TestDraftsDrop(Workshop):
 class TestHonestExits(Workshop):
     def test_headless_approve_exits_nonzero(self):
         notes.note(self.ws, "waiting", target_project="geardoor")
-        rc, out = _run(self.ws, "approve", [])
+        with no_terminal():
+            rc, out = _run(self.ws, "approve", [])
         self.assertEqual(rc, 1)  # the words refuse; the exit must agree
+        self.assertIn("real terminal", out)
+
+    def test_headless_resume_exits_nonzero_too(self):
+        """8.2.3 printed the same refusal from resume and returned 0."""
+        notes.note(self.ws, "waiting", target_project="geardoor")
+        with no_terminal():
+            rc, out = _run(self.ws, "resume", [])
+        self.assertEqual(rc, 1)
         self.assertIn("real terminal", out)
 
     def test_make_close_over_empty_diff_says_attempted(self):
@@ -117,7 +135,7 @@ class TestHonestExits(Workshop):
 
 
 class TestKeptFileDrift(Workshop):
-    """Two surfaces told the truth about their own scope and the wall stayed
+    """two surfaces told the truth about their own scope and the wall stayed
     old: update said 'kept (yours)', doctor said 'placed files current'."""
 
     def _payload(self):
@@ -172,23 +190,6 @@ class TestResetByName(Workshop):
         rc, out = _run(self.ws, "reset", ["/no/such/file"])
         self.assertEqual(rc, 1)
         self.assertIn("never placed", out)
-
-
-class TestReleaseWallFifthMove(unittest.TestCase):
-    def test_release_notes_carry_section_and_key(self):
-        from engine import integrity
-        version = open(os.path.join(integrity.root(), "VERSION"), encoding="utf-8").read().strip()
-        path, tagline = integrity.release_notes(version)
-        self.assertIsNotNone(path, tagline)
-        text = open(path, encoding="utf-8").read()
-        self.assertIn("Sandbox OS %s — %s" % (version, tagline), text)
-        self.assertIn("release public key: RWS", text)
-
-    def test_release_notes_refuse_a_version_the_changelog_never_met(self):
-        from engine import integrity
-        path, why = integrity.release_notes("0.0.0-ghost")
-        self.assertIsNone(path)
-        self.assertIn("no section", why)
 
 
 if __name__ == "__main__":

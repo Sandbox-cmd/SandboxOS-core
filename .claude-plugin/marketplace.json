@@ -1,13 +1,13 @@
 {
-  "name": "sandbox-os",
-  "owner": {
-    "name": "Sandbox-cmd"
-  },
-  "plugins": [
-    {
-      "name": "sandbox-os",
-      "source": "./vessel/plugin",
-      "description": "Sandbox OS \u2014 the workshop's voice, versioned with the core."
-    }
-  ]
+ "name": "sandbox",
+ "owner": {
+  "name": "Sandbox-cmd"
+ },
+ "plugins": [
+  {
+   "name": "sandbox-os",
+   "source": "./vessel/plugin",
+   "description": "Sandbox OS — the hooks, six crew briefs, three skills, the voice and two commands, versioned with the core."
+  }
+ ]
 }

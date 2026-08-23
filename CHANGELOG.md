@@ -1,5 +1,175 @@
 # CHANGELOG
 
+## 9.0.0 — one home, one key, one plugin (2026-08-23)
+
+the ninth body. two discovery runs closed on 8.2.3 the same day and were
+built as one release: one tree at `~/Sandbox/system` that the shim follows;
+one real key read at the terminal with the fingerprint of what was shown;
+one plugin that carries the hooks, six briefs, three skills, the voice and
+two commands; the shelf as a marketplace with its own signing key; `export`
+in place of the living page; `make` riding the session; `ship` as the
+celebration; the soul re-derived and a lint that reaches every printed
+string. the loud line, scoped to claims: NOTHING LANDS THAT YOU WERE NOT
+SHOWN. `law/` is untouched.
+
+
+### four rulings, built (2026-08-23)
+- R23 `UNVERIFIED` is the fourth caps signal word (FAIL, LOOK, DRAFTS, UNVERIFIED); the lint's `CAPS_ALLOWED` and `soul/voice.md` position 8 carry it; the caps debt is empty.
+- R24 doctor's exit is the repair block's alone: a LOOK on a `host:` row is named and the run stays green (`test_a_host_look_never_changes_the_exit`).
+- R25 the git hook moves from `pre-commit` to `commit-msg` — `vessel/git/commit-msg`; `sandbox release --hook` places it there; the file's text is unchanged but its placement line.
+- R26 usage placeholders stay `NAME`/`PATH`/`DIR`; the spec's `<name>` form is superseded.
+
+this section also carries the one thing a
+release cannot reconstruct later: which of 8.2.3's checks stopped running,
+and under what name they run now. `engine/tests/carry_ledger.py` reads
+8.2.3's test names straight out of the tag and refuses any retirement this
+list does not name.
+
+### retired tests
+
+- `test_open_build_close_computes_the_diff` — reads as
+  `test_open_edit_close_computes_the_diff`; the make session is the same.
+- `test_build_with_a_fake_builder_runs_and_closes` and
+  `test_build_without_a_builder_hands_you_the_prompt` — the verb carries no
+  builder at all now, held by `test_no_headless_builder` and
+  `test_the_verb_carries_no_builder_at_all`.
+- `test_approve_headless_lands_nothing` — reads as
+  `test_approve_headless_refuses_with_the_verb_in_it`, which also pins the
+  exit code the old one left loose.
+- `test_resume_headless_shows_but_touches_nothing` and
+  `test_resume_with_key_lands_and_confirms` — read as
+  `test_resume_headless_refuses_with_its_own_name_and_exits_one` and
+  `test_resume_with_key_lands_and_confirms_under_one_hash`.
+- `test_human_at_tty_lands_with_computed_ink` — reads as
+  `test_human_origin_stages_too`; the rung is computed at the landing.
+- `test_synthetic_hand_says_its_name` — reads as
+  `test_the_synthetic_terminal_still_says_its_name`, beside
+  `test_the_rig_key_is_always_stamped_synthetic`.
+- `test_record_write_denied`, `test_bash_naming_the_record_denied`,
+  `test_core_tree_fenced_from_workshop_sessions`,
+  `test_cross_project_write_denied_same_project_passes`,
+  `test_auto_memory_write_routed_to_the_gate` and
+  `test_malformed_input_fails_open` — the guard moved into the plugin and its
+  refusals were rewritten in the first person; the same six fences are held
+  by `test_a_write_into_the_record_is_turned_back`,
+  `test_writing_the_record_is_turned_back`,
+  `test_a_write_into_the_system_tree_is_turned_back`,
+  `test_a_write_into_another_project_names_both`,
+  `test_a_write_into_the_hosts_memory_is_routed_to_the_key` and
+  `test_malformed_events_decide_nothing`.
+- `test_dead_hooks_pruned_live_ones_kept` — reads as
+  `test_the_8x_guard_wiring_is_pruned_and_foreign_hooks_stand`.
+- `test_agent_count_is_whatever_vessel_ships` — the crew ships in the plugin
+  and is placed nowhere, held by
+  `test_the_crew_ships_in_the_plugin_and_init_places_none_of_it`.
+- `test_no_cut_word_in_any_engine_or_vessel_file` — the cut-list is read from
+  `soul/voice.md` now, held by `test_no_forbidden_phrase_in_any_text`.
+- `test_catalog_pin_upgrades_trust_and_tamper_is_named` — reads as
+  `test_a_pin_upgrades_trust_and_tamper_is_named`.
+- `test_person_data_refuses_the_share` — split in two:
+  `test_a_private_term_still_refuses` and
+  `test_a_deny_listed_file_still_refuses`.
+- `test_page_renders_self_contained_with_asof` — the page stopped wearing an
+  "as of" when it stopped being a mirror of workshop state (R8); the file's
+  own claims are held by `test_the_page_asks_the_network_for_nothing` and
+  `test_the_page_carries_the_footer_and_no_live_claim`.
+- `test_page_escapes_what_it_renders` — reads as
+  `test_the_page_escapes_every_field_it_renders`.
+- `test_clean_build_stages_with_honest_notes` — reads as
+  `test_a_card_from_a_stock_home_shares_and_exits_zero`, beside
+  `test_the_staged_card_says_which_workshop_not_whose`.
+
+### the stranger's four pages, re-derived (X4, X5, X6)
+
+no 8.2.3 test name was retired or renamed here — the doc pins kept their
+names and changed what they hold, which the carry ledger cannot see, so it is
+written down:
+
+- `test_readme_loud_line_is_true` held the exact words
+  `A PIPE CANNOT APPROVE ANYTHING`. under R12 it holds
+  `NOTHING LANDS THAT YOU WERE NOT SHOWN.` and one more behaviour: a key
+  minted over one pile lands nothing when the pile moved under it. the pipe
+  refusal keeps its paragraph and its line citation beneath the shout, so
+  what it always proved is still proved.
+- `test_readme_install_block_obeys_its_three_laws` required the block to end
+  in `./sandbox doctor` after a bare `git clone`. it now requires exactly one
+  clone, into `~/Sandbox/system`, still with the bill named above it and the
+  health check at the end.
+- `test_version_is_read_not_written` reads the README with its `sitting`
+  block cut out: the version inside a transcript was printed rather than
+  typed, and `test_readme_sitting` re-runs it against this build.
+- `test_voice.TestNegation`'s `STACKED_DEBT` and `NAKED_DEBT` are empty. they
+  carried `README.md: 1` and `docs/OPEN.md: 2` stacked, `docs/OPEN.md: 2`
+  naked; the four pages were rewritten and the sentences are gone, so a new
+  entry in either table is a regression rather than a debt.
+
+new in the same pass: `engine/tests/test_readme_sitting.py` (the first
+screen's transcript is re-run in a throwaway workshop) and
+`engine/tests/test_start_here.py` (all nine steps walked at a pty and down a
+pipe, step 5's Claude Code session skipped by name and its documented
+terminal fallback run in its place), plus twelve pins in `test_doc_claims.py`
+for the first-screen order, the cost line, the seven claim rows, the `law/`
+and `soul/` counts, the *amana* gloss, and OPEN.md's `closes:` per debt.
+
+### for scripts (X9)
+
+the final voice sweep moved no token's case: `FAIL`, `LOOK` and `DRAFTS`
+stand where the ruling put them, `UNVERIFIED` stands as drafted while the
+owner rules on it (`soul/surfaces.md`, open 1), and the usage placeholders
+(`NAME`, `PATH`, `DIR`, `ID`) keep their caps — the manual and the README
+spell them the same way, so the lint exempts them by name instead.
+
+what did move is the wording of fifteen printed lines. old → new, exact:
+
+- `engine/desk.py` — `an assertion needs a body` → `a note needs words of
+  its own`
+- `engine/desk.py` — `a claim never marks its own ink — computed at landing`
+  → `a claim never marks itself — the mark is computed at landing`
+- `engine/registry.py` — `fact: ink must be one of %s` → `fact: the mark
+  must be one of %s`
+- `engine/export.py` — `a redacted export is a reading copy, and import
+  would land a self with holes in it. run export --portable on its own, or
+  hand the .md file over by itself.` → `a redacted export is a reading copy;
+  import needs every line. run export --portable by itself.`
+- `engine/integrity.py` — `i placed the pre-commit hook at %s — it asks this
+  verb whether a commit on main is a release commit` → `i placed the
+  pre-commit hook at %s — it asks this verb before any commit on main`
+- `engine/make.py` — `%d red — no close: FAIL %s. fix them, then: sandbox
+  make --close %s — or change the line under '## checks' in PROJECT.md; your
+  next ship re-reads your k on it` → `%d red — no close: FAIL %s. fix them,
+  then: sandbox make --close %s` (R11: one door, and it is the check)
+- `engine/make.py` — `no checks under ## checks — …` → `nothing under ##
+  checks — a ship with nothing under it is a costume; add one line there`
+- `engine/share.py` — `no shelf key is set — set %s to a key of its own, or
+  share it unsigned` → `no shelf key is set — point %s at its own key, or
+  share unsigned`
+- `engine/share.py` — `%s names the key this core signs itself with — the
+  shelf takes a second key, so a leaked one never speaks for the core` →
+  `%s signs this core — the shelf takes a second key, so a leak stops there`
+- `engine/share.py` — `i could not read the public half of that key — set %s
+  to its .pub file` → `i could not read that key's public half — set %s to
+  its .pub file`
+- `engine/shelf.py` — `the card at the source is torn — a build is one card
+  and exactly one payload` → the same line with `exactly` dropped
+- `engine/shelf.py` — `the payload for %s no longer matches its card —
+  refusing to spread a build that drifted` → `%s no longer matches its card
+  — i refuse to spread a build that drifted`
+- `engine/ship.py` — `a ship with nothing under it is a costume — put one
+  command per line under ## checks in PROJECT.md` → `a ship with no checks
+  is a costume — add a line under PROJECT.md's ## checks`
+- `engine/succession.py` — `this workshop already has a landed record of its
+  own — import only fills an empty one, and never merges selves` → `this
+  workshop already has a record — import fills an empty one and never merges
+  selves`
+- `engine/verbs.py` — `shared %d, no pull witnessed yet — when a friend
+  tells you, stage it: sandbox note "pull-witnessed: <who> <build>"` →
+  `shared %d, no pull witnessed yet — stage one: sandbox note
+  "pull-witnessed: <who> <build>"`
+
+`README.md` and `docs/START-HERE.md` carry the ship and make lines verbatim;
+both pages moved in the same change, so what the page shows is what the tool
+says.
+
 ## 8.2.3 — the class closed, the ceremony finished (2026-08-09)
 
 three findings landed the same morning on 8.2.2, and every one traced to a

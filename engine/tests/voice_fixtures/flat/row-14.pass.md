@@ -1,0 +1,1 @@
+- sandbox help reads as sentences: each verb says what it does before what it needs.

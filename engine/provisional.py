@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: FSL-1.1-Apache-2.0
-"""The provisional lane (amana's second speed): correct now, confirm later.
+"""the provisional lane (amana's second speed): correct now, confirm later.
 
 A reversible act inside ruled boundaries executes at once — but before it
 touches anything, the pre-act content is snapshotted and hashed. At the next
@@ -13,7 +13,7 @@ import json
 import os
 import time
 
-from . import gate, journal
+from . import desk, gate, journal
 
 LANE = "provisional.jsonl"
 SNAPS = "snapshots"
@@ -51,7 +51,7 @@ def _write_lane(ws, entries):
 
 
 def act(ws, path, new_content, why, project=None):
-    """Execute a reversible act now. Snapshot first, write second.
+    """execute a reversible act now. Snapshot first, write second.
 
     Returns the lane entry. The act is marked provisional until the owner's
     keystroke at resume; its revert path is the snapshot, and its honesty is
@@ -59,7 +59,10 @@ def act(ws, path, new_content, why, project=None):
     """
     os.makedirs(_snapdir(ws), exist_ok=True)
     existed = os.path.exists(path)
-    before = open(path, "rb").read() if existed else b""
+    before = b""
+    if existed:
+        with open(path, "rb") as f:
+            before = f.read()
     aid = "prv-" + _sha(("%s|%s|%s" % (path, why, time.time())).encode())[:10]
     snap = os.path.join(_snapdir(ws), aid)
     with open(snap, "wb") as f:
@@ -82,7 +85,7 @@ def act(ws, path, new_content, why, project=None):
 
 
 def pending(ws, project=None):
-    """Unconfirmed acts — the count status and boot must name plainly."""
+    """unconfirmed acts — the count status and boot must name plainly."""
     acts = _read_lane(ws)
     if project is not None:
         acts = [a for a in acts if a.get("project") == project]
@@ -101,12 +104,21 @@ def oldest_age_days(ws):
 def status_of(ws, entry):
     """clean (revertible or confirmable as-taken) | moved-on (needs your hand)."""
     path = entry["path"]
-    current = open(path, "rb").read() if os.path.exists(path) else b""
+    current = b""
+    if os.path.exists(path):
+        with open(path, "rb") as f:
+            current = f.read()
     return "clean" if _sha(current) == entry["after_sha"] else "moved-on"
 
 
-def confirm(ws, aid, consent):
-    """The keystroke lands the act as a journal event. Headless lands nothing."""
+def confirm(ws, aid, consent=None):
+    """the keystroke lands the act as a journal event. Headless lands nothing.
+
+    With no consent handed in, the key is read here through the one gate —
+    a caller with a screen mints once and covers the batch.
+    """
+    if consent is None:
+        consent = gate.mint_consent()
     if not consent or consent.get("source") != "tty" or consent.get("key") != gate.COMMIT_KEY:
         return False, "confirming needs your %r at a real terminal" % gate.COMMIT_KEY
     entries = _read_lane(ws)
@@ -118,19 +130,19 @@ def confirm(ws, aid, consent):
             keep.append(e)
     if hit is None:
         return False, "no provisional act named %s" % aid
-    event = {"op": "assert", "cls": "provisional-confirmed", "body": hit["why"],
+    event = {"cls": "provisional-confirmed", "body": hit["why"],
              "project": hit.get("project"), "origin": "human",
-             "receipt": hit["snapshot"], "ink": "receipted"}
-    if consent.get("synthetic"):
-        event["hand"] = "synthetic"
-    journal.append(ws, event)
+             "receipt": hit["snapshot"]}
+    if consent.get("shown"):
+        event["shown"] = consent["shown"]
+    desk.mint(ws, event, consent)
     _write_lane(ws, keep)
     os.remove(hit["snapshot"])
     return True, "confirmed — landed with your key"
 
 
 def revert(ws, aid):
-    """Restore the snapshot — but only over a file that hasn't moved on.
+    """restore the snapshot — but only over a file that hasn't moved on.
 
     A moved-on file is never auto-reverted; the answer is 'needs your hand',
     with both hashes shown so the owner can see exactly what drifted.

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: FSL-1.1-Apache-2.0
-"""Placement provenance: what the system put in the workshop, and its hash.
+"""placement provenance: what the system put in the workshop, and its hash.
 
 The Hermes pattern with its edges closed: on every sync, a placed file whose
 local hash still equals the recorded one is refreshed silently; a diverged
@@ -29,6 +29,12 @@ def _sha_file(path):
         return hashlib.sha256(f.read()).hexdigest()
 
 
+def file_sha(path):
+    """one file's sha256 — the same hash the book records, for a caller that
+    needs to ask whether a placed file is still what was placed."""
+    return _sha_file(path)
+
+
 def book(ws):
     p = _book_path(ws)
     if not os.path.exists(p):
@@ -41,6 +47,15 @@ def _write_book(ws, b):
     os.makedirs(os.path.dirname(_book_path(ws)), exist_ok=True)
     with open(_book_path(ws), "w", encoding="utf-8") as f:
         json.dump(b, f, indent=1)
+
+
+def write_book(ws, b):
+    """the book, rewritten whole — the one door a rebuild comes in through.
+
+    place.json is a projection and this module has always said so; this is
+    where the record hands it back after folding the `place` events itself.
+    """
+    _write_book(ws, b)
 
 
 def _event(ws, action, dest, sha=None):
@@ -112,12 +127,12 @@ def sync(ws, payload):
 
 
 def diverged(ws):
-    """The files updates are skipping — doctor names these at every run."""
+    """the files updates are skipping — doctor names these at every run."""
     return [d for d, rec in book(ws).items() if rec.get("diverged")]
 
 
 def unrecorded_drift(ws, payload):
-    """Placement destinations the book never recorded whose content differs
+    """placement destinations the book never recorded whose content differs
     from what ships. This is the hole two honest surfaces left between them:
     update said "kept (yours)", doctor said "placed files current", and the
     live guard held at a version three releases old."""
@@ -131,8 +146,30 @@ def unrecorded_drift(ws, payload):
     return sorted(out)
 
 
+def resolve_placed(payload, given):
+    """which placed destination `given` names: (dest, matches).
+
+    An exact path wins. A short name resolves against the payload's own
+    destinations — the book is not required: a destination the payload knows
+    is placeable even when an older core placed it without recording (the
+    guard's three-release drift hid exactly there). `dest` is None when more
+    than one answers, and `matches` is what the caller names back.
+    """
+    dest = os.path.abspath(os.path.expanduser(given))
+    if dest in payload:
+        return dest, [dest]
+    matches = sorted(d for d in payload
+                     if os.path.basename(d) == given
+                     or d.endswith(os.sep + given))
+    if len(matches) == 1:
+        return matches[0], matches
+    if len(matches) > 1:
+        return None, matches
+    return dest, []
+
+
 def reset(ws, dest, src):
-    """Back to pristine, on the owner's word: re-copy and re-baseline."""
+    """back to pristine, on the owner's word: re-copy and re-baseline."""
     shutil.copy2(src, dest)
     b = book(ws)
     b[dest] = {"sha": _sha_file(dest)}

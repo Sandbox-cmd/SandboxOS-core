@@ -1,14 +1,12 @@
 # SPDX-License-Identifier: FSL-1.1-Apache-2.0
-"""The provisional lane: correct now, confirm later — with real teeth."""
+"""the provisional lane: correct now, confirm later — with real teeth."""
 import os
 import tempfile
 import unittest
 
-from engine import gate, journal, provisional
+from engine import journal, provisional
 
-
-def key():
-    return gate.mint_consent(is_real_tty=True, keychar="k")
+from . import key, no_terminal, pressing
 
 
 class TestProvisional(unittest.TestCase):
@@ -46,14 +44,33 @@ class TestProvisional(unittest.TestCase):
 
     def test_confirm_needs_key_then_lands_with_receipt(self):
         e = provisional.act(self.ws, self.f, "corrected\n", "his correction", None)
-        ok, _ = provisional.confirm(self.ws, e["id"], None)
+        with no_terminal():
+            ok, why = provisional.confirm(self.ws, e["id"], None)
         self.assertFalse(ok)
+        self.assertIn("real terminal", why)
         ok, _ = provisional.confirm(self.ws, e["id"], key())
         self.assertTrue(ok)
         events, _ = journal.read(self.ws)
         hit = [ev for ev in events if ev.get("cls") == "provisional-confirmed"]
         self.assertEqual(len(hit), 1)
         self.assertEqual(provisional.pending(self.ws), [])
+
+    def test_confirm_reads_the_key_itself_when_it_is_handed_none(self):
+        """the K8 case: the same gate, the same one keypress — no caller mints for it."""
+        e = provisional.act(self.ws, self.f, "corrected\n", "read it yourself", None)
+        with pressing("k"):
+            ok, msg = provisional.confirm(self.ws, e["id"])
+        self.assertTrue(ok, msg)
+        self.assertEqual(provisional.pending(self.ws), [])
+
+    def test_a_confirmed_act_carries_what_was_shown(self):
+        e = provisional.act(self.ws, self.f, "corrected\n", "rode a hash", None)
+        ok, _ = provisional.confirm(self.ws, e["id"], key(shown="deadbeef" * 8))
+        self.assertTrue(ok)
+        events, _ = journal.read(self.ws)
+        hit = [ev for ev in events if ev.get("body") == "rode a hash"][0]
+        self.assertEqual(hit["shown"], "deadbeef" * 8)
+        self.assertEqual(hit["hand"], "synthetic")
 
     def test_act_on_new_file_reverts_to_absence(self):
         g = os.path.join(self.work, "new.md")

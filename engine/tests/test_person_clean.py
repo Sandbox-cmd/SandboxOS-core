@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: FSL-1.1-Apache-2.0
-"""Person-clean: the scrub bites, the export never carries history."""
+"""person-clean: the scrub bites, the export never carries history."""
 import os
 import subprocess
 import tempfile

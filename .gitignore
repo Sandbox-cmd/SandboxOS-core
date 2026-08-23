@@ -1,3 +1,7 @@
 __pycache__/
 *.pyc
 .DS_Store
+.nodeterm/
+record-*.md
+record-*.html
+record-*-portable/

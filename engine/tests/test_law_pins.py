@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: FSL-1.1-Apache-2.0
-"""The law pins: clause text is bedrock. Changing a law means editing its
+"""the law pins: clause text is bedrock. Changing a law means editing its
 pin in the same commit — a speed bump with a receipt, never a wall. The
 texts are the constitution ratified in sitting on 2026-07-30; only the
 owner's pen amends them."""

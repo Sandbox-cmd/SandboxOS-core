@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: FSL-1.1-Apache-2.0
-"""The face's first tokens — restrained on purpose. (taste stratum, dated
+"""the face's first tokens — restrained on purpose. (taste stratum, dated
 2026-07-30: the full design pass happens with the owner's taste rulings in
 the room; until then the CLI wears work clothes with one earned accent.)
 
@@ -19,10 +19,25 @@ def _on():
 
 
 def accent(text):
-    """The one emphasis: what needs the owner. Plain when piped."""
+    """the one emphasis: what needs the owner. Plain when piped."""
     return ACCENT + text + RESET if _on() else text
 
 
-def mark(ok):
-    """The two-state mark doctor and checks speak."""
-    return " ok " if ok else accent("LOOK")
+# the three verdicts doctor speaks. a proved fence is `ok`, a fence that
+# needs the owner is the one accented word, and a fence nobody could read is
+# a gap in what doctor can see rather than a fault in the workshop.
+OK, LOOK, GAP = "ok", "look", "?"
+
+
+def mark(verdict):
+    """the mark doctor and checks speak: three verdicts, booleans still read.
+
+    True and False are the two states every older caller hands in; the three
+    words are what the report itself carries, so a receipt nobody could read
+    stops being printed as a failure.
+    """
+    if verdict is True or verdict == OK:
+        return " ok "
+    if verdict is False or verdict == LOOK:
+        return accent("LOOK")
+    return " ?  "

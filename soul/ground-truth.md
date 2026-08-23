@@ -7,8 +7,8 @@ against the eighth body's engine: every path the seventh's column cited is
 gone from this body (eleven dead paths, counted), so each row below names the
 living organ that carries the weight now.
 
-the ten axioms sandbox os stands on. not theology — operational, load-bearing
-assumptions, each wired to a mechanism that embodies it. an axiom earns its
+the ten axioms sandbox os stands on: operational, load-bearing assumptions
+rather than theology, each wired to a mechanism that embodies it. an axiom earns its
 place by being structurally enforced, not merely stated — which is axiom 7
 applied to the axioms themselves. each anchor carries one line of the
 builder's own sense of it, a gloss and not a translation.
@@ -24,7 +24,7 @@ builder's own sense of it, a gloss and not a translation.
 | 7 | **surface engagement is condemned** (47:24 · do they not reflect — or are there locks on the hearts?) | `engine/tests/test_voice.py` — the cut-list bites every string the engine speaks · `engine/face.py` — one earned accent, the rest stays work clothes · `law/15-plain-first.md` |
 | 8 | **saying without doing is the deepest failure** (61:2-3 · why say what you do not do?) | `engine/notes.py` — a finding is remembered by a durable event, not by intent · `engine/make.py` — the close diff is computed, never claimed · `engine/shelf.py` — a saved build is real files with real provenance |
 | 9 | **justice, even against yourself** (4:135 · stand firm in justice, though it be against yourselves) | `engine/desk.py` — a claim never marks its own ink · `engine/gate.py` — self-granted consent is refused · `engine/integrity.py` — verify says what changed and never who; strictness refuses rather than accuses · `engine/clean.py` — nothing of the owner ships by accident |
-| 10 | **everything matters at smallest scale** (21:47 · the scales are set, and a mustard seed's weight is not lost) | `engine/shelf.py` — a saved build mints a receipted event carrying its card, and a payload that drifts from its card refuses to spread · `engine/page.py` — the living page wears its "as of" · `engine/placement.py` — a diverged file is named, never silently passed |
+| 10 | **everything matters at smallest scale** (21:47 · the scales are set, and a mustard seed's weight is not lost) | `engine/shelf.py` — a saved build mints a receipted event carrying its card, and a payload that drifts from its card refuses to spread · `engine/export.py` — one file carries every landed line in time order, and says at the foot that it is a file · `engine/placement.py` — a diverged file is named, never silently passed |
 
 ## why this page renders nowhere a stranger's session reads
 

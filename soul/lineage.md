@@ -30,4 +30,9 @@ the owner trust what the machine remembers?
   record continuous since the seventh's genesis: the seam between the
   species and the individual finally ratified, the constitution hash-pinned,
   and the instruction layer rebuilt as projections of one soul, so what the
-  machine is told and what it believes can no longer drift apart unseen.
+  machine is told and what it believes can no longer drift apart unseen. on
+  2026-08-22 it began the ninth: one home at `~/Sandbox/system` in place of
+  three trees, a gate that reads the key from the terminal itself and writes
+  the hash of what was shown on the line it lands, and the soul's words
+  reaching every output the workshop prints rather than only the pages the
+  model reads.

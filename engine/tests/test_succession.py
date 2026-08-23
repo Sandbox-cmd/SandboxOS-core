@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: FSL-1.1-Apache-2.0
-"""Succession: the record comes whole, the past opens at new addresses."""
+"""succession: the record comes whole, the past opens at new addresses."""
 import json
 import os
 import tempfile
@@ -7,9 +7,11 @@ import unittest
 
 from engine import journal, notes, onboard, project, succession, update
 
+from . import no_terminal, pressing, quiet
+
 
 def make_seventh_body():
-    """A little old workshop in the seventh body's shapes."""
+    """a little old workshop in the seventh body's shapes."""
     old = tempfile.mkdtemp(prefix="sbx7-")
     state = os.path.join(old, ".sandbox")
     os.makedirs(state)
@@ -65,9 +67,10 @@ class TestImport(unittest.TestCase):
         self.assertEqual(c["goal"], "the store's data")
         self.assertEqual(c["checks"], ["true"])
         from engine import ship
-        ok, msg = ship.ship(self.ws, "geardoor")  # headless — must re-ask
+        with no_terminal():                       # headless — must re-ask
+            ok, msg = ship.ship(self.ws, "geardoor", quiet)
         self.assertFalse(ok)
-        self.assertIn("new or changed", msg)
+        self.assertIn("ratifying checks needs your 'k' at a real terminal", msg)
 
     def test_old_receipts_open_through_the_path_map(self):
         succession.run(self.ws, self.old, ["geardoor"])
@@ -82,7 +85,7 @@ class TestImport(unittest.TestCase):
         self.assertTrue(os.path.exists(os.path.join(self.ws, ".claude", "agents", "keeper.md")))
 
     def test_moved_roots_relocate_by_suffix(self):
-        """A root recorded before the workshop moved still comes in."""
+        """a root recorded before the workshop moved still comes in."""
         cart = os.path.join(self.old, "cartridges", "shop")
         os.makedirs(cart)
         open(os.path.join(cart, "data.json"), "w").write("{}")
@@ -100,7 +103,8 @@ class TestImport(unittest.TestCase):
     def test_import_refuses_a_lived_in_workshop(self):
         onboard.run(self.ws)
         notes.note(self.ws, "already mine", target_project=None)
-        notes.approve(self.ws, is_real_tty=True, keychar="k")
+        with pressing("k"):
+            notes.approve(self.ws, out=lambda _line: None)
         ok, text = succession.run(self.ws, self.old, [])
         self.assertFalse(ok)
         self.assertIn("never merges selves", text)
@@ -139,3 +143,71 @@ class TestExternalRoots(unittest.TestCase):
             os.path.join(project.dirpath(ws, "toolwork"), "NOTES.md")))  # docs came
         self.assertFalse(os.path.exists(
             os.path.join(project.dirpath(ws, "toolwork"), "engine.py")))  # tree did not
+
+
+class TestPortableRoundTrip(unittest.TestCase):
+    """the outward half of law 2: what `export --portable` writes, `import`
+    reads, and what stays behind is said in the file it wrote."""
+
+    def setUp(self):
+        from engine import export, project as prj
+        self.old = tempfile.mkdtemp(prefix="sbx9-leaving-")
+        journal.ensure_genesis(self.old)
+        prj.new(self.old, "geardoor", "the store")
+        with pressing("k"):
+            notes.note(self.old, "the tax rule is 5 percent", target_project="geardoor")
+            notes.approve(self.old, out=quiet)
+        self.leaving, _ = export.write(self.old, form="portable")
+        self.ws = tempfile.mkdtemp(prefix="sbx9-arriving-")
+
+    def _sha(self, path):
+        import hashlib
+        with open(path, "rb") as f:
+            return hashlib.sha256(f.read()).hexdigest()
+
+    def test_the_record_comes_back_verbatim(self):
+        ok, text = succession.run(self.ws, self.leaving, [])
+        self.assertTrue(ok, text)
+        self.assertEqual(self._sha(os.path.join(self.leaving, "journal.jsonl")),
+                         self._sha(journal.path(self.ws)))
+        with open(os.path.join(self.leaving, "journal.jsonl"), encoding="utf-8") as f:
+            left = [json.loads(l) for l in f if l.strip()]
+        after, _ = journal.read(self.ws)
+        self.assertEqual([e.get("id") for e in left],
+                         [e.get("id") for e in after])
+        self.assertEqual(len(notes.recall(self.ws, "tax rule")), 1)
+        # the line the export itself minted lands after the copy is taken, so
+        # it stays with the workshop that wrote it rather than riding along.
+        self.assertEqual([e for e in after if e.get("op") == "export"], [])
+
+    def test_an_old_receipt_opens_at_its_new_address(self):
+        succession.run(self.ws, self.leaving, [])
+        from engine import project as prj
+        old_receipt = prj.contract_path(self.old, "geardoor")
+        self.assertTrue(update.resolve(self.ws, old_receipt).startswith(self.ws))
+
+    def test_what_stays_behind_is_named_on_the_file_itself(self):
+        name = [n for n in os.listdir(self.leaving) if n.endswith(".md")][0]
+        with open(os.path.join(self.leaving, name), encoding="utf-8") as f:
+            text = f.read()
+        self.assertIn("what comes back through import", text)
+        self.assertIn("what stays behind", text)
+        self.assertIn("the shelf's cards", text)
+        self.assertIn("the project trees", text)
+
+    def test_the_projects_and_the_cards_stay_where_they_were(self):
+        """the leaving directory is the record, and it says so rather than
+        arriving with a project tree that never travelled."""
+        succession.run(self.ws, self.leaving, [])
+        from engine import project as prj
+        self.assertFalse(os.path.isdir(prj.dirpath(self.ws, "geardoor")))
+        self.assertFalse(os.path.isdir(os.path.join(self.ws, "shelf")))
+
+    def test_a_leaving_directory_is_refused_by_a_workshop_that_lived(self):
+        onboard.run(self.ws)
+        with pressing("k"):
+            notes.note(self.ws, "already mine", target_project=None)
+            notes.approve(self.ws, out=quiet)
+        ok, text = succession.run(self.ws, self.leaving, [])
+        self.assertFalse(ok)
+        self.assertIn("never merges selves", text)

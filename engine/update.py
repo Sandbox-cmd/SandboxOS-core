@@ -14,11 +14,37 @@ import json
 import os
 import subprocess
 
-from . import journal, placement
+from . import desk, journal, placement
+
+
+SHIM_DIR_ENV = "SANDBOX_SHIM_DIR"
 
 
 def _version_path(ws):
     return os.path.join(ws, journal.STATE_DIR, "core-version.json")
+
+
+def shim_dir():
+    """where the `sandbox` shim goes. The env var is for tests and probe
+    workshops; every other machine gets ~/.local/bin."""
+    return os.path.expanduser(os.environ.get(SHIM_DIR_ENV) or "~/.local/bin")
+
+
+def write_shim():
+    """the one shim, pointed at this copy. Returns (path, dir, on the PATH?).
+
+    `setup`'s whole body — the file, its mode, and whether the shell would
+    find it. It lives here, beside the migration that rewrites the same file,
+    and the verb does the printing.
+    """
+    from .cli import ROOT
+    d = shim_dir()
+    os.makedirs(d, exist_ok=True)
+    shim = os.path.join(d, "sandbox")
+    with open(shim, "w", encoding="utf-8") as f:
+        f.write('#!/bin/sh\nexec "%s" "$@"\n' % os.path.join(ROOT, "sandbox"))
+    os.chmod(shim, 0o755)
+    return shim, d, d in os.environ.get("PATH", "")
 
 
 def core_version():
@@ -47,7 +73,7 @@ def record_version(ws, migration=None):
 
 
 def skew(ws):
-    """None when current; otherwise one plain sentence."""
+    """none when current; otherwise one plain sentence."""
     r = recorded(ws)
     cur = core_version()
     if r["version"] is None:
@@ -63,12 +89,107 @@ def skew(ws):
 
 # --- migrations ---------------------------------------------------------
 # (number, description, fn(ws) -> str). Numbered, idempotent, appended only.
-MIGRATIONS = []
+def _migration_one_home(ws):
+    """9.0: the tool lives in one home. The shim follows this copy; the
+    placed files re-baseline against what ships here. The old trees are
+    left where they are — deleting them is the owner's hand."""
+    from .cli import ROOT
+    shim = os.path.join(shim_dir(), "sandbox")
+    moved = "shim untouched (none found)"
+    if os.path.exists(shim):
+        try:
+            with open(shim, encoding="utf-8") as f:
+                body = f.read()
+            if os.path.join(ROOT, "sandbox") not in body:
+                with open(shim, "w", encoding="utf-8") as f:
+                    f.write('#!/bin/sh\nexec "%s" "$@"\n' % os.path.join(ROOT, "sandbox"))
+                os.chmod(shim, 0o755)
+                moved = "shim now runs this copy"
+            else:
+                moved = "shim already runs this copy"
+        except OSError as e:
+            moved = "shim left alone (%s)" % e
+    return moved
+
+
+def _retired_placements(ws):
+    """what 8.x placed into the workshop and 9.0 loads from the plugin.
+
+    The guard beside the record, the six briefs, and the style: every one of
+    them now ships inside `vessel/plugin/` and is read from there, so the copy
+    in the workshop is a second version of a file with one home.
+    """
+    from . import journal as j
+    out = [os.path.join(ws, j.STATE_DIR, "vessel", "guard.py"),
+           os.path.join(ws, ".claude", "output-styles", "across-the-desk.md")]
+    adir = os.path.join(ws, ".claude", "agents")
+    if os.path.isdir(adir):
+        out += [os.path.join(adir, n) for n in sorted(os.listdir(adir))
+                if n.endswith(".md")]
+    return out
+
+
+def _migration_two_plugin(ws):
+    """9.0: the vessel is one plugin. Everything the workshop was given a copy
+    of is loaded from the plugin now, so the copies go — the pristine ones.
+
+    An edited copy stays where it is and is named: a file the owner changed is
+    the owner's, and this migration removes nothing it did not place. Nothing
+    under `~/.claude` is touched at all — that directory is his.
+    """
+    from . import onboard, placement
+    lines = []
+    b = placement.book(ws)
+    for dest in _retired_placements(ws):
+        if not os.path.exists(dest):
+            continue
+        rec = b.get(dest)
+        name = os.path.basename(dest)
+        if rec and placement.file_sha(dest) == rec.get("sha"):
+            os.remove(dest)
+            del b[dest]
+            lines.append("removed %s — the plugin serves it now" % name)
+        else:
+            lines.append("kept %s — you changed it, so it stays" % name)
+    placement.write_book(ws, b)
+
+    pointer = os.path.join(ws, journal.STATE_DIR, "vessel", "engine-root")
+    if os.path.exists(pointer):
+        os.remove(pointer)
+        lines.append("removed engine-root — the plugin says where the tree is")
+    vdir = os.path.dirname(pointer)
+    if os.path.isdir(vdir) and not os.listdir(vdir):
+        os.rmdir(vdir)
+
+    if not lines:
+        lines.append("nothing 8.x placed is left in this workshop")
+
+    if onboard.wired(ws):
+        lines.append("settings already carry the plugin's entry")
+    else:
+        _ok, wiring = onboard.emit_settings(ws)
+        lines.extend(wiring)
+    for name in onboard.shadowed_skills():
+        lines.append("%s under ~/.claude/skills shadows the plugin's — "
+                     "retire it when you like: rm -r ~/.claude/skills/%s"
+                     % (name, name))
+    return lines
+
+
+# surface: 7
+MIGRATIONS = [
+    (1, "one home — the shim follows this copy", _migration_one_home),
+    (2, "one plugin — the placed copies retire", _migration_two_plugin),
+]
 
 
 def migrate(ws):
-    """Apply every pending migration, recording the high-water after each —
-    a failure mid-list leaves an honest 'half-migrated' doctor can name."""
+    """apply every pending migration, recording the high-water after each —
+    a failure mid-list leaves an honest 'half-migrated' doctor can name.
+
+    A migration that did several things hands back a line per thing; one that
+    did a single thing hands back a sentence and reads on one row.
+    """
     r = recorded(ws)
     lines = []
     for number, description, fn in MIGRATIONS:
@@ -76,7 +197,11 @@ def migrate(ws):
             continue
         msg = fn(ws)
         record_version(ws, migration=number)
-        lines.append("migration %d: %s — %s" % (number, description, msg))
+        if isinstance(msg, (list, tuple)):
+            lines.append("migration %d: %s" % (number, description))
+            lines.extend("  " + str(m) for m in msg)
+        else:
+            lines.append("migration %d: %s — %s" % (number, description, msg))
     if not lines:
         lines.append("no migrations pending")
     return lines
@@ -93,7 +218,7 @@ def set_path_map(ws, pairs):
 
 
 def resolve(ws, path):
-    """A receipt path, through the map. Unmapped paths pass unchanged."""
+    """a receipt path, through the map. Unmapped paths pass unchanged."""
     p = os.path.join(ws, journal.STATE_DIR, "path-map.json")
     if not path or not os.path.exists(p):
         return path
@@ -105,7 +230,7 @@ def resolve(ws, path):
 
 
 def void_ratifications(ws, why="paths changed"):
-    """Out loud, in one place — never a wall of surprise ship refusals."""
+    """out loud, in one place — never a wall of surprise ship refusals."""
     from . import ship
     p = os.path.join(ws, journal.STATE_DIR, "ratified.json")
     if not os.path.exists(p):
@@ -113,10 +238,9 @@ def void_ratifications(ws, why="paths changed"):
     with open(p, encoding="utf-8") as f:
         names = sorted(json.load(f))
     os.remove(p)
-    journal.append(ws, {"op": "assert", "cls": "note", "origin": "machine",
-                        "triggered": "session",
-                        "body": "ratifications voided (%s): %s" % (why, ", ".join(names)),
-                        "ink": "receipted", "receipt": "journal:void"})
+    desk.mint(ws, {"cls": "note", "origin": "machine", "triggered": "session",
+                   "body": "ratifications voided (%s): %s" % (why, ", ".join(names)),
+                   "receipt": "journal:void"})
     return ("%d project(s)' checks await your k again — %s: %s"
             % (len(names), why, ", ".join(names)))
 
@@ -124,7 +248,7 @@ def void_ratifications(ws, why="paths changed"):
 # --- the verb -----------------------------------------------------------
 
 def run(ws):
-    """Move both surfaces: the clone (if it has a remote and the owner's
+    """move both surfaces: the clone (if it has a remote and the owner's
     pull), then the workshop (re-sync + migrations + version record)."""
     from . import onboard
     from .cli import ROOT

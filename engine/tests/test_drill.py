@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: FSL-1.1-Apache-2.0
-"""The continuous drill: one workshop lives a whole life in one test —
+"""the continuous drill: one workshop lives a whole life in one test —
 boot, build, land, ship, save, share, fetch, install, update. If the shapes
 disagree anywhere, this is where it shows."""
 import os
@@ -8,11 +8,8 @@ import unittest
 
 from engine import (apps, gate, journal, make, notes, onboard, project,
                     share, shelf, ship, status, update)
+from engine.tests import elsewhere_home, key, pressing, quiet
 from engine.tests.test_app import make_app
-
-
-def key():
-    return gate.mint_consent(is_real_tty=True, keychar="k")
 
 
 class TestTheWholeLife(unittest.TestCase):
@@ -22,8 +19,10 @@ class TestTheWholeLife(unittest.TestCase):
         # boot
         ok, text = onboard.run(ws)
         self.assertTrue(ok, text)
-        healthy, lines = status.doctor(ws)
+        with elsewhere_home():
+            healthy, lines = status.doctor(ws)
         self.assertTrue(healthy, "\n".join(lines))
+        self.assertIn("nothing needs you.", status.status(ws))
 
         # a project, a build pass, a landed note
         ok, _ = project.new(ws, "geardoor", "the store's data")
@@ -36,17 +35,22 @@ class TestTheWholeLife(unittest.TestCase):
         ok, msg = make.close_session(ws, "geardoor", "tax table added")
         self.assertTrue(ok)
         notes.note(ws, "the tax rule is 5 percent", target_project="geardoor")
-        n, _ = notes.approve(ws, is_real_tty=True, keychar="k")
-        self.assertGreaterEqual(n, 2)  # the note + the make summary
+        said = []
+        with pressing("k"):
+            rc = notes.approve(ws, out=said.append)
+        self.assertEqual(rc, 0)
+        self.assertTrue(said[-1].startswith("landed 2 (shown "),  # note + summary
+                        said[-1])
         self.assertEqual(len(notes.recall(ws, "tax rule")), 1)
 
         # checks, ratify, ship — then a headless re-ship
         cpath = project.contract_path(ws, "geardoor")
         base = open(cpath).read().split("## checks")[0]
         open(cpath, "w").write(base + "## checks\npython3 -c \"import json; json.load(open('tax.json'))\"\n")
-        ok, msg = ship.ship(ws, "geardoor", key())
+        with pressing():
+            ok, msg = ship.ship(ws, "geardoor", quiet)
         self.assertTrue(ok, msg)
-        ok, msg = ship.ship(ws, "geardoor")
+        ok, msg = ship.ship(ws, "geardoor", quiet)   # ratified — no key again
         self.assertTrue(ok, msg)
 
         # save a build, share it, and a second workshop fetches it
@@ -73,7 +77,8 @@ class TestTheWholeLife(unittest.TestCase):
             self.assertTrue(ok, text)
             events, scars = journal.read(w)
             self.assertEqual(scars, [])
-            healthy, lines = status.doctor(w)
+            with elsewhere_home():
+                healthy, lines = status.doctor(w)
             self.assertTrue(healthy, "\n".join(lines))
         self.assertEqual(len(notes.recall(ws, "tax rule")), 1)  # nothing lost
 
