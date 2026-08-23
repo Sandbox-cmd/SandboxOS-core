@@ -27,7 +27,7 @@ def run_cli(*args, **kw):
 
 
 NAG = ('shared 1, no pull witnessed yet — stage one: '
-       'sandbox note "pull-witnessed: <who> <build>"')
+       'sandbox note "pull-witnessed: WHO BUILD"')
 
 
 class TestFirstPull(unittest.TestCase):

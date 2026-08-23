@@ -33,18 +33,20 @@ REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SOUL = os.path.join(REPO, "soul")
 TABLE_HEADING = "## forbidden phrases, with reasons"
 
-# the one ruled signal word, and its two named exemptions (gate 3, 2026-08-22):
-# doctor's accent, and the statusline pill whose caps are its die-cut shape.
+# the four ruled signal words: FAIL, doctor's LOOK, the statusline pill whose
+# caps are its die-cut shape, and UNVERIFIED (gate 3, 2026-08-22; R23).
 CAPS_ALLOWED = ("FAIL", "LOOK", "DRAFTS", "UNVERIFIED")  # R23
 
-# argument placeholders in a usage line. the caps are the placeholder's shape,
-# the way `<name>` is a shape: `sandbox save PATH` says "your own path goes
-# here" rather than shouting. docs/MANUAL.md, README.md and docs/START-HERE.md
-# spell the same placeholders the same way, so lowering them in the engine
-# would make the tool and its own pages disagree about what to type. `PATH`
-# doubles as the shell variable the setup line names, and the case there is
-# the variable's.
-CAPS_PLACEHOLDERS = ("NAME", "PATH", "DIR", "ID", "K", "N", "VALUE")
+# argument placeholders in a usage line. the caps are the placeholder's shape:
+# `sandbox save PATH` says "your own path goes here" rather than shouting.
+# docs/MANUAL.md, README.md and docs/START-HERE.md spell the same placeholders
+# the same way, so lowering them in the engine would make the tool and its own
+# pages disagree about what to type. `PATH` doubles as the shell variable the
+# setup line names, and the case there is the variable's. WHO and BUILD joined
+# the list with R26's sweep: the shelf's pull-witnessed line asks for a person
+# and a build by name, and it asked in the superseded `<who>` shape.
+CAPS_PLACEHOLDERS = ("NAME", "PATH", "DIR", "ID", "K", "N", "VALUE",
+                     "WHO", "BUILD")
 
 # words the specs use for parts of the machine; a printed line uses the thing
 # instead (experience.md principle 7). soul/ and docs/ prose and law/ keep them.

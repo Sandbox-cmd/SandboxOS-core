@@ -91,8 +91,12 @@ def ratify(ws, name, consent, digest=""):
         # surface: 3a
         return False, "no project named %s" % name
     if not c["checks"]:
+        # the same sentence `ship` refuses with below, because it is the same
+        # refusal — `ship` reaches this guard only after its own, so a second
+        # wording here was a twin nobody could ever read (9.0.1).
         # surface: 3a
-        return False, "no checks to ratify — a ship with nothing under it is a costume"
+        return False, ("a ship with no checks is a costume — add a line "
+                       "under PROJECT.md's ## checks")
     r = _ratified(ws)
     r[name] = checks_hash(c["checks"])
     with open(_ratified_path(ws), "w", encoding="utf-8") as f:

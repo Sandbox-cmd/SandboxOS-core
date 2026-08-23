@@ -220,8 +220,27 @@ class TestRedaction(Workshop):
     def test_the_path_is_the_last_line_the_verb_prints(self):
         rc, out = _run(self.ws, "export", [])
         last = out.strip().splitlines()[-1]
-        self.assertTrue(os.path.exists(last), last)
+        self.assertTrue(os.path.exists(os.path.expanduser(last)), last)
         self.assertTrue(last.endswith(".md"), last)
+
+    def test_the_path_wears_a_tilde_where_the_home_was(self):
+        """an owner's name is no part of where a file is (A#11).
+
+        The verb printed the absolute path raw while every other path this
+        core prints goes through `clean.strip_home`. The scratch workshop
+        this suite runs in sits outside a home directory, so the rule is
+        held on a path taken from the floor `strip_home` reads.
+        """
+        home = clean.FLOOR[0] + "someone"
+        said, n = clean.strip_home(home + "/Sandbox/record-2026-08-23.md")
+        self.assertEqual(said, "~/Sandbox/record-2026-08-23.md")
+        self.assertEqual(n, 1)
+        out = io.StringIO()
+        verbs._export_report({"span": ("", ""), "lines": 0, "redacted": False,
+                              "would": 0, "path": home + "/Sandbox/r.md"},
+                             out=lambda *a: out.write(" ".join(a) + "\n"))
+        self.assertEqual(out.getvalue().strip().splitlines()[-1],
+                         "~/Sandbox/r.md")
 
 
 class TestTheEvent(Workshop):
@@ -280,10 +299,28 @@ class TestTheHtmlForm(Workshop):
         self.assertIn("page is export --html now — writing record-", out)
         last = out.strip().splitlines()[-1]
         self.assertTrue(last.endswith(".html"), last)
-        self.assertTrue(os.path.exists(last))
+        self.assertTrue(os.path.exists(os.path.expanduser(last)))
         events, _ = journal.read(self.ws)
         self.assertEqual([e["form"] for e in events if e.get("op") == "export"],
                          ["html"])
+
+    def test_page_takes_the_flags_it_forwards(self):
+        """the one door refused `page --redact` before `page` ran (A#1).
+
+        `page` had no row in the flag table, so `dispatch` turned back every
+        flag it was about to hand to export. It takes export's flags now,
+        minus the two that pick a form — it has already picked one.
+        """
+        self.assertEqual(set(verbs.FLAGS["page"]),
+                         set(verbs.FLAGS["export"]) - {"--html", "--portable"})
+        self.land("acme lives here", target_project="geardoor")
+        rc, out = _run(self.ws, "page", ["--redact"])
+        self.assertEqual(rc, 0, out)
+        self.assertIn("redacted ", out)
+        self.assertTrue(out.strip().splitlines()[-1].endswith(".html"))
+        rc, out = _run(self.ws, "page", ["--html"])
+        self.assertEqual(rc, 2, out)
+        self.assertIn("page doesn't know --html", out)
 
 
 class TestTheTornLineCount(Workshop):

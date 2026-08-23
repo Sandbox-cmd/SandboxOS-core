@@ -1,13 +1,129 @@
 # CHANGELOG
 
+## 9.0.1 — the audits read back (2026-08-23)
+
+the first release after the ninth body, the same day. three audits read the
+tree, the live workshop and the program's own pages against each other, and
+everything below is one of their findings closed — plus the README written
+again from the manifesto: why this exists, what it is, the principles and
+what each one refuses, then the first minute.
+
+### built
+
+- a struck `build-kept` line leaves the shelf reading: doctor's
+  journal-vs-disk reader and the registry's build fold skip a line the owner
+  struck with `invalidate`, and the line itself stays on the record. found
+  re-pressing commerceos on the shelf, after a mis-named save.
+- `status --line` counts the ship debt of the project it names. it printed a
+  workshop-wide sum beside one project's name — `37 closes since ship` while
+  doctor read 0 for the same project — and it folds the one `needs()` list
+  now, like the other two renderers.
+- doctor leaves an orphaned plugin cache out of its style copies. a cache
+  directory marked `.orphaned_at`, or one whose marketplace is off the host's
+  `known_marketplaces.json`, sits outside what `sandbox update` walks. a row
+  prescribing a verb that stops short of it is a door onto a wall.
+- two host receipts, `host: plugin marketplace` and `host: plugin on`. the
+  marketplace entry pointing at this tree and the plugin turned on under it
+  decide whether a session loads this core at all; absent, they read LOOK
+  with `sandbox init`, and unreadable they read `?`.
+- doctor's exit is the repair block's alone, all the way down: an open make
+  past a week is a LOOK and no longer red, so a three-week-old make stops
+  teaching the owner to ignore the exit code. the rows that still decide it
+  are the record and the disk disagreeing, a placed or kept file drifted,
+  and a core and a workshop on different versions.
+- `sandbox page` takes export's flags. it had no entry in the flag table, so
+  the one door refused `--redact`, `--project`, `--since` and `--to` before
+  `page` could hand them on to export.
+- `sandbox export` prints its path with `~` for the home, the way every
+  other path this core prints does.
+- `.claude-plugin/marketplace.json` is inside the seal. it names the plugin
+  source a host loads out of this tree, so a change to it changes what runs
+  on somebody else's machine.
+- the two skills that cited a `references/banned-words.txt` cite
+  `soul/voice.md`'s forbidden-phrases table and `python3 -m engine.voicelint`,
+  which reads it. the file existed nowhere, and the check that grepped it
+  could never fail.
+- the git hook is placed in this tree: `sandbox release --hook` writes
+  `.git/hooks/commit-msg`, so the wall's fast no is a file rather than a
+  claim about one.
+- one unreachable refusal in `engine/ship.py` now says what the reachable one
+  says; the ops tuple's comment counts eleven ops, `check` and `export` both
+  born with 9.0; and `update --rebuild` takes its list from
+  `registry.PROJECTIONS` instead of a second hand-typed one.
+- `soul/surfaces.md`: three ruled caps exemptions rather than two; row 21
+  says the statusline is produced outside the core by the owner's own script;
+  row 24 is marked unbuilt; row 29's budget is the fourteen words its own
+  exemplar runs to; rows 16 and 28 carry what ships. `soul/lineage.md` counts
+  nine bodies.
+- the README is re-derived from the manifesto, frame first: why this exists
+  and what it is, then the sitting, then the bill, then the claims.
+- `docs/OPEN.md` retires the doctor-exit item R24 ruled, and names five debts
+  it was carrying silently.
+
+### known, not fixed
+
+on a work branch the reseal after each commit leaves `manifest.json.minisig`
+signing 9.0.0's manifest against a manifest that has moved. plain
+`sandbox verify` reads clean; strict verify (`SANDBOX_MINISIGN_PUBKEY` set)
+refuses. the 9.0.1 release re-signs. `docs/OPEN.md` carries it as a debt.
+
+### for scripts
+
+R26's placeholder sweep: the engine printed the spec's `<name>` shape in ten
+places and now prints the ruled caps. the lint exempts `WHO` and `BUILD`
+beside `NAME`, `PATH`, `DIR`, `ID`, `K`, `N` and `VALUE`. old → new, exact:
+
+- `engine/status.py` — `sandbox reset <path> re-baselines` → `sandbox reset
+  PATH re-baselines`
+- `engine/status.py` — `restore on your word: sandbox reset <name>` →
+  `restore on your word: sandbox reset NAME`
+- `engine/status.py` — `%s says %r — sandbox reset <name>` → `%s says %r —
+  sandbox reset NAME`
+- `engine/status.py` — `sandbox share %s --to <dir>` → `sandbox share %s
+  --to DIR`
+- `engine/verbs.py` — `project new <name> [goal] [--root <dir>] · on <name> ·
+  off <name> · done <name>` → `project new NAME [goal] [--root DIR] · on NAME
+  · off NAME · done NAME`
+- `engine/verbs.py` — `sandbox note "pull-witnessed: <who> <build>"` →
+  `sandbox note "pull-witnessed: WHO BUILD"`
+- `engine/verbs.py` — `what would work: git switch -c <name> && git commit` →
+  `what would work: git switch -c NAME && git commit`
+- `engine/verbs.py` — the `fetch` flag table's `--expect-key <key>` →
+  `--expect-key K`
+- `engine/verbs.py` — the `update` flag table's `--rebuild
+  <place|shelf|canon|index>` → `--rebuild place|shelf|canon|index`
+- `engine/integrity.py` — `work belongs on a branch: git switch -c <name>,
+  then start again` → `... git switch -c NAME, then start again`
+- `engine/onboard.py` — `retire them when you like: rm -r
+  ~/.claude/skills/<name>` → `... rm -r ~/.claude/skills/NAME`
+
+four more printed lines moved with the fixes above:
+
+- `engine/status.py` — `%d closes since ship` → `%d close since ship` at one,
+  `%d closes since ship` above one
+- `engine/status.py` — the voice row's `, %d style copy(s) match` is dropped
+  when this machine holds no copy
+- `engine/ship.py` — the unreachable `ratify` refusal prints the sentence
+  `ship` already prints: `a ship with no checks is a costume — add a line
+  under PROJECT.md's ## checks`
+- `engine/apps.py` — `source: %s — UNVERIFIED (the hash proves consistency,
+  not who made it)` → `source: UNVERIFIED — %s is not the catalog. the hash
+  proves the bytes are the same bytes, not who wrote them.`
+
+### retired tests
+
+- `test_five_files_each_wearing_lineage` — reads as
+  `test_six_files_each_wearing_lineage`; `soul/` holds six pages, and
+  `surfaces.md` was read by none of test_soul's checks.
+
 ## 9.0.0 — one home, one key, one plugin (2026-08-23)
 
 the ninth body. two discovery runs closed on 8.2.3 the same day and were
 built as one release: one tree at `~/Sandbox/system` that the shim follows;
 one real key read at the terminal with the fingerprint of what was shown;
 one plugin that carries the hooks, six briefs, three skills, the voice and
-two commands; the shelf as a marketplace with its own signing key; `export`
-in place of the living page; `make` riding the session; `ship` as the
+two commands; the shelf as a marketplace with its own signing key; `export`,
+with `page` as its html alias; `make` riding the session; `ship` as the
 celebration; the soul re-derived and a lint that reaches every printed
 string. the loud line, scoped to claims: NOTHING LANDS THAT YOU WERE NOT
 SHOWN. `law/` is untouched.
@@ -114,8 +230,8 @@ and `soul/` counts, the *amana* gloss, and OPEN.md's `closes:` per debt.
 ### for scripts (X9)
 
 the final voice sweep moved no token's case: `FAIL`, `LOOK` and `DRAFTS`
-stand where the ruling put them, `UNVERIFIED` stands as drafted while the
-owner rules on it (`soul/surfaces.md`, open 1), and the usage placeholders
+stand where the ruling put them, `UNVERIFIED` is the fourth signal word
+(R23, and `soul/surfaces.md`'s open list is empty), and the usage placeholders
 (`NAME`, `PATH`, `DIR`, `ID`) keep their caps — the manual and the README
 spell them the same way, so the lint exempts them by name instead.
 
@@ -133,7 +249,8 @@ what did move is the wording of fifteen printed lines. old → new, exact:
   import needs every line. run export --portable by itself.`
 - `engine/integrity.py` — `i placed the pre-commit hook at %s — it asks this
   verb whether a commit on main is a release commit` → `i placed the
-  pre-commit hook at %s — it asks this verb before any commit on main`
+  commit-msg hook at %s — it asks this verb before any commit on main`
+  (R25 moved the hook in the same release)
 - `engine/make.py` — `%d red — no close: FAIL %s. fix them, then: sandbox
   make --close %s — or change the line under '## checks' in PROJECT.md; your
   next ship re-reads your k on it` → `%d red — no close: FAIL %s. fix them,

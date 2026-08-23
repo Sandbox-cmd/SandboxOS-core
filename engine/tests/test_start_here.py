@@ -245,7 +245,9 @@ class TestTheNineSteps(Walk):
     def test_step_8_writes_one_file_that_says_what_it_is(self):
         out = self.out_of(8)
         self.assertIn("not redacted — 0 span(s) would go under --redact", out)
-        path = out.strip().splitlines()[-1]
+        # the verb prints the path with `~` for a home (A#11); the walk runs
+        # in a scratch home, so expanduser is the one that reads either.
+        path = os.path.expanduser(out.strip().splitlines()[-1])
         self.assertTrue(os.path.exists(path), path)
         self.assertIn("this is a file — opening it leaves nothing on the record",
                       _text(path))

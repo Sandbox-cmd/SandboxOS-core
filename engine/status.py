@@ -72,13 +72,18 @@ def age_days(ts):
 
 class Need(object):
     """one waiting thing: what kind, what it is about, when it started, and
-    the verb that ends it. `text` is the rendered row every surface prints."""
+    the verb that ends it. `text` is the rendered row every surface prints.
 
-    __slots__ = ("kind", "subject", "ts", "verb", "text")
+    `count` is how many of the thing this row stands for — one make, but
+    four drafts or nine closes. The status line folds on it rather than
+    re-counting off its own second read of the same workshop.
+    """
 
-    def __init__(self, kind, subject, ts, verb, text):
+    __slots__ = ("kind", "subject", "ts", "verb", "text", "count")
+
+    def __init__(self, kind, subject, ts, verb, text, count=1):
         self.kind, self.subject, self.ts = kind, subject, ts
-        self.verb, self.text = verb, text
+        self.verb, self.text, self.count = verb, text, count
 
     @property
     def age_days(self):
@@ -174,7 +179,7 @@ def needs(ws):
                         first.get("staged_at"), "sandbox approve",
                         '%d draft(s) · "%s" %s — sandbox approve'
                         % (len(pile), (first.get("body") or "")[:52],
-                           age(first.get("staged_at")))))
+                           age(first.get("staged_at"))), count=len(pile)))
 
     for name, intent, opened in open_makes(ws):
         # surface: 1
@@ -189,7 +194,7 @@ def needs(ws):
         out.append(Need("provisional", "%d act(s)" % len(waiting), oldest,
                         "sandbox resume",
                         "%d provisional act(s) waiting %s — sandbox resume"
-                        % (len(waiting), age(oldest))))
+                        % (len(waiting), age(oldest)), count=len(waiting)))
 
     for name, when in _checks_moved(ws, events):
         # surface: 1
@@ -199,7 +204,7 @@ def needs(ws):
 
     for name, n, when in _closes(ws, events):
         out.append(Need("close", name, when, "sandbox ship %s" % name,
-                        closes_row(name, n, age(when))))
+                        closes_row(name, n, age(when)), count=n))
 
     out.sort(key=lambda n: n.ts or "")
     return out
@@ -242,21 +247,30 @@ def status(ws):
 def line(ws):
     """the host's status line, in one row: what is on, and what is owed.
 
+    It folds the one `needs()` list, like the other two renderers — it never
+    counts the workshop a second way. The ship debt is the ON project's own,
+    the project this row names: a sum over five other projects printed beside
+    one project's name is a number about somebody else, and the line was
+    saying `37 closes since ship` while doctor said 0 for the same project.
+
     Cheap on purpose and durable on purpose: it writes nothing, it mints
     nothing, and it exits 0 whatever it finds, because a status line that can
     fail a shell is a status line somebody turns off.
     """
     on = project.on_list(ws)
-    pile, _ = desk.drafts(ws)
-    makes = open_makes(ws)
-    closes = ship.closes_since_ship(ws)
-    n = sum(c for _, c in closes)
+    here = on[0] if on else None
+    items = needs(ws)
+    drafts = sum(i.count for i in items if i.kind == "draft")
+    makes = [i for i in items if i.kind == "make"]
+    closes = sum(i.count for i in items
+                 if i.kind == "close" and i.subject == here)
     return " · ".join([
-        on[0] if on else "no project",
-        ("%d draft%s" % (len(pile), "" if len(pile) == 1 else "s"))
-        if pile else "no drafts",
-        ("make %s" % age(min(o for _, _, o in makes))) if makes else "no make",
-        ("%d closes since ship" % n) if n else "shipped",
+        here or "no project",
+        ("%d draft%s" % (drafts, "" if drafts == 1 else "s"))
+        if drafts else "no drafts",
+        ("make %s" % age(min(i.ts or "" for i in makes))) if makes else "no make",
+        ("%d close%s since ship" % (closes, "" if closes == 1 else "s"))
+        if closes else "shipped",
     ])
 
 
@@ -370,9 +384,12 @@ def agreement(ws, events=None):
         events, _ = journal.read(ws)
     out = []
 
+    # a struck keep (sandbox invalidate) leaves this reading: the line stays
+    # on the record, and the shelf is read as the owner's strike left it.
+    struck = {e.get("of") for e in events if e.get("op") == "invalidate"}
     kept = {e.get("build") for e in events
             if e.get("op") == "assert" and e.get("cls") == "build-kept"
-            and e.get("build")}
+            and e.get("build") and e.get("id") not in struck}
     carded = {c["name"] for c in shelf.list_all(ws)}
     for name in sorted(carded - kept):
         out.append(("disk", "shelf", "%s is on the shelf with no build-kept event" % name))
@@ -530,6 +547,51 @@ def settings_receipts(ws, sources=None):
     else:
         out.append(("host: hooks on", face.LOOK if off[1] else face.OK,
                     "%s (%s)" % ("hooks are off" if off[1] else "hooks are on", off[0])))
+
+    # the two lines that decide whether a session loads this core at all: the
+    # marketplace entry pointing at this tree, and the plugin turned on under
+    # it. init writes both; doctor reads them back off the file, so a workshop
+    # whose plugin quietly stopped loading says so instead of looking green.
+    from . import onboard
+    want = onboard.marketplace_source()
+    entry = None
+    for name, d in readable:
+        v = _dig(d, "extraKnownMarketplaces", onboard.MARKETPLACE, "source")
+        if v is not None:
+            entry = (name, v)
+            break
+    if not readable:
+        out.append(("host: plugin marketplace", face.GAP, "no settings file reads"))
+    elif entry is None:
+        out.append(("host: plugin marketplace", face.LOOK,
+                    "no %s marketplace in the settings i can read — sandbox init"
+                    % onboard.MARKETPLACE))
+    elif entry[1] == want:
+        from . import clean
+        out.append(("host: plugin marketplace", face.OK,
+                    "%s at %s (%s)" % (want["source"],
+                                       clean.strip_home(want["path"])[0],
+                                       entry[0])))
+    else:
+        out.append(("host: plugin marketplace", face.LOOK,
+                    "%r is not this tree — sandbox init" % (entry[1],)))
+
+    on = None
+    for name, d in readable:
+        v = _dig(d, "enabledPlugins", onboard.plugin_key())
+        if v is not None:
+            on = (name, v)
+            break
+    if not readable:
+        out.append(("host: plugin on", face.GAP, "no settings file reads"))
+    elif on is None:
+        out.append(("host: plugin on", face.LOOK,
+                    "no %s line in the settings i can read — sandbox init"
+                    % onboard.plugin_key()))
+    else:
+        out.append(("host: plugin on", face.OK if on[1] is True else face.LOOK,
+                    "%s (%s)" % ("on" if on[1] is True else
+                                 "off — sandbox init", on[0])))
     return out
 
 
@@ -568,8 +630,50 @@ def style_source():
     return os.path.join(_repo_root(), "vessel", "plugin", "output-styles", STYLE_FILE)
 
 
+KNOWN_MARKETPLACES = os.path.join("~", ".claude", "plugins",
+                                  "known_marketplaces.json")
+ORPHAN_MARK = ".orphaned_at"
+
+
+def known_marketplaces():
+    """the marketplace names the host still holds, or None when unreadable.
+
+    None is not "none": a file that will not read is a gap, and a gap makes
+    every cache dir count rather than none of them.
+    """
+    try:
+        with open(os.path.expanduser(KNOWN_MARKETPLACES), encoding="utf-8") as f:
+            d = json.load(f)
+    except (OSError, ValueError):
+        return None
+    return set(d) if isinstance(d, dict) else set(d or ())
+
+
+def _live_cache(path, known):
+    """is this plugin-cache copy one `sandbox update` could still reach?
+
+    Two ways a cache dir stops being ours to update: the host marked it
+    orphaned (`.orphaned_at`, written when a marketplace is removed), or its
+    marketplace is no longer in `known_marketplaces.json`. Either way the
+    row would have prescribed `sandbox update` for a directory update never
+    walks — a door that does nothing is worse than no door.
+    """
+    # …/cache/<marketplace>/<plugin>/<version>/output-styles/<file>
+    version = os.path.dirname(os.path.dirname(path))
+    plugin = os.path.dirname(version)
+    market = os.path.dirname(plugin)
+    for d in (version, plugin, market):
+        if os.path.exists(os.path.join(d, ORPHAN_MARK)):
+            return False
+    return known is None or os.path.basename(market) in known
+
+
 def style_copies(ws):
-    """[(where, matches)] — every copy of the style this machine can see."""
+    """[(where, matches)] — every copy of the style this machine can see.
+
+    Orphaned plugin caches are left out: doctor names a stale copy with the
+    verb that fixes it, so a copy no verb here can touch is not a row.
+    """
     out = []
     src = style_source()
     if not os.path.exists(src):
@@ -578,8 +682,10 @@ def style_copies(ws):
         want = f.read()
     seen = [os.path.join(ws, ".claude", "output-styles", STYLE_FILE),
             os.path.expanduser(os.path.join("~", ".claude", "output-styles", STYLE_FILE))]
-    seen += sorted(glob.glob(os.path.expanduser(os.path.join(
-        "~", ".claude", "plugins", "cache", "*", "*", "*", "output-styles", STYLE_FILE))))
+    known = known_marketplaces()
+    seen += [c for c in sorted(glob.glob(os.path.expanduser(os.path.join(
+        "~", ".claude", "plugins", "cache", "*", "*", "*", "output-styles",
+        STYLE_FILE)))) if _live_cache(c, known)]
     for p in seen:
         if not os.path.exists(p) or os.path.abspath(p) == os.path.abspath(src):
             continue
@@ -662,8 +768,12 @@ def _checks_block(ws, events, scars, missing, unread):
     rows.append(("project contracts parse", not bad, "; ".join(bad)))
 
     for name, intent, opened in open_makes(ws):
-        old = age_days(opened) > WEEK
-        rows.append(("open makes", not old,
+        # R16 names an open make at any age and turns it LOOK past a week.
+        # LOOK rather than False on purpose (A#9): a make left open is work
+        # in progress, not a workshop out of agreement with itself, and the
+        # exit belongs to the repair rows alone.
+        stale_make = age_days(opened) > WEEK
+        rows.append(("open makes", face.LOOK if stale_make else face.OK,
                      "%s %r open %s — sandbox make %s --close"
                      % (name, (intent or "no intent")[:40], age(opened), name)))
 
@@ -683,12 +793,12 @@ def _checks_block(ws, events, scars, missing, unread):
 
     div = placement.diverged(ws)
     rows.append(("placed files current", not div,
-                 "updates are skipping your edited copies: %s — sandbox reset <path> re-baselines"
+                 "updates are skipping your edited copies: %s — sandbox reset PATH re-baselines"
                  % ", ".join(os.path.basename(d) for d in div) if div else ""))
 
     drift = placement.unrecorded_drift(ws, onboard.shipped_payload(ws))
     rows.append(("kept files match what ships", not drift,
-                 "never-recorded copies differ from this core: %s — restore on your word: sandbox reset <name>"
+                 "never-recorded copies differ from this core: %s — restore on your word: sandbox reset NAME"
                  % ", ".join(os.path.basename(d) for d in drift) if drift else ""))
 
     sources = settings_files(ws)
@@ -722,7 +832,7 @@ def _checks_block(ws, events, scars, missing, unread):
     else:
         if said:
             where, phrase = said
-            rows.append(("voice", False, "%s says %r — sandbox reset <name>"
+            rows.append(("voice", False, "%s says %r — sandbox reset NAME"
                          % (where, phrase)))
         elif stalest:
             rows.append(("voice", False, "%s is not the style this core ships "
@@ -730,9 +840,12 @@ def _checks_block(ws, events, scars, missing, unread):
         else:
             from . import vessel
             ships = vessel.payload()
+            copies = style_copies(ws)
             rows.append(("voice", True,
-                         "%d placed file(s), %d in the plugin, %d style copy(s) match"
-                         % (len(texts), len(ships["ships"]), len(style_copies(ws)))))
+                         "%d placed file(s), %d in the plugin%s"
+                         % (len(texts), len(ships["ships"]),
+                            (", %d style copy(s) match" % len(copies))
+                            if copies else "")))
     return rows
 
 
@@ -751,7 +864,7 @@ def _ready_block(ws, events):
         if c["name"] not in shared:
             # surface: 4
             out.append("%s — a build that has never left this machine — "
-                       "sandbox share %s --to <dir>" % (c["name"], c["name"]))
+                       "sandbox share %s --to DIR" % (c["name"], c["name"]))
     if not any(e.get("op") == "export" or e.get("cls") == "export" for e in events):
         # surface: 4
         out.append("export: never run")
@@ -771,6 +884,13 @@ def _ready_block(ws, events):
         out.append("crew: %d seat(s) on the record, %d used in %d days"
                    % (len(seats), len(used), MONTH))
     return out
+
+
+# the rows whose LOOK is a repair: the workshop disagreeing with its own
+# record, or with the core it was placed from. These decide the exit; every
+# other LOOK is a thing that needs the owner and says so.
+REPAIR_ROWS = ("journal and disk agree", "placed files current",
+               "kept files match what ships", "core and workshop agree")
 
 
 def doctor(ws):
@@ -818,9 +938,14 @@ def doctor(ws):
         # surface: 4
         lines.append("could not read: %s" % " · ".join(unread))
 
-    # R24: the repair block decides the exit; a host row is a reading of the
-    # host's settings, and a LOOK there is named, never a failed run.
-    ok = all(v is not False and v != face.LOOK
+    # R24 and A#9: the exit is the repair block's alone. A row counts when
+    # its verdict is False, and a LOOK counts only when it names a repair —
+    # the record and the disk disagreeing, a placed or kept file drifted, a
+    # core and a workshop on different versions. An open make (R16), a host
+    # row and every row under `ready:` are named and never the exit: a
+    # three-week-old make used to keep doctor red, which taught the owner to
+    # stop reading the exit code.
+    ok = all(v is not False and (v != face.LOOK or _l not in REPAIR_ROWS)
              for _l, v, _n in rows
              if v is not None and not (_l or "").startswith("host:"))
     return ok, lines

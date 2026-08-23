@@ -265,7 +265,7 @@ def run(ws):
     shadowed = shadowed_skills()
     if shadowed:
         lines.append("your own copies of %s shadow the plugin's — retire them "
-                     "when you like: rm -r ~/.claude/skills/<name>"
+                     "when you like: rm -r ~/.claude/skills/NAME"
                      % ", ".join(shadowed))
 
     from . import update

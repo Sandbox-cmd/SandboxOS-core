@@ -58,9 +58,48 @@ class TestTheLine(unittest.TestCase):
 
     def test_the_closes_field_counts_the_ship_debt(self):
         project.new(self.ws, "geardoor", "the store's data")
+        project.switch(self.ws, "geardoor", True)
         make.open_session(self.ws, "geardoor", "one pass")
         make.close_session(self.ws, "geardoor")
-        self.assertIn("1 closes since ship", status.line(self.ws))
+        self.assertIn("1 close since ship", status.line(self.ws))
+        make.open_session(self.ws, "geardoor", "another pass")
+        make.close_session(self.ws, "geardoor")
+        self.assertIn("2 closes since ship", status.line(self.ws))
+
+    def test_the_ship_debt_is_the_on_project_s_own(self):
+        """the count belongs to the project the row names (C#48).
+
+        The line read `core · … · 37 closes since ship` while doctor read 0
+        for core — 37 was the sum over five other projects. One `needs()`
+        producer, and the fold is scoped to the project on the line.
+        """
+        project.new(self.ws, "geardoor", "the store's data")
+        project.new(self.ws, "tuner", "the other one")
+        project.switch(self.ws, "geardoor", True)
+        for _ in range(3):
+            make.open_session(self.ws, "tuner", "a pass")
+            make.close_session(self.ws, "tuner")
+        row = status.line(self.ws)
+        self.assertTrue(row.startswith("geardoor · "), row)
+        self.assertIn("shipped", row)
+        self.assertNotIn("3 closes", row)
+        # the same three closes are still on the record, and doctor's own
+        # producer still sees them — the line scopes, it never hides.
+        self.assertEqual([n.count for n in status.needs(self.ws)
+                          if n.kind == "close" and n.subject == "tuner"], [3])
+
+    def test_the_line_folds_the_one_needs_producer(self):
+        """three renderers over one truth (M4). the line re-derives nothing."""
+        project.new(self.ws, "geardoor", "the store's data")
+        project.switch(self.ws, "geardoor", True)
+        notes.note(self.ws, "a finding", target_project="geardoor")
+        make.open_session(self.ws, "geardoor", "the tax table")
+        items = status.needs(self.ws)
+        fields = status.line(self.ws).split(" · ")
+        self.assertEqual(sum(n.count for n in items if n.kind == "draft"), 1)
+        self.assertEqual(fields[1], "1 draft")
+        self.assertEqual(fields[2], "make %s"
+                         % status.age(min(n.ts for n in items if n.kind == "make")))
 
     def test_the_age_is_the_one_formatter(self):
         """`21 d` on the line is the same string status and doctor print."""

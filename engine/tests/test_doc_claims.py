@@ -128,16 +128,27 @@ class TestDocClaims(unittest.TestCase):
         A README that points at `engine/ship.py`, line 45 is making a claim a
         stranger will check. When the source moves, this fails here instead of
         lying there.
+
+        The line must carry the sentence the page quotes, not merely be a
+        `return`: the page pointed at `desk.py` line 160 for months while the
+        refusal a piped `approve` actually meets is `gate.NOT_A_TTY`, and a
+        shape check was green over the wrong file the whole time.
         """
         text = _read("README.md")
+        flat = " ".join(text.split())
         cites = re.findall(r"`(engine/[a-z_]+\.py)`, line (\d+)", text)
         self.assertTrue(cites, "no line citations found — did the page stop citing source?")
         for rel, lineno in cites:
             lines = _read(rel).splitlines()
             n = int(lineno)
             self.assertLessEqual(n, len(lines), "%s has no line %d" % (rel, n))
-            self.assertTrue(lines[n - 1].lstrip().startswith("return"),
-                            "%s:%d is not the refusal the README says it is" % (rel, n))
+            said = re.findall(r'"([^"]{12,})"', lines[n - 1])
+            self.assertTrue(said, "%s:%d carries no sentence to quote" % (rel, n))
+            # the literal may take a runtime tail (`— run: sandbox %s`); the
+            # head of it is what the page prints and what is held here.
+            head = said[0].split("%s")[0].strip()
+            self.assertIn(head, flat,
+                          "%s:%d is not the refusal the README quotes" % (rel, n))
 
     def test_readme_loud_line_is_true(self):
         """the page's one loud line: nothing lands that you were not shown.
@@ -189,7 +200,7 @@ class TestDocClaims(unittest.TestCase):
         head = below.split("## ", 1)[0]
         self.assertIn("digest", head, "the loud line lost its scope paragraph")
         self.assertIn("sandbox ship", head, "R17's ship half went missing")
-        self.assertIn("engine/desk.py", head,
+        self.assertIn("engine/gate.py", head,
                       "the pipe refusal stopped naming where it lives")
 
     def test_readme_install_block_obeys_its_three_laws(self):
@@ -237,18 +248,28 @@ class TestDocClaims(unittest.TestCase):
 
     # ------------------------------------------------ the first screen (J11, J12)
 
-    def test_the_first_screen_is_the_sitting_then_the_cost_line_then_the_table(self):
-        """order, as a fact: a stranger meets a real run, then the bill, then
-        the claims. anything above the sitting is the one framing paragraph."""
+    def test_the_first_screen_is_the_frame_then_the_sitting_then_the_bill(self):
+        """order, as a fact (owner, 2026-08-23): a stranger meets why this
+        exists and what it is, then a real run, then the bill, then the
+        claims. the frame is written from the principles, never the tech."""
         text = _read("README.md")
+        why = text.index("## why this exists")
+        what = text.index("## what it is")
+        principles = text.index("## the principles, and what each one refuses")
         sitting = text.index(SITTING[0])
         cost = text.index("only `make`\ncosts money")
         table = text.index("## open any of it")
+        self.assertLess(why, what)
+        self.assertLess(what, principles)
+        self.assertLess(principles, sitting, "the sitting sits above the frame")
         self.assertLess(sitting, cost, "the cost line sits above the sitting")
         self.assertLess(cost, table, "the cost line sits below the claims table")
-        head = text[:sitting]
+        head = text[:why]
         self.assertFalse(re.search(r"^## ", head, re.M),
-                         "a heading landed above the first sitting")
+                         "a heading landed above 'why this exists'")
+        for word in ("own the tools you think with", "afford to experiment",
+                     "grades its own homework", "built by one maker"):
+            self.assertIn(word, text[:sitting], "the frame dropped %r" % word)
 
     def test_the_cost_line_names_its_prerequisites(self):
         text = _read("README.md")

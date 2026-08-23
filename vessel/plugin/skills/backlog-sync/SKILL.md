@@ -26,8 +26,9 @@ finish.
   flow exists to undo.
 - **Plain words.** Every line you write into the backlog is understood on
   first read by someone who never met the project. No coined vocabulary,
-  and no hype — the closed list in spec-driven-discovery's
-  `references/banned-words.txt` is out of bounds; say the plain thing.
+  and no hype — the forbidden-phrases table in `soul/voice.md` is out of
+  bounds, and `python3 -m engine.voicelint PATH` is what reads it; say
+  the plain thing.
 - **The pull rules are the file's own law — obey them.** A new item is
   pullable only when it names its **job row** and its **check** (a runnable
   command whose output a person reads). A row missing its job row waits

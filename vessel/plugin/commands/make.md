@@ -18,5 +18,7 @@ open the pass first, plan before you build, and hand the close back.
 
        sandbox make --close NAME --summary "what changed, in your words"
 
-the close reads the owner's key, so this command leaves it to them: what you
-do here is show the work, and the verb is what puts it on the record.
+the close takes no key. it stages your summary, and what lands it is the
+owner's own `sandbox approve`. this command leaves the verb to them either
+way: what you do here is show the work, and their hand puts it on the
+record.

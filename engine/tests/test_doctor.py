@@ -78,11 +78,17 @@ class TestTheOpenSeam(DoctorCase):
         self.assertTrue(ok, "\n".join(lines))
 
     def test_an_open_make_past_a_week_is_the_look_line(self):
-        """rule R16: named at any age, LOOK past 7 days."""
+        """rule R16: named at any age, LOOK past 7 days.
+
+        A#9: and green — R24 gives the exit to the repair rows, and a make
+        left open is work in progress rather than a workshop out of
+        agreement with itself. A three-week-old make used to keep doctor
+        red, which is how an owner learns to stop reading the exit code.
+        """
         plant_open_make(self.ws, "geardoor", "ADJUDICATED1 — a withdrawal",
                         days_ago(21))
         ok, lines = self.doctor()
-        self.assertFalse(ok)
+        self.assertTrue(ok, "\n".join(lines))
         row = find(lines, "open makes")[0]
         self.assertTrue(row.strip().startswith("LOOK"), row)
         self.assertIn("21 d", row)
@@ -106,6 +112,28 @@ class TestJournalVersusDisk(DoctorCase):
         self.assertIn("tuner", row)
         self.assertIn("sandbox update --rebuild shelf", row)
         self.assertNotIn("sandbox repair", row)
+
+    def test_a_struck_keep_leaves_the_shelf_reading(self):
+        """9.0.1: a build-kept line the owner struck with `invalidate` stays on
+        the record and stops counting — the shelf is read as the strike left
+        it, so a mis-named save is repairable without a card."""
+        kept = journal.append(self.ws, {"op": "assert", "cls": "build-kept",
+                                        "origin": "machine", "build": "stray",
+                                        "body": "kept: stray", "ink": "receipted",
+                                        "receipt": "nowhere"})
+        ok, lines = self.doctor()
+        self.assertFalse(ok)
+        self.assertIn("stray", find(lines, "the record is ahead")[0])
+        struck_id = kept["id"] if isinstance(kept, dict) and kept.get("id") else \
+            json.loads(open(journal.path(self.ws), encoding="utf-8").read()
+                       .strip().splitlines()[-1])["id"]
+        journal.append(self.ws, {"op": "invalidate", "of": struck_id,
+                                 "origin": "human", "body": "a mis-named save"})
+        ok, lines = self.doctor()
+        self.assertEqual(find(lines, "stray"), [], "\n".join(lines))
+        self.assertTrue(ok, "\n".join(lines))
+        world = registry.project(self.ws)
+        self.assertNotIn("stray", [b["name"] for b in world.get("build", [])])
 
     def test_a_forgotten_placement_book_names_the_record(self):
         os.remove(os.path.join(self.ws, journal.STATE_DIR, "place.json"))
@@ -133,13 +161,86 @@ class TestTheHostReceipts(DoctorCase):
             json.dump({"sandbox": {"network": {"strictAllowlist": True}},
                        "permissions": {"deny": ["Edit(//a/b/.claude/projects/**)"]},
                        "worktree": {"baseRef": "fresh"},
-                       "disableAllHooks": False}, f)
+                       "disableAllHooks": False,
+                       "extraKnownMarketplaces": {
+                           onboard.MARKETPLACE: {
+                               "source": onboard.marketplace_source()}},
+                       "enabledPlugins": {onboard.plugin_key(): True}}, f)
         with open(p, encoding="utf-8") as f:
             sources = [("~/.claude/settings.json", json.load(f))]
         rows = status.settings_receipts(self.ws, sources)
-        self.assertEqual([v for _l, v, _d in rows], [face.OK] * 4)
+        self.assertEqual([v for _l, v, _d in rows], [face.OK] * 6)
         for _label, _verdict, detail in rows:
             self.assertIn("~/.claude/settings.json", detail)
+
+    def test_the_plugin_wiring_is_two_receipts_and_each_names_its_door(self):
+        """a workshop whose plugin quietly stopped loading says so (B#10).
+
+        The marketplace entry and the `enabledPlugins` line are what decide
+        whether a session loads this core at all; both are read back off the
+        file init wrote them to, and an absent one is a LOOK with the verb
+        that writes it — never the exit code, because they are host rows.
+        """
+        rows = status.settings_receipts(
+            self.ws, [("~/.claude/settings.json", {"disableAllHooks": False})])
+        by = {l: (v, d) for l, v, d in rows}
+        self.assertEqual(by["host: plugin marketplace"][0], face.LOOK)
+        self.assertIn("sandbox init", by["host: plugin marketplace"][1])
+        self.assertEqual(by["host: plugin on"][0], face.LOOK)
+        self.assertIn("sandbox init", by["host: plugin on"][1])
+
+        good = {"extraKnownMarketplaces": {
+                    onboard.MARKETPLACE: {"source": onboard.marketplace_source()}},
+                "enabledPlugins": {onboard.plugin_key(): True}}
+        rows = status.settings_receipts(self.ws, [("~/.claude/settings.json", good)])
+        by = {l: (v, d) for l, v, d in rows}
+        self.assertEqual(by["host: plugin marketplace"][0], face.OK)
+        self.assertIn("directory", by["host: plugin marketplace"][1])
+        self.assertNotIn(os.path.expanduser("~"),
+                         by["host: plugin marketplace"][1])
+        self.assertEqual(by["host: plugin on"][0], face.OK)
+
+        rows = status.settings_receipts(self.ws, [("~/.claude/settings.json", None)])
+        by = {l: (v, d) for l, v, d in rows}
+        self.assertEqual(by["host: plugin marketplace"][0], face.GAP)
+        self.assertEqual(by["host: plugin on"][0], face.GAP)
+
+    def test_an_orphaned_plugin_cache_is_not_a_row_doctor_can_fix(self):
+        """the doctor row prescribes `sandbox update`, and update walks no
+        cache the host has orphaned — so the copy is not a row at all (B#5)."""
+        with elsewhere_home() as home:
+            cache = os.path.join(home, ".claude", "plugins", "cache",
+                                 "gone", "sandbox-os", "9.0.0")
+            styles = os.path.join(cache, "output-styles")
+            os.makedirs(styles)
+            with open(os.path.join(styles, status.STYLE_FILE), "w",
+                      encoding="utf-8") as f:
+                f.write("an older copy\n")
+            # 1: no known_marketplaces.json at all — every cache counts.
+            self.assertTrue([w for w, _s in status.style_copies(self.ws)
+                             if "gone" in w])
+            # 2: the host still holds the marketplace — it counts.
+            km = os.path.join(home, ".claude", "plugins",
+                              "known_marketplaces.json")
+            with open(km, "w", encoding="utf-8") as f:
+                json.dump({"gone": {}}, f)
+            self.assertTrue([w for w, _s in status.style_copies(self.ws)
+                             if "gone" in w])
+            # 3: the marketplace is off the host's list — it is not a row.
+            with open(km, "w", encoding="utf-8") as f:
+                json.dump({"other": {}}, f)
+            self.assertEqual([w for w, _s in status.style_copies(self.ws)
+                              if "gone" in w], [])
+            # 4: back on the list, but marked orphaned — still not a row.
+            with open(km, "w", encoding="utf-8") as f:
+                json.dump({"gone": {}}, f)
+            with open(os.path.join(cache, status.ORPHAN_MARK), "w") as f:
+                f.write("2026-08-23\n")
+            self.assertEqual([w for w, _s in status.style_copies(self.ws)
+                              if "gone" in w], [])
+            ok, lines = status.doctor(self.ws)
+        self.assertTrue(ok, "\n".join(lines))
+        self.assertEqual(find(lines, "sandbox update --rebuild gone"), [])
 
     def test_could_not_prove_is_never_ok(self):
         """a setting nobody could read is a gap, never a green fence."""

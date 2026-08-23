@@ -59,10 +59,11 @@ These came from the owner's corrections. Each law carries its check — a law
 you can't check is a vibe.
 
 - **Plain words.** Coined vocabulary, philosophy and hype all fail the same
-  test: every sentence is understood on first read. Check: grep the spec tree
-  against `references/banned-words.txt` — a closed list, so amend the file
-  rather than the grep — for zero hits, plus judgment for freshly coined
-  words a list cannot hold.
+  test: every sentence is understood on first read. Check: run
+  `python3 -m engine.voicelint spec/` for zero hits —
+  the forbidden-phrases table in `soul/voice.md` is the one list, so amend
+  that table rather than the check — plus judgment for freshly coined words
+  a table cannot hold.
 - **Holistic, both directions.** A mechanism designed around one past failure
   fits that failure and nothing else, so an old lesson arrives as
   *configuration* of a general mechanism rather than as its shape. Check: for
@@ -224,7 +225,7 @@ this exact template:
     ## open          (OPEN [owner] / OPEN [design], each with a proposal)
 
 Then the **unification pass**, never skipped, by the orchestrator alone:
-- voice sweep (grep `references/banned-words.txt`), template compliance
+- voice sweep (`python3 -m engine.voicelint spec/`), template compliance
 - seam check: ownership conflicts (two writers of one thing), circular or
   missing cross-references, contradictions with the parent specs
 - fold refinements back UP into the parent spec so no file disagrees
@@ -473,6 +474,6 @@ preregistered divergence. Say the plain thing or nothing.
   front for idea-stage work), movement 7 challenge (its adversarial pass
   caught build-breaking spec errors), movement 9 build-on-the-workshop-loop
   (idea to product, not idea to backlog), the format-learns loop with the
-  two legal amendment paths, checks on every law, the closed banned-words
-  list, the example job row, the worked sizing example. Removed: CommerceOS
+  two legal amendment paths, checks on every law, the one forbidden-phrases
+  table, the example job row, the worked sizing example. Removed: CommerceOS
   residue ("one scout instead of eight").

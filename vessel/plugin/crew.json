@@ -1,5 +1,5 @@
 {
- "note": "the crew as data. engine/vessel.py renders one brief per seat into vessel/plugin/agents/, with the shared tail from crew-tail.md written once. a brief edited by hand is a red check: sandbox vessel --build rewrites it.",
+ "note": "the crew as data. engine/vessel.py renders one brief per seat into vessel/plugin/agents/, with the shared tail from crew-tail.md written once. a brief edited by hand is a red check: python3 -m engine.vessel --build rewrites it.",
  "seats": [
   {
    "seat": "challenger",

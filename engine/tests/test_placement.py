@@ -184,7 +184,7 @@ class TestInit(unittest.TestCase):
             else:
                 _os.environ["HOME"] = old
         self.assertIn("backlog-sync", text)
-        self.assertIn("rm -r ~/.claude/skills/<name>", text)
+        self.assertIn("rm -r ~/.claude/skills/NAME", text)
         # named, never removed
         self.assertTrue(_os.path.isdir(
             _os.path.join(home, ".claude", "skills", "backlog-sync")))

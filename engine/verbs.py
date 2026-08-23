@@ -12,8 +12,12 @@ agent tool-surface is generated from it — no surface re-implements a verb.
 """
 import os
 
-# The record's op set. Nine inherited, one born with this body: `check`, the
-# only op that raises a claim's rung, and it raises it at the read.
+from . import registry
+
+# The record's op set: eleven names, nine inherited and two born with this
+# body. `check` is the only op that raises a claim's rung, and it raises it
+# at the read; `export` is the second, and it stamps the receipt a person
+# carries off the machine.
 # `halt` is reserved and unminted — the seventh body's rows still use it, so
 # the name stays and test_declarations counts it as parked.
 OPS = ("genesis", "session", "assert", "invalidate", "make",
@@ -77,15 +81,22 @@ FLAGS = {
     "use": {"--project": "NAME"},
     "save": {"--note": '"..."'},
     "share": {"--to": "DIR", "--sign": None},
-    "fetch": {"--from": "DIR", "--expect-key": "<key>"},
+    "fetch": {"--from": "DIR", "--expect-key": "K"},
     "app": {"--catalog": "DIR"},
     "import": {"--projects": "a,b,c"},
     "export": {"--redact": None, "--project": "NAME", "--since": "2026-08-01",
                "--to": "DIR", "--html": None, "--portable": None},
+    # page is export --html, so it takes export's flags and never the two
+    # that pick a form — it has already picked one.
+    "page": {"--redact": None, "--project": "NAME", "--since": "2026-08-01",
+             "--to": "DIR"},
     "release": {"--hook": None, "--is-release-commit": "FILE"},
     "status": {"--line": None},
     "canon": {"--project": "NAME", "--memory": None},
-    "update": {"--rebuild": "<place|shelf|canon|index>"},
+    # the projections are named once, in registry; a second hand-typed list
+    # here is how the flag came to advertise a `marketplace` rebuild that
+    # never existed.
+    "update": {"--rebuild": "|".join(registry.PROJECTIONS)},
 }
 
 
@@ -146,9 +157,14 @@ def _version(ws, argv):
 
 
 def _plugin_dir(ws, argv):
-    """where the plugin lives, printed. The marketplace's `command` source
-    runs this every session, so the host follows the tree instead of holding
-    a path that goes stale (R14). It reads one constant and writes nothing."""
+    """where the plugin lives, printed — a convenience, and nothing more.
+
+    Nothing calls it to wire anything: the marketplace this core registers is
+    a `directory` source at this tree's root, and the plugin entry inside it
+    is a relative path, so the host follows the tree with no command to run
+    (R14's intent; its `command` wording is superseded). Reads one constant
+    and writes nothing.
+    """
     from . import vessel
     print(vessel.PLUGIN)
     return 0
@@ -181,8 +197,8 @@ def _project(ws, argv):
         return 0
     root, argv = _flag(argv, "--root")
     if not argv:
-        print("project new <name> [goal] [--root <dir>] · on <name> · "
-              "off <name> · done <name>")
+        print("project new NAME [goal] [--root DIR] · on NAME · "
+              "off NAME · done NAME")
         return 2
     sub, rest = argv[0], argv[1:]
     if sub == "new" and rest:
@@ -192,8 +208,8 @@ def _project(ws, argv):
     elif sub == "done" and rest:
         ok, msg = project.done(ws, rest[0])
     else:
-        print("project new <name> [goal] [--root <dir>] · on <name> · "
-              "off <name> · done <name>")
+        print("project new NAME [goal] [--root DIR] · on NAME · "
+              "off NAME · done NAME")
         return 2
     print(msg)
     return 0 if ok else 1
@@ -491,7 +507,7 @@ def _builds(ws, argv):
     pull = shelf.first_pull(ws)
     if pull["shared"] and not pull["witnessed"]:
         print("shared %d, no pull witnessed yet — stage one: "
-              "sandbox note \"pull-witnessed: <who> <build>\""
+              "sandbox note \"pull-witnessed: WHO BUILD\""
               % len(pull["shared"]))
     if shelf.offers_marketplace(ws):
         print("a friend adds this shelf with: claude plugin marketplace add "
@@ -662,7 +678,9 @@ def _export_report(report, out=print):
     else:
         # surface: 7
         out("not redacted — %d span(s) would go under --redact" % report["would"])
-    out(report["path"])
+    # the last line is the path, and it wears `~` like every other path this
+    # core prints — an owner's name is not part of where a file is.
+    out(clean.strip_home(report["path"])[0])
 
 
 def _export(ws, argv):
@@ -718,7 +736,7 @@ def _release(ws, argv):
             return 0
         # surface: 3c
         print("i turned this commit back: main takes the commits a release makes.")
-        print("what would work: git switch -c <name> && git commit")
+        print("what would work: git switch -c NAME && git commit")
         return 1
     if "--hook" in argv:
         ok, msg = integrity.place_hook()

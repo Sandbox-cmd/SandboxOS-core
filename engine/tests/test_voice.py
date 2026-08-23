@@ -238,12 +238,9 @@ class TestLintString(unittest.TestCase):
                          self.SPEC_WORD_DEBT,
                          "the spec-only words moved (C4 clears this set)")
 
-    # the one caps word left outside the ruling, twice. surfaces.md's open 1
-    # asks the owner whether `UNVERIFIED` is a fourth exemption or reads as a
-    # field name in lowercase; until he rules, it stays as drafted and is
-    # counted here. the usage placeholders (`NAME`, `PATH`, `DIR`, `ID`) left
-    # this list at X9 by exemption, not by lowering — the manual and the
-    # README spell them the same way.
+    # the usage placeholders (`NAME`, `PATH`, `DIR`, `ID`, and R26's `WHO`
+    # and `BUILD`) left this list at X9 by exemption, not by lowering — the
+    # manual and the README spell them the same way.
     # R23 (owner, 2026-08-23): UNVERIFIED is the fourth signal word.
     CAPS_DEBT = set()
 
@@ -252,11 +249,10 @@ class TestLintString(unittest.TestCase):
                          "a caps token moved; the ruling is FAIL, LOOK, "
                          "DRAFTS, UNVERIFIED")
 
-    # one literal over its row's count, and the row is what is wrong: row 29's
-    # own exemplar is this exact line at 14 words on a budget of 10, and
-    # `test_start_here` pins the words. the soul page is the owner's to move,
-    # so the number stays honest here instead.
-    BUDGET_DEBT = {("engine/status.py:808", "29")}
+    # empty since 9.0.1: row 29's budget was 10 while its own exemplar — the
+    # shipped legend line, pinned word for word by `test_start_here` — ran to
+    # 14. the row moved to 14, and no printed literal is over its row now.
+    BUDGET_DEBT = set()
 
     def test_the_budget_debt_is_the_one_row_that_disagrees_with_itself(self):
         self.assertEqual({(w, r) for w, r, _, _ in self.rep.budget},

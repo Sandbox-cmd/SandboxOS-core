@@ -13,7 +13,8 @@ import unittest
 
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SOUL = os.path.join(REPO, "soul")
-FILES = ("ground-truth.md", "values.md", "voice.md", "partner.md", "lineage.md")
+FILES = ("ground-truth.md", "values.md", "voice.md", "partner.md",
+         "lineage.md", "surfaces.md")
 ANCHORS = ("54:17", "96:6-7", "33:72", "21:22", "55:7-9",
            "2:222", "47:24", "61:2-3", "4:135", "21:47")
 
@@ -75,7 +76,7 @@ KIND_TESTS = {
 
 
 class TestSoul(unittest.TestCase):
-    def test_five_files_each_wearing_lineage(self):
+    def test_six_files_each_wearing_lineage(self):
         for name in FILES:
             p = os.path.join(SOUL, name)
             self.assertTrue(os.path.exists(p), name)

@@ -16,7 +16,11 @@ import shutil
 import subprocess
 
 DIRS = ("engine", "vessel", "law", "docs", "soul")
-FILES = ("sandbox", "boot.py", "README.md", "LICENSE", "VERSION", "CHANGELOG.md")
+# tracked files that sit outside DIRS. `.claude-plugin/marketplace.json`
+# names the plugin source a host loads out of this tree, so a change to it
+# changes what runs on someone's machine — inside the seal with the rest.
+FILES = ("sandbox", "boot.py", "README.md", "LICENSE", "VERSION", "CHANGELOG.md",
+         ".claude-plugin/marketplace.json")
 SKIP_DIRS = {"__pycache__"}
 PUBKEY_ENV = "SANDBOX_MINISIGN_PUBKEY"
 
@@ -243,7 +247,7 @@ def main_row(r):
         return True, "ok   main holds only release commits since %s" % tag
     # surface: 13
     return False, ("FAIL main holds %d work commit(s) since %s — the first is %s %s\n"
-                   "     work belongs on a branch: git switch -c <name>, then start again"
+                   "     work belongs on a branch: git switch -c NAME, then start again"
                    % (len(work), tag, work[0][0][:7], work[0][1]))
 
 

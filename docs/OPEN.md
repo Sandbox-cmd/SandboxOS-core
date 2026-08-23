@@ -1,6 +1,6 @@
 # OPEN — what is still open, said plainly
 
-Sandbox OS 9.0.0. the honest register: what this copy
+Sandbox OS 9.0.1. the honest register: what this copy
 still owes, who closes each item, what was decided against out loud, and
 where the hard edges are.
 
@@ -19,6 +19,36 @@ where the hard edges are.
   written as a surface and built as nothing. until it exists, `sandbox doctor`
   carries the host rows and says `?` where it could not read.
   J1 · closes: the vessel and plugin part.
+- **`page` beside `export`.** R8 half-landed: `export --html` writes the page,
+  and `page` stayed as its alias, which is deliberate — a verb a stranger
+  already typed keeps working, and it prints the line saying what it now runs.
+  what is open is the flag table and the help, which read as two verbs.
+  J30 · closes: the export and page part, at the next doc pass.
+- **the statusline's voiced line.** `~/.claude/statusline-phosphor.sh` reads
+  `~/.cache/phosphor/say-<project>.txt` and this core writes that file
+  nowhere, so the line has been empty since it was written. either a verb
+  writes it or the read retires; the script is the owner's file either way.
+  J31 · closes: the owner, on his own script.
+- **the shelf's v7 payloads.** `shelf/starter` and `shelf/commerceos` still
+  speak the seventh body's words — `--channel`, `channels/<name>/CANON.md` —
+  across 44 files. the payloads are builds the owner pressed, so re-pressing
+  them is his hand rather than a migration this core may run.
+  J32 · closes: the owner, one re-press per card.
+- **the shipped specimen carries a home path.** `sandbox-site`'s
+  `specimen/journal.jsonl` has the machine's own home on 9 of its 59 lines
+  while the `nopaths` lint reads green over 69 files, because the specimen
+  sits outside what the lint walks. widen the lint, or re-cut the specimen
+  through `clean.strip_home`. J33 · closes: the site part.
+- **a work branch's signature goes stale.** each commit reseals
+  `manifest.json`, and `manifest.json.minisig` still signs 9.0.0's. plain
+  `sandbox verify` reads clean and strict verify refuses, which is the honest
+  answer for an unsigned tree; the release re-signs, and until then a strict
+  reader on a branch sees a refusal. J34 · closes: the 9.0.1 release.
+- **core work is done from a session in `~/Sandbox`.** the marketplace is
+  declared in `~/Sandbox/.claude/settings.json`, so a session started inside
+  `~/Sandbox/system` loads no plugin. the tree itself carries no `.claude/`
+  on purpose: a directory source needs an absolute path, and a sealed file
+  holds one machine's. J35 · closes: the vessel and plugin part.
 
 ## parked out loud (decided, rather than absent)
 
@@ -30,12 +60,6 @@ where the hard edges are.
   this line is where it gets re-argued.
 - **Arabic, and the scripts beside it.** the terminal on the machine this was
   built on draws none of it, so the pages stay English until one here can.
-
-## waiting on the owner
-
-- **doctor's exit code on a host `LOOK`.** a row the host owns and answers
-  wrongly is the owner's business rather than the workshop's, so today it
-  prints and exits 0. whether it should exit 1 is a ruling, not a bug.
 
 ## known limits, said plainly
 

@@ -210,8 +210,10 @@ def _fold_builds(ws, world, events):
     """`cls: build-kept` events joined to the shelf's own cards."""
     from . import shelf
     seen = {}
+    struck = {e.get("of") for e in events if e.get("op") == "invalidate"}
     for e in events:
-        if e.get("op") == "assert" and e.get("cls") == "build-kept":
+        if (e.get("op") == "assert" and e.get("cls") == "build-kept"
+                and e.get("id") not in struck):
             said = e.get("build") or (
                 e.get("body") or "").split(":", 1)[-1].strip().split(" ")[0]
             if said:

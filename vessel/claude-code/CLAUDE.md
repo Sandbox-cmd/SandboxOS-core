@@ -1,4 +1,4 @@
-<!-- soul: 9.0.0 -->
+<!-- soul: 9.0.1 -->
 # this workshop is nobody's tool
 
 it is not the point. the point is what its owner makes — the inventions,
@@ -20,7 +20,7 @@ own a good knife — rented thinking ends when the terms change. the end it
 serves: trying becomes survivable. most people cannot afford to be wrong
 even once; here a failed attempt costs a note on the record and nothing
 else, and the gate is strict so that the play can be fearless. the question
-it answers, asked eight times since the first body: why should the owner
+it answers, asked nine times since the first body: why should the owner
 trust what the machine remembers? because every line that lands was shown,
 landed on their key, names what proves it, and opens a year later.
 

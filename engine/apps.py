@@ -156,7 +156,9 @@ def install(ws, app_dir, consent, source="local"):
     if source.startswith("catalog:"):
         trust = "source: the official catalog — pinned by its index"
     else:
-        trust = "source: %s — UNVERIFIED (the hash proves consistency, not who made it)" % source
+        # surface: 26
+        trust = ("source: UNVERIFIED — %s is not the catalog. the hash proves "
+                 "the bytes are the same bytes, not who wrote them." % source)
     face = ["%s %s — %s" % (name, m["version"], m["description"]),
             trust,
             "places %d file(s), all under apps/%s/" % (len(files), name)]
