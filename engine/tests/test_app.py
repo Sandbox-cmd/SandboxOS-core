@@ -29,7 +29,7 @@ def make_app(name="tuner", version="1.0.0", min_core="8.0.0",
             with open(p, "w") as f:
                 f.write("print('hi')\n")
         except OSError:
-            pass  # deliberately-bad placements can't build a payload — the
+            pass  # a bad-on-purpose placement can't build a payload — the
             #       engine must refuse them before ever touching one
     return d
 

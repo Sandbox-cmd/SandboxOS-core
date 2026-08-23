@@ -1,5 +1,77 @@
 # CHANGELOG
 
+## 9.0.2 — written like a person, for a person (2026-08-23)
+
+the writing convention entered the soul whole. the em dash was the piece a
+reader noticed first, and the ruling that followed put the rest of it into one
+position and behind one check.
+
+the ruling, verbatim from the record:
+
+```
+[claimed] [machine] ruling R27 (owner, 2026-08-23): the writing convention is
+the whole of how the workshop writes, voices, narrates and talks to a person,
+and it enters the soul and the lint in full — the em dash was one element of
+many. the six dimensions and the core from the voices research
+(~/eighth/shelf/builds/voices: framework.md, tells.md, research.md; plain
+hands) become a soul position with its checks; voicelint gates prose pages on
+it; every page a person reads is rebuilt to it, the README from the ground up.
+owner's words: 'dont just remove the em-dashes, now that we know what was
+wrong lets rebuild it. and lets also make the change for the rule in all
+places not just for the em dashes but for the entire scope expanding from that
+one specific part as its only 1 element of many in how we write, voice,
+narrate and talk.'
+```
+
+### built
+
+- `soul/voice.md` gains position 9, "written like a person, for a person": the
+  core as checkable rules, the six dimensions of the tone framework set as this
+  house's own numbers, and the two boundaries stated out loud. it applies to
+  every page a person reads. it stops at an engine output line, where the em
+  dash is a field separator and a one-line status is a label.
+- the forbidden table gains nine rows out of the AI-tell catalog the ruling
+  names: the flat adverbs, the significance words, the two connectors of the
+  five-paragraph mold, one paragraph opener, two more hype adjectives, the
+  metaphor uses of two scenery nouns, and one dead opener. every phrase reaches
+  the table with its reason, the way every phrase before it did, and the
+  all-scope list runs 58 now.
+- check E in `engine/voicelint.py` reads the 24 prose pages. three gates: the em
+  dash outside quoted engine output, the four contrast constructions, and three
+  consecutive sentences within two words of each other. three counts print: the
+  rule of three, the pace, the filler density. one `prose:` row per page, then a
+  summary line.
+- an exemption marker, `<!-- voice: contrast ok: why -->`, takes one line out of
+  one rule. a marker with no reason rules nothing and reports itself, which is
+  the rule every row of `EXEMPTIONS` already obeys. `soul/voice.md` carries the
+  first one, over conviction 4's own name.
+- `PROSE_DEBT` in `engine/tests/test_voice.py` freezes what 21 pages owe the new
+  gate, by exact count. the rule is real from today; the pages are rebuilt after
+  it. a row that grows is a regression, and a rebuilt page drops its row in the
+  same commit as its words.
+- the two projections carry position 9 in their own words.
+  `vessel/plugin/output-styles/across-the-desk.md` gains a rhythm section and
+  keeps its 65-line budget. the voicer's pass runs to seven steps, with the
+  shape and the six settings written into `vessel/plugin/crew.json` and rendered
+  from there.
+- `README.md`, `soul/voice.md` and the style pass the new gate today. thirteen
+  fixtures under `engine/tests/voice_fixtures/` hold each rule to a failing page
+  and a passing one.
+- the three pages a stranger walks are rebuilt to position 9, and their rows in
+  the ceiling table drop to zero. `docs/START-HERE.md` came off 34 gates with
+  its nine steps intact. `engine/tests/test_start_here.py` still walks every
+  command block on the page at a pty and then down a pipe, and the tutorial's
+  step words keep their shape on a colon. `docs/OPEN.md` came off 11, every debt
+  still carrying its `closes:` line and its J row. `docs/MANUAL.md` came off 17
+  in the prose around the generated verb table, which stays byte for byte what
+  `engine/selfmap.py` writes.
+- check E stops at the changelog's history. it reads the section being written
+  (this one) and blanks every release below it, because a shipped section is
+  what that release said and re-cutting those words now would edit the past. the
+  rule is `changelog_history` in `engine/voicelint.py`, and a fixture pair holds
+  it: an em dash in the open section gates, and the same mark down in the
+  history does not.
+
 ## 9.0.1 — the audits read back (2026-08-23)
 
 the first release after the ninth body, the same day. three audits read the

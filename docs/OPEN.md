@@ -1,8 +1,7 @@
-# OPEN — what is still open, said plainly
+# OPEN: what is still open, said plainly
 
-Sandbox OS 9.0.1. the honest register: what this copy
-still owes, who closes each item, what was decided against out loud, and
-where the hard edges are.
+Sandbox OS 9.0.2. the honest register: what this copy still owes, who closes
+each item, what was decided against out loud, and where the hard edges are.
 
 ## named debts (built next, and named until they are)
 
@@ -14,15 +13,15 @@ where the hard edges are.
   the owner has ever pulled from it. the promise stays unproven until one
   fetch by someone else lands on the record, and a check watches for it.
   J20 · closes: a person, then the check that sees them.
-- **`sandbox vessel`.** the verb that reads the plugin back to you — which
-  hooks are wired, what they may land, which fences the host can prove — is
+- **`sandbox vessel`.** the verb that reads the plugin back to you (which
+  hooks are wired, what they may land, which fences the host can prove) is
   written as a surface and built as nothing. until it exists, `sandbox doctor`
   carries the host rows and says `?` where it could not read.
   J1 · closes: the vessel and plugin part.
 - **`page` beside `export`.** R8 half-landed: `export --html` writes the page,
-  and `page` stayed as its alias, which is deliberate — a verb a stranger
-  already typed keeps working, and it prints the line saying what it now runs.
-  what is open is the flag table and the help, which read as two verbs.
+  and `page` stayed on as its alias. that part is deliberate, since a verb a
+  stranger already typed keeps working and prints the line saying what it now
+  runs. what is open is the flag table and the help, which read as two verbs.
   J30 · closes: the export and page part, at the next doc pass.
 - **the statusline's voiced line.** `~/.claude/statusline-phosphor.sh` reads
   `~/.cache/phosphor/say-<project>.txt` and this core writes that file
@@ -30,9 +29,9 @@ where the hard edges are.
   writes it or the read retires; the script is the owner's file either way.
   J31 · closes: the owner, on his own script.
 - **the shelf's v7 payloads.** `shelf/starter` and `shelf/commerceos` still
-  speak the seventh body's words — `--channel`, `channels/<name>/CANON.md` —
-  across 44 files. the payloads are builds the owner pressed, so re-pressing
-  them is his hand rather than a migration this core may run.
+  speak the seventh body's words (`--channel`, `channels/<name>/CANON.md`)
+  across 44 files. the payloads are builds the owner pressed. re-pressing them
+  is his own hand, and this core runs no migration over them.
   J32 · closes: the owner, one re-press per card.
 - **the shipped specimen carries a home path.** `sandbox-site`'s
   `specimen/journal.jsonl` has the machine's own home on 9 of its 59 lines
@@ -50,7 +49,7 @@ where the hard edges are.
   on purpose: a directory source needs an absolute path, and a sealed file
   holds one machine's. J35 · closes: the vessel and plugin part.
 
-## parked out loud (decided, rather than absent)
+## parked out loud (absent on purpose)
 
 - **the room, the deck, any second face.** ruled parked: the session you are
   already sitting in is the face, and the status line and the refusals carry
@@ -66,8 +65,8 @@ where the hard edges are.
 - **POSIX only.** macOS and Linux are the floor: the guard, the shim and the
   paths assume them all the way down.
 - **one person's machine.** every default path runs with the network off, and
-  there is no account behind it — a record kept somewhere else is someone
-  else's to read. a team would need a second key, and there is one.
+  there is no account behind it, because a record kept somewhere else is
+  someone else's to read. a team would need a second key, and there is one.
 - **the seal covers the core, and stops at your workshop.** your files are
   yours to edit, so they stay outside it; `sandbox verify` speaks for the
   clone alone.
@@ -78,7 +77,7 @@ where the hard edges are.
   the plugin's hooks; a terminal with no session around it still records
   everything you land, and the session line is what it lacks.
 
-## always the owner's hands (the design, rather than a debt)
+## always the owner's hands (by design)
 
 - the tag and the push. `sandbox release` refuses until the suite, the
   integrity check, a fresh signature and a committed tree all hold, and then
@@ -88,10 +87,9 @@ where the hard edges are.
 
 ## what this page does not cover
 
-`law/` is untouched by this release: the fifteen laws carry over word for
-word from the release before it, hash-pinned, and amending one is its own
-ceremony. what
-moved for 9.0 is the words a stranger reads — this page, README.md,
-`docs/START-HERE.md` and the prose of `docs/MANUAL.md` — held by
-`python3 -m engine.voicelint README.md docs/*.md` and by the pins in
-`engine/tests/test_doc_claims.py`.
+`law/` is untouched by this release. the fifteen laws carry over word for word
+from the release before it. they stay hash-pinned, and amending one is its own
+ceremony. what moved for 9.0 is the words a stranger reads: this page,
+README.md, `docs/START-HERE.md` and the prose of `docs/MANUAL.md`. those four
+are held by `python3 -m engine.voicelint README.md docs/*.md`
+and by the pins in `engine/tests/test_doc_claims.py`.

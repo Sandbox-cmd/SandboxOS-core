@@ -78,8 +78,14 @@ class TestLayerBudget(unittest.TestCase):
         _vessel("claude-code", "CLAUDE.md"): 90,
         _vessel("plugin", "output-styles", "across-the-desk.md"): 65,
     }
-    BRIEF_CEILING = 90
-    BRIEF_EXCEPTIONS = {"producer.md": 115}
+    # 92 since R27 (2026-08-23): the shared tail in vessel/plugin/crew-tail.md
+    # was rewritten to position 9, and the rewrite costs two lines more
+    # than the tail it replaced. the number moves with the tail.
+    BRIEF_CEILING = 92
+    # the producer carries the product frame; the voicer carries position 9
+    # of soul/voice.md in full (R27, 2026-08-23), which is the convention the
+    # other five seats only cite. both are over the common ceiling on purpose.
+    BRIEF_EXCEPTIONS = {"producer.md": 118, "voicer.md": 120}
 
     def test_charter_and_style_within_budget(self):
         for path, ceiling in self.CEILINGS.items():

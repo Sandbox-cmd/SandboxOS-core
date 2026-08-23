@@ -153,7 +153,7 @@ def render_seat(seat, tail):
         out += answer["note"]
     out.append("")
     # surface: 19
-    out.append("filled, so the shape reads as a report rather than a slot list:")
+    out.append("filled, so the shape reads as a report instead of a slot list:")
     out.append("")
     out += _indented(answer["example"])
     out.append("")

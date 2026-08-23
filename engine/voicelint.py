@@ -15,9 +15,12 @@ the checks:
      README.md and both plugin json files
   B  negation — density (smell), stacked (gate), naked (gate)
   C  lint-string — every printed literal in engine/*.py and guard.py held to
-     a row of `soul/surfaces.md`
+     a row of `soul/surfaces.md`, and the spec-only words none of them carry
   D  docstrings open lowercase
-  E  a short list of words the specs use and no printed string may carry
+  E  prose — the pages a person reads, held to position 9 of `soul/voice.md`:
+     the em dash, contrast constructions and flat rhythm gate; the rule of
+     three, the pace and the filler count print. CHANGELOG.md is read down to
+     its history and no further (`changelog_history`)
 
 every exemption is a row in EXEMPTIONS with its reason, and `report()` carries
 them out so a reader can see what the green run skipped.
@@ -119,6 +122,18 @@ EXEMPTIONS = (
               "the three step words of the tutorial in docs/START-HERE.md are "
               "ruled in (gate 2): they are a form the reader follows rather "
               "than a sentence they read"),
+    Exemption("soul/*.md", r"^\s*(pair — )?before:", r"^\s*stratum:",
+              ("prose",),
+              "both halves of a pair are exhibits: the before-line wears the "
+              "replaced voice, the after-line quotes an engine line, and an "
+              "engine line keeps its em dash"),
+    Exemption("CHANGELOG.md", r"^## \d", None, ("prose",),
+              "a release heading is parsed on its em dash by "
+              "integrity._changelog_section, so the mark is a field separator"),
+    Exemption("README.md", r"<!-- sitting:begin", r"<!-- sitting:end",
+              ("prose",),
+              "the sitting block is a real run pasted whole, so its lines are "
+              "the engine's own and position 9 leaves them"),
 )
 
 # whole directories skipped, with the reason.
@@ -209,6 +224,10 @@ def exempt_lines(rel, text, check):
 def blanked(text, rel, check):
     """`text` with every exempt line blanked — line numbers stay honest."""
     skip = exempt_lines(rel, text, check)
+    # the changelog is a record: check E reads the section being written and
+    # blanks the releases under it. `changelog_history` carries the reason.
+    if check == "prose" and rel == "CHANGELOG.md":
+        skip = skip | changelog_history(text)
     if not skip:
         return text
     return "\n".join("" if n + 1 in skip else l
@@ -734,6 +753,294 @@ def row_for(lit, markers=None):
     return SURFACE.get((lit.path, lit.func))
 
 
+# ------------------------------------------------------- check E: the prose
+
+# soul/voice.md position 9 (R27, owner, 2026-08-23). the convention is the
+# whole of how the workshop writes, so it is checked on the whole page a
+# person reads and not one string at a time. an engine output line keeps its
+# em dash as a field separator, which is why no engine literal is read here.
+
+EM_DASH = "—"
+
+MIN_SENTENCE = 4     # words; below it a fragment is a label, not a sentence
+MONOTONY_SPAN = 2    # words; three sentences inside it are one flat run
+THREE_CEILING = 2    # rule-of-three lists per page before the smell prints
+PACE_LOW, PACE_HIGH = 15.0, 20.0   # mean sentence, framework.md §2
+PACE_SD = 8.0                      # deviation that reads human, research §2
+FILLER_PER_1000 = 2.0              # framework.md §3: formal prose floors here
+
+# the four contrast constructions position 9 names. `not just … but` and
+# `isn't … it's` fire on no page in this tree today, which is why they gate
+# with the other two: they name a shape nobody here writes by accident.
+CONTRAST_MOVES = (
+    ("x, not y", re.compile(r",\s+not\b(?!\s+(?:yet|once|even)\b)", re.I)),
+    ("not just x but y",
+     re.compile(r"\bnot\s+(?:just|only|merely|simply)\b[^.;:!?]{0,80}?\bbut\b",
+                re.I)),
+    ("x isn't y, it's z",
+     re.compile(r"\b(?:is|are|was|were)\s*n[o']t\b[^.;:!?]{0,60}?,"
+                r"\s*(?:it's|it is|they're|they are|its)\b", re.I)),
+    ("rather than", re.compile(r"\brather than\b", re.I)),
+)
+
+# a, b, and c inside one clause. the ceiling is per page: one list of three
+# is a list, and a page of them is the machine's cadence (tells.md tier B).
+# a four-item list ends the same way, so a comma standing just before the
+# match drops it: what is counted is three items and no more.
+RULE_OF_THREE = re.compile(
+    r"[^,.;:!?()\n]{2,60},\s+[^,.;:!?()\n]{2,60},\s+and\s+")
+
+# the discourse markers framework.md §3 counts. `so` and `now` stay out: this
+# tree writes both as ordinary words, and a smell that fires on those is noise.
+FILLERS = re.compile(
+    r"\b(?:of course|in fact|that said|after all|needless to say|to be fair"
+    r"|to be honest|at the end of the day|as it happens)\b"
+    r"|(?<!\bas )(?<![\w'’])(?:well|oh|anyway|honestly|frankly|actually"
+    r"|basically|essentially|obviously|indeed)(?=,)", re.I)
+
+# `<!-- voice: contrast ok: the reason -->` takes one line out of one rule.
+# the reason is required, the way every row of EXEMPTIONS carries one.
+PROSE_RULES = ("em dash", "contrast", "three", "monotony", "pace", "filler")
+VOICE_MARK = re.compile(
+    r"<!--\s*voice:\s*(?P<rule>[a-z ]+?)\s+ok\s*[:—-]?\s*"
+    r"(?P<why>[^>]*?)\s*-->")
+
+# the changelog's own rule. a release heading is `## <version> — <tagline>
+# (<date>)`, the shape `integrity._changelog_section` parses.
+CHANGELOG_RELEASE = re.compile(r"^##\s+(\d[\w.]*)\s+—\s*(.*)$")
+
+
+def _version():
+    """this core's version, off the VERSION file; empty when it cannot be read."""
+    try:
+        return _text(os.path.join(REPO, "VERSION")).strip()
+    except (OSError, UnicodeDecodeError):
+        return ""
+
+
+def changelog_history(text, version=None):
+    """the 1-based lines of CHANGELOG.md check E does not read: the history.
+
+    a changelog is a record of what each release said, and holding a shipped
+    section to a convention that landed after it would mean rewriting the
+    past. so the check reads the section being written now — the `in progress`
+    heading, or the section `VERSION` names while nothing newer stands above
+    it — and blanks from the next release heading to the end of the file.
+    """
+    version = _version() if version is None else version
+    lines = text.splitlines()
+    current = False
+    for n, line in enumerate(lines, 1):
+        m = CHANGELOG_RELEASE.match(line)
+        if not m:
+            continue
+        if not current and ("in progress" in m.group(2) or m.group(1) == version):
+            current = True
+            continue
+        return set(range(n, len(lines) + 1))
+    return set()
+
+
+_FENCE = re.compile(r"^\s*(?:```|~~~)")
+_ROW = re.compile(r"^\s*\|")
+_HTML = re.compile(r"^\s*<!--")
+_BLOCK = re.compile(r"^(?: {4,}|\t)\S")
+_ITEM = re.compile(r"^(?:[-*+]\s+|\d+[.)]\s+)(.*)$")
+_SPLIT = re.compile(r"(?<=[.!?])\s+")
+_TICKS = re.compile(r"`[^`\n]*`")
+
+
+def prose_marks(text):
+    """{lineno: {rule, …}} — what each `voice:` marker takes out of the check.
+
+    a marker rules its own line and the next line carrying words, so it can
+    sit above the sentence it answers for. a marker with no reason rules
+    nothing: `prose_mark_errors` reports it instead.
+    """
+    lines = text.splitlines()
+    out = {}
+    for n, line in enumerate(lines, 1):
+        for m in VOICE_MARK.finditer(line):
+            rule, why = m.group("rule").strip(), m.group("why").strip()
+            if rule not in PROSE_RULES or not why:
+                continue
+            out.setdefault(n, set()).add(rule)
+            j = n
+            while j < len(lines):
+                if lines[j].strip() and not _HTML.match(lines[j]):
+                    out.setdefault(j + 1, set()).add(rule)
+                    break
+                j += 1
+    return out
+
+
+def prose_mark_errors(text):
+    """the markers that name no rule or carry no reason — each one gates."""
+    out = []
+    for n, line in enumerate(text.splitlines(), 1):
+        for m in VOICE_MARK.finditer(line):
+            rule, why = m.group("rule").strip(), m.group("why").strip()
+            if rule not in PROSE_RULES or not why:
+                out.append((n, m.group(0)[:60]))
+    return out
+
+
+def prose_body(text, rel=""):
+    """[(lineno, line)] — the page as prose, every other region blanked.
+
+    blanked out: the exempt regions, the frontmatter, fenced and indented
+    blocks, table rows and html comments. a backticked span becomes one
+    token, so a quoted engine line spends no em dash and costs one word.
+    """
+    if rel:
+        text = blanked(text, rel, "prose")
+    out = []
+    fenced = front = block = False
+    blank = True
+    for n, line in enumerate(text.splitlines(), 1):
+        if n == 1 and line.strip() == "---":
+            front = True
+            out.append((n, ""))
+            continue
+        if front:
+            out.append((n, ""))
+            front = line.strip() != "---"
+            continue
+        if _FENCE.match(line):
+            fenced = not fenced
+            out.append((n, ""))
+            continue
+        # an indented block opens after a blank line and runs to the next
+        # line that starts nearer the margin. a wrapped list item is indented
+        # too, and it follows the item's own line, so it stays prose.
+        if _BLOCK.match(line) and (block or blank):
+            block = True
+            out.append((n, ""))
+            blank = False
+            continue
+        if line.strip():
+            block = False
+        blank = not line.strip()
+        if fenced or _ROW.match(line) or _HTML.match(line):
+            out.append((n, ""))
+            continue
+        out.append((n, _TICKS.sub("x", line)))
+    return out
+
+
+def prose_sentences(text, rel=""):
+    """[(lineno, words, sentence)] — one entry per sentence a person reads.
+
+    a blank line, a heading and a list marker each end the run, so a bullet
+    counts as its own sentence and a heading never joins the paragraph under
+    it. the line number is where the sentence's paragraph opens.
+    """
+    groups, buf, start = [], [], None
+    for n, line in prose_body(text, rel):
+        stripped = line.strip()
+        item = _ITEM.match(stripped)
+        if not stripped or stripped.startswith("#") or item:
+            if buf:
+                groups.append((start, " ".join(buf)))
+            buf, start = [], None
+        if not stripped or stripped.startswith("#"):
+            continue
+        if item:
+            stripped = item.group(1)
+        if start is None:
+            start = n
+        buf.append(stripped)
+    if buf:
+        groups.append((start, " ".join(buf)))
+    out = []
+    for n, joined in groups:
+        for part in _SPLIT.split(re.sub(r"\s+", " ", joined).strip()):
+            words = re.findall(r"[A-Za-z0-9'’]+", part)
+            if len(words) >= MIN_SENTENCE:
+                out.append((n, len(words), part))
+    return out
+
+
+def em_dash_hits(text, rel=""):
+    """[(lineno, line)] — every em dash left in prose. the gate is zero."""
+    marks = prose_marks(text)
+    return [(n, l.strip()) for n, l in prose_body(text, rel)
+            if EM_DASH in l and "em dash" not in marks.get(n, ())]
+
+
+def contrast_hits(text, rel=""):
+    """[(lineno, move, line)] — the contrast constructions, by name."""
+    marks, out = prose_marks(text), []
+    for n, line in prose_body(text, rel):
+        if "contrast" in marks.get(n, ()):
+            continue
+        for name, rx in CONTRAST_MOVES:
+            if rx.search(line):
+                out.append((n, name, line.strip()))
+    return out
+
+
+def three_hits(text, rel=""):
+    """[(lineno, phrase)] — a, b, and c inside one clause. counted, then smelled.
+
+    read over whole sentences, so a list wrapped across lines is one list.
+    """
+    marks, out = prose_marks(text), []
+    for n, _, sent in prose_sentences(text, rel):
+        if "three" in marks.get(n, ()):
+            continue
+        for m in RULE_OF_THREE.finditer(sent):
+            if sent[:m.start()].rstrip().endswith(","):
+                continue
+            out.append((n, m.group(0).strip()))
+            break
+    return out
+
+
+def monotony_hits(text, rel=""):
+    """[(lineno, (a, b, c))] — three sentences in a row of the same length.
+
+    tells.md's second tier-A finding: a run of three reads as rhythm nobody
+    wrote. the span is MONOTONY_SPAN words, so 18/19/20 is a run and 18/21/20
+    is not.
+    """
+    marks, sents, out = prose_marks(text), prose_sentences(text, rel), []
+    for i in range(len(sents) - 2):
+        run = sents[i:i + 3]
+        lens = [w for _, w, _ in run]
+        if max(lens) - min(lens) > MONOTONY_SPAN:
+            continue
+        if any("monotony" in marks.get(n, ()) for n, _, _ in run):
+            continue
+        out.append((run[0][0], tuple(lens)))
+    return out
+
+
+def pace(text, rel=""):
+    """(mean, deviation, sentences) — the page's rhythm, printed as a smell."""
+    lens = [w for _, w, _ in prose_sentences(text, rel)]
+    if not lens:
+        return 0.0, 0.0, 0
+    mean = float(sum(lens)) / len(lens)
+    var = sum((n - mean) ** 2 for n in lens) / len(lens)
+    return mean, var ** 0.5, len(lens)
+
+
+def filler_count(text, rel=""):
+    """(fillers, words) — the discourse markers, over the words they ride on."""
+    marks, hits, words = prose_marks(text), 0, 0
+    for n, line in prose_body(text, rel):
+        words += len(re.findall(r"[A-Za-z0-9'’]+", line))
+        if "filler" not in marks.get(n, ()):
+            hits += len(FILLERS.findall(line))
+    return hits, words
+
+
+def filler_ceiling(words):
+    """the count a page of this size may spend: two, or two per 1000 words."""
+    return max(2, int(round(FILLER_PER_1000 * words / 1000.0)))
+
+
 # ----------------------------------------------------------------- the walks
 
 def walk_text_files():
@@ -771,6 +1078,30 @@ def docstring_files():
     tests = os.path.join(REPO, "engine", "tests")
     return source_files() + [os.path.join(tests, n) for n in sorted(os.listdir(tests))
                              if n.endswith(".py")]
+
+
+def prose_files():
+    """the pages position 9 governs: everything a person reads as prose.
+
+    the README, the docs, the charter, the style, the briefs, the skills,
+    the commands, the soul and the changelog. `soul/voice.md` names the same
+    set in words, and the engine's own output lines are outside both.
+    """
+    out = [os.path.join(REPO, "README.md"), os.path.join(REPO, "CHANGELOG.md"),
+           os.path.join(REPO, "vessel", "claude-code", "CLAUDE.md")]
+    for sub in ("docs", "soul"):
+        d = os.path.join(REPO, sub)
+        out += [os.path.join(d, n) for n in sorted(os.listdir(d))
+                if n.endswith(".md")]
+    for sub in ("output-styles", "agents", "skills", "commands"):
+        d = os.path.join(REPO, "vessel", "plugin", sub)
+        if not os.path.isdir(d):
+            continue
+        for dirpath, dirnames, filenames in os.walk(d):
+            dirnames[:] = [x for x in dirnames if x not in SKIP_DIRS]
+            out += [os.path.join(dirpath, n) for n in sorted(filenames)
+                    if n.endswith(".md")]
+    return [p for p in sorted(set(out)) if os.path.exists(p)]
 
 
 def negation_files():
@@ -815,11 +1146,25 @@ class Report(object):
         self.moves = []          # (where, move, text)          gate
         self.docstrings = 0
         self.doc_case = []       # (kind, where, first line)    gate on modules
+        self.em_dash = []        # (where, line)                gate
+        self.contrast = []       # (where, move, line)          gate
+        self.monotony = []       # (where, lengths)             gate
+        self.bad_marks = []      # (where, marker)              gate
+        self.three = []          # (rel, count)                 smell
+        self.pace = []           # (rel, mean, deviation, n)    smell
+        self.filler = []         # (rel, count, ceiling)        smell
+        self.prose = []          # (rel, gates, smells)         counted
 
     @property
     def gates(self):
         return (self.forbidden + self.stacked + self.naked + self.case
-                + self.spec_words + self.moves)
+                + self.spec_words + self.moves + self.em_dash + self.contrast
+                + self.monotony + self.bad_marks)
+
+    @property
+    def prose_gates(self):
+        return (len(self.em_dash) + len(self.contrast) + len(self.monotony)
+                + len(self.bad_marks))
 
     def line(self):
         return ("coverage: %d file(s), %d printed literal(s), %d mapped to a "
@@ -892,6 +1237,37 @@ def check_source(path, rep, phrases, rows):
 
 
 
+def check_prose(path, rep):
+    """check E over one page: three gates, three counts, one `prose:` row."""
+    rel = _rel(path)
+    try:
+        text = _text(path)
+    except (UnicodeDecodeError, OSError):
+        return
+    for n, line in em_dash_hits(text, rel):
+        rep.em_dash.append(("%s:%d" % (rel, n), line))
+    for n, move, line in contrast_hits(text, rel):
+        rep.contrast.append(("%s:%d" % (rel, n), move, line))
+    for n, lens in monotony_hits(text, rel):
+        rep.monotony.append(("%s:%d" % (rel, n), lens))
+    for n, mark in prose_mark_errors(text):
+        rep.bad_marks.append(("%s:%d" % (rel, n), mark))
+    threes = three_hits(text, rel)
+    if len(threes) > THREE_CEILING:
+        rep.three.append((rel, len(threes)))
+    mean, sd, n_sents = pace(text, rel)
+    if n_sents >= 10 and (not PACE_LOW <= mean <= PACE_HIGH or sd < PACE_SD):
+        rep.pace.append((rel, mean, sd, n_sents))
+    fillers, words = filler_count(text, rel)
+    ceiling = filler_ceiling(words)
+    if fillers > ceiling:
+        rep.filler.append((rel, fillers, ceiling))
+    rep.prose.append((rel, len(em_dash_hits(text, rel))
+                      + len(contrast_hits(text, rel))
+                      + len(monotony_hits(text, rel)),
+                      (len(threes), mean, sd, n_sents, fillers, ceiling)))
+
+
 def check_docstrings(path, rep):
     rel = _rel(path)
     for kind, lineno, name, text in docstrings(path):
@@ -910,10 +1286,12 @@ def run(paths=None):
         texts = [p for p in paths if not p.endswith(".py")]
         sources = [p for p in paths if p.endswith(".py")]
         negations = [p for p in paths if p.endswith(".md")]
+        proses = negations
     else:
         texts = walk_text_files()
         sources = source_files()
         negations = negation_files()
+        proses = prose_files()
     for p in texts + [s for s in sources if paths]:
         check_text(p, rep, phrases)
     if not paths:
@@ -921,6 +1299,8 @@ def run(paths=None):
             check_text(p, rep, phrases)
     for p in negations:
         check_negation(p, rep)
+    for p in proses:
+        check_prose(p, rep)
     for p in sources:
         check_source(p, rep, phrases, rows)
     for p in (sources if paths else docstring_files()):
@@ -950,6 +1330,26 @@ def report(rep, sample=0, out=None):
               "docstrings)\n"
               % ("smell" if rep.doc_case else "ok   ", len(rep.doc_case),
                  rep.docstrings, len(mods)))
+    smelly = set(r for r, _ in rep.three) | set(r for r, _, _, _ in rep.pace) \
+        | set(r for r, _, _ in rep.filler)
+    for rel, gates, counts in sorted(rep.prose):
+        three, mean, sd, n_sents, fillers, ceiling = counts
+        mark = "FAIL " if gates else ("smell" if rel in smelly else "ok   ")
+        out.write("%s prose %-40s em/contrast/flat %d · three %d, pace "
+                  "%.1f/%.1f, filler %d/%d\n"
+                  % (mark, rel, gates, three, mean, sd, fillers, ceiling))
+    if rep.prose:
+        out.write("%s prose: %d page(s), %d gate(s), %d smell(s)\n"
+                  % ("FAIL " if rep.prose_gates else "ok   ", len(rep.prose),
+                     rep.prose_gates, len(smelly)))
+    for where, line in rep.em_dash:
+        out.write("FAIL %s keeps an em dash in prose: %s\n" % (where, line[:70]))
+    for where, move, line in rep.contrast:
+        out.write("FAIL %s writes %r: %s\n" % (where, move, line[:60]))
+    for where, lens in rep.monotony:
+        out.write("FAIL %s runs three sentences of %s words\n" % (where, lens))
+    for where, mark in rep.bad_marks:
+        out.write("FAIL %s marks a rule with no reason: %s\n" % (where, mark))
     for where, phrase, why in rep.forbidden:
         out.write("FAIL %s says %r — %s\n" % (where, phrase, why))
     for rel, s in rep.stacked:

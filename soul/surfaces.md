@@ -1,4 +1,4 @@
-# surfaces — one voice, a budget per room
+# surfaces: one voice, a budget per room
 
 lineage: written new 2026-08-22 for the second wave, from voice.md's
 positions, gov.uk's error-message rules, clig's error section, voice.md
@@ -6,8 +6,8 @@ positions, gov.uk's error-message rules, clig's error section, voice.md
 stratum: dated positions, newest word wins, no pin. rows 22 to 30 were
 added 2026-08-22 for 9.0's new surfaces, from the sandbox-next specs.
 
-**row 0 — clear beats voice.** every row below is the same voice at a
-budget; where character and clarity pull apart, clarity wins (law 15).
+**row 0: clear beats voice.** every row below is the same voice at a budget.
+where character and clarity pull apart, clarity wins (law 15).
 
 | # | surface | max words | case | first person | opens with | avoid — and why | exit | exemplar |
 |---|---|---|---|---|---|---|---|---|
@@ -46,25 +46,27 @@ budget; where character and clarity pull apart, clarity wins (law 15).
 | 29 | doctor's legend line | 14 | lowercase; `LOOK` by row 4's exemption | no: it defines the marks | `ok`, the first mark it glosses | a mark with no gloss — a stranger reads `?` as a fault rather than a gap in what doctor can see | 0 | `ok = proved · LOOK = needs you · ? = could not read` |
 | 30 | `make --close` on red — the refusal | 20 | lowercase; `FAIL` quotes the check line's own mark | no: the checks refused, and the make stays open | the count of red checks | an `--anyway` door — a close over a red check is a claim the check contradicts (R11) | 1 | `2 red — no close: FAIL <check line>. fix them, then: sandbox make --close` |
 
-rows 22 to 30 are **9.0, proposed** — written 2026-08-22 from
+rows 22 to 30 are **9.0, proposed**, written 2026-08-22 from
 `sandbox-next`'s experience spec and its gate, doctor-status, export-page,
 shelf, vessel-plugin and make-ship parts, for the surfaces 9.0 adds. rows 1
-to 21 carry the second wave's cold read; these nine do not yet, and the
+to 21 carry the second wave's cold read. these nine do not yet, and the
 owner's cold read is what closes them.
 
-how the columns are read: max words is a ceiling the lint counts; case is
+how the columns are read. max words is a ceiling the lint counts. case is
 lowercase-first unless the cell says otherwise, and FAIL is the one word
-allowed in caps (ruled 2026-08-22) beside its three ruled exemptions,
+allowed in caps (ruled 2026-08-22) beside its three ruled exemptions:
 doctor's LOOK, the statusline's DRAFTS (gate 3, 2026-08-22) and fetch's
-UNVERIFIED (R23, 2026-08-23); first person is "i"
-and only where the cell allows; the opening verb is checked as a smell, not
-a gate; the avoid cell is a forbidden move with its reason, and the lint
-holds the mechanical half (please / sorry / invalid in a refusal, caps
-outside FAIL, a cut word anywhere); the exit code is checked at the verb;
-the exemplar must pass its own row.
+UNVERIFIED (R23, 2026-08-23). first person is "i", and only where the cell
+allows. the opening verb is checked as a smell and never as a gate. the
+avoid cell is a forbidden move with its reason, and the lint holds the
+mechanical half (please / sorry / invalid in a refusal, caps outside FAIL, a
+cut word anywhere). the exit code column is checked against what the verb
+actually returns. the exemplar must pass its own row.
 
-open, on this page: the list is empty. the one item it carried was ruled:
+open, on this page: the list is empty, because the one item it carried was
+ruled.
 
-1. **`UNVERIFIED` in fetch's source line** (row 26) — RULED R23 (owner,
-   2026-08-23): a fourth signal word beside FAIL, LOOK, DRAFTS, because it
-   marks a card without a signature, and the reader is about to trust it. `engine/voicelint.py` `CAPS_ALLOWED` carries the four.
+1. **`UNVERIFIED` in fetch's source line** (row 26), RULED R23 (owner,
+   2026-08-23): a fourth signal word beside FAIL, LOOK and DRAFTS, because it
+   marks a card without a signature, and the reader is about to trust it.
+   `engine/voicelint.py` `CAPS_ALLOWED` carries the four.

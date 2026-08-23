@@ -133,7 +133,7 @@ class TestSoul(unittest.TestCase):
             self.assertIn(i, carried, "conviction %s is carried by nothing" % i)
 
     def test_the_lint_fires(self):
-        # a green result must mean something: a deliberately broken claim is caught
+        # a green result must mean something: a claim broken on purpose is caught
         token = re.compile(r"`((?:engine|law|vessel|docs)/[^`\n]+)`")
         fake = "the organ is `engine/does-not-exist.py` here"
         found = token.findall(fake)

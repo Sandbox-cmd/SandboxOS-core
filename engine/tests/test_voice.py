@@ -374,6 +374,250 @@ class TestFlatFixtures(unittest.TestCase):
               "— the owner's eye is the check" % (len(rows), len(rows) // 2))
 
 
+class TestProse(unittest.TestCase):
+    """check E: soul/voice.md position 9, over every page a person reads.
+
+    three gates (the em dash, the four contrast constructions, a flat run of
+    three sentences) and three counts that print (the rule of three, the pace,
+    the fillers). the rule is real from the day it lands, so the pages that
+    fail it are frozen below by exact count instead of the check being loosened.
+    """
+
+    # page -> the ceiling it owes (em dash, contrast, monotony) on the day
+    # check E landed. R27 (owner, 2026-08-23) orders every page a person reads
+    # rebuilt to position 9. the row is a ceiling on the page's total, so a
+    # rebuild that trades em dashes for a flat run still ratchets the number
+    # down; a page over its total is a regression, a page missing from the
+    # table is a page the check forgot, and (0, 0, 0) is a page already
+    # rebuilt. a rebuild lowers its row in the same commit as the words, and
+    # `test_the_cleared_rows_print` names the rows that are ready to drop.
+    # the voicer and the challenger quote `return, not perfection`, conviction
+    # 4's own name in soul/values.md. both answer for it the way soul/voice.md
+    # does, with a `<!-- voice: contrast ok: … -->` marker; crew.json carries
+    # the marker at the head of that conviction's text, so it renders on the
+    # line the name sits on and the rule is exempted where the name is quoted.
+    PROSE_DEBT = {
+        'CHANGELOG.md': (0, 0, 0),
+        'README.md': (0, 0, 0),
+        'docs/MANUAL.md': (0, 0, 0),
+        'docs/OPEN.md': (0, 0, 0),
+        'docs/START-HERE.md': (0, 0, 0),
+        'soul/ground-truth.md': (0, 0, 0),
+        'soul/lineage.md': (0, 0, 0),
+        'soul/partner.md': (0, 0, 0),
+        'soul/surfaces.md': (0, 0, 0),
+        'soul/values.md': (0, 0, 0),
+        'soul/voice.md': (0, 0, 0),
+        'vessel/claude-code/CLAUDE.md': (0, 0, 0),
+        'vessel/plugin/agents/challenger.md': (0, 0, 0),
+        'vessel/plugin/agents/checker.md': (0, 0, 0),
+        'vessel/plugin/agents/keeper.md': (0, 0, 0),
+        'vessel/plugin/agents/producer.md': (0, 0, 0),
+        'vessel/plugin/agents/surveyor.md': (0, 0, 0),
+        'vessel/plugin/agents/voicer.md': (0, 0, 0),
+        'vessel/plugin/commands/make.md': (0, 0, 0),
+        'vessel/plugin/commands/sandbox.md': (0, 0, 0),
+        'vessel/plugin/output-styles/across-the-desk.md': (0, 0, 0),
+        'vessel/plugin/skills/backlog-sync/SKILL.md': (0, 0, 0),
+        'vessel/plugin/skills/sandbox-workshop/SKILL.md': (0, 0, 0),
+        'vessel/plugin/skills/spec-driven-discovery/SKILL.md': (0, 0, 0),
+    }
+
+    # the pages rebuilt to position 9. they are held at zero by name, so a
+    # later edit cannot quietly spend the headroom a ceiling row would give it.
+    CLEAN = ("soul/voice.md",
+             "vessel/claude-code/CLAUDE.md",
+             "vessel/plugin/agents/challenger.md",
+             "vessel/plugin/agents/checker.md",
+             "vessel/plugin/agents/keeper.md",
+             "vessel/plugin/agents/producer.md",
+             "vessel/plugin/agents/surveyor.md",
+             "vessel/plugin/agents/voicer.md",
+             "vessel/plugin/commands/make.md",
+             "vessel/plugin/commands/sandbox.md",
+             "vessel/plugin/output-styles/across-the-desk.md")
+
+    def setUp(self):
+        self.rep = voicelint.run()
+
+    def _counts(self):
+        out = {voicelint._rel(p): [0, 0, 0] for p in voicelint.prose_files()}
+        for where, _ in self.rep.em_dash:
+            out[where.rsplit(":", 1)[0]][0] += 1
+        for where, _, _ in self.rep.contrast:
+            out[where.rsplit(":", 1)[0]][1] += 1
+        for where, _ in self.rep.monotony:
+            out[where.rsplit(":", 1)[0]][2] += 1
+        return {k: tuple(v) for k, v in out.items()}
+
+    def test_no_page_is_over_the_ceiling_it_owes(self):
+        """the ceiling is the page's total. a rebuild that trades 77 em dashes
+        for two flat runs is progress, and a per-column pin would call it a
+        regression; the tuple stays because it says what the page owed."""
+        counts = self._counts()
+        over = ["%s owes %d and reads %d %s"
+                % (rel, sum(self.PROSE_DEBT[rel]), sum(got), tuple(got))
+                for rel, got in sorted(counts.items())
+                if rel in self.PROSE_DEBT
+                and sum(got) > sum(self.PROSE_DEBT[rel])]
+        self.assertEqual(over, [], "a prose page got worse under position 9")
+
+    def test_every_prose_page_has_a_row(self):
+        """a page the table forgot is a page the ceiling never held."""
+        rels = sorted(voicelint._rel(p) for p in voicelint.prose_files())
+        self.assertEqual(rels, sorted(self.PROSE_DEBT),
+                         "the prose set and the debt table disagree")
+
+    def test_the_pages_written_to_position_9_stay_at_zero(self):
+        counts = self._counts()
+        for rel in self.CLEAN:
+            self.assertEqual(counts.get(rel, (0, 0, 0)), (0, 0, 0),
+                             "%s picked up a prose gate" % rel)
+
+    def test_the_cleared_rows_print(self):
+        """what the next rebuild commit can lower, said out loud."""
+        counts = self._counts()
+        drop = [rel for rel, owed in sorted(self.PROSE_DEBT.items())
+                if sum(owed) and sum(counts.get(rel, (0, 0, 0))) < sum(owed)]
+        for rel in drop:
+            print("cleared: %s owes %s and reads %s"
+                  % (rel, self.PROSE_DEBT[rel], counts.get(rel, (0, 0, 0))))
+        print("prose debt: %d of %d page(s) still owe the gate, %d row(s) "
+              "ready to drop"
+              % (len([r for r, v in counts.items() if any(v)]),
+                 len(self.PROSE_DEBT), len(drop)))
+
+    def test_the_soul_page_passes_its_own_position(self):
+        """position 9 is written on a page that obeys it: no gate, no smell."""
+        text = _read("soul/voice.md")
+        rel = "soul/voice.md"
+        self.assertEqual(voicelint.em_dash_hits(text, rel), [])
+        self.assertEqual(voicelint.contrast_hits(text, rel), [])
+        self.assertEqual(voicelint.monotony_hits(text, rel), [])
+        self.assertLessEqual(len(voicelint.three_hits(text, rel)),
+                             voicelint.THREE_CEILING)
+        mean, sd, n = voicelint.pace(text, rel)
+        self.assertGreaterEqual(n, 10)
+        self.assertTrue(voicelint.PACE_LOW <= mean <= voicelint.PACE_HIGH,
+                        "mean sentence %.1f words" % mean)
+        self.assertGreaterEqual(sd, voicelint.PACE_SD)
+        print("voice.md: mean %.1f words, deviation %.1f over %d sentence(s)"
+              % (mean, sd, n))
+
+    def test_the_page_names_where_position_9_stops(self):
+        """the engine's own line keeps the em dash, and the page says so."""
+        text = _read("soul/voice.md")
+        self.assertIn("written like a person, for a person", text)
+        for token in ("field separator", "check E", "framework.md"):
+            self.assertIn(token, text, token)
+
+    def test_the_projections_carry_the_rules_in_their_own_words(self):
+        """read with the line breaks flattened: a page rewrapped by hand still
+        carries the same sentences, and the rule is the sentence."""
+        flat = lambda rel: re.sub(r"\s+", " ", _read(rel))
+        style = flat("vessel/plugin/output-styles/across-the-desk.md")
+        for token in ("vary sentence length hard", "so is the em dash",
+                      "contrast reflex", "rule of three", "fillers per reply"):
+            self.assertIn(token, style, token)
+        voicer = flat("vessel/plugin/agents/voicer.md")
+        for token in ("the shape", "the six settings", "word stock", "pace:",
+                      "assumed context", "relationship"):
+            self.assertIn(token, voicer, token)
+
+    def test_the_prose_gates_fire_on_their_fixtures(self):
+        d = "engine/tests/voice_fixtures/"
+        for name, fn in (("emdash", voicelint.em_dash_hits),
+                         ("contrast", voicelint.contrast_hits),
+                         ("monotony", voicelint.monotony_hits)):
+            self.assertTrue(fn(_read(d + name + ".fail.md")),
+                            "%s.fail.md passed" % name)
+            self.assertEqual(fn(_read(d + name + ".pass.md")), [],
+                             "%s.pass.md failed" % name)
+
+    def test_the_changelog_is_read_down_to_its_history(self):
+        """check E holds the section being written and leaves the releases
+        under it standing: a shipped section is what that release said."""
+        d = "engine/tests/voice_fixtures/"
+        rel = "CHANGELOG.md"
+        bad, good = _read(d + "changelog.fail.md"), _read(d + "changelog.pass.md")
+        self.assertTrue(voicelint.em_dash_hits(bad, rel), "changelog.fail.md passed")
+        self.assertTrue(voicelint.contrast_hits(bad, rel), "changelog.fail.md passed")
+        self.assertEqual(voicelint.em_dash_hits(good, rel), [])
+        self.assertEqual(voicelint.contrast_hits(good, rel), [])
+        # the same page with nothing blanked: the marks are down in the history,
+        # which is where the rule leaves them.
+        self.assertTrue(voicelint.em_dash_hits(good))
+        self.assertNotIn(3, voicelint.changelog_history(good), "the open heading")
+        # the other half of the rule: with no `in progress` section, the one
+        # `VERSION` names is the section being written.
+        lines = good.replace("9.9.9 — in progress",
+                             "9.9.9 — shipped (2026-01-02)").splitlines()
+        history = voicelint.changelog_history("\n".join(lines), "9.9.9")
+        self.assertEqual(min(history),
+                         1 + next(i for i, l in enumerate(lines)
+                                  if l.startswith("## 9.9.8 ")))
+        print("changelog: %d of %d line(s) read as history"
+              % (len(voicelint.changelog_history(good)),
+                 len(good.splitlines())))
+
+    def test_the_prose_smells_fire_on_their_fixtures(self):
+        d = "engine/tests/voice_fixtures/"
+        self.assertGreater(len(voicelint.three_hits(_read(d + "three.fail.md"))),
+                           voicelint.THREE_CEILING)
+        self.assertEqual(voicelint.three_hits(_read(d + "three.pass.md")), [])
+        hot, cool = voicelint.pace(_read(d + "pace.fail.md")), \
+            voicelint.pace(_read(d + "pace.pass.md"))
+        self.assertLess(hot[0], voicelint.PACE_LOW)
+        self.assertLess(hot[1], voicelint.PACE_SD)
+        self.assertTrue(voicelint.PACE_LOW <= cool[0] <= voicelint.PACE_HIGH)
+        self.assertGreaterEqual(cool[1], voicelint.PACE_SD)
+        for name, over in (("filler.fail.md", True), ("filler.pass.md", False)):
+            hits, words = voicelint.filler_count(_read(d + name))
+            self.assertEqual(hits > voicelint.filler_ceiling(words), over, name)
+
+    def test_an_exemption_marker_carries_a_reason_or_it_rules_nothing(self):
+        """the EXEMPTIONS rule, in a comment: a skip with no reason is a hole."""
+        d = "engine/tests/voice_fixtures/"
+        bad = _read(d + "mark.fail.md")
+        self.assertTrue(voicelint.prose_mark_errors(bad))
+        self.assertTrue(voicelint.contrast_hits(bad),
+                        "a marker with no reason exempted the line anyway")
+        good = _read(d + "mark.pass.md")
+        self.assertEqual(voicelint.prose_mark_errors(good), [])
+        self.assertEqual(voicelint.contrast_hits(good), [])
+
+    def test_the_marker_is_used_on_a_real_page(self):
+        """the mechanism is proved on the tree, never only on a fixture."""
+        text = _read("soul/voice.md")
+        marks = voicelint.prose_marks(text)
+        self.assertTrue(marks, "no voice marker in soul/voice.md")
+        self.assertEqual(voicelint.prose_mark_errors(text), [])
+        self.assertEqual([w for w, _ in self.rep.bad_marks], [])
+
+    def test_the_prose_set_is_every_page_a_person_reads(self):
+        rels = {voicelint._rel(p) for p in voicelint.prose_files()}
+        for rel in ("README.md", "CHANGELOG.md", "docs/MANUAL.md",
+                    "docs/START-HERE.md", "docs/OPEN.md", "soul/voice.md",
+                    "vessel/claude-code/CLAUDE.md",
+                    "vessel/plugin/output-styles/across-the-desk.md",
+                    "vessel/plugin/agents/voicer.md",
+                    "vessel/plugin/commands/sandbox.md",
+                    "vessel/plugin/skills/sandbox-workshop/SKILL.md"):
+            self.assertIn(rel, rels, rel)
+        for rel in rels:
+            self.assertTrue(rel.endswith(".md"), rel)
+        self.assertEqual(len(rels), len(self.rep.prose))
+
+    def test_the_pace_of_every_page_prints(self):
+        for rel, mean, sd, n in sorted(self.rep.pace):
+            print("smell: %s mean %.1f words, deviation %.1f over %d sentence(s)"
+                  % (rel, mean, sd, n))
+        owed = sum(sum(v) for v in self.PROSE_DEBT.values())
+        print("prose: %d page(s) read, %d gate(s) owed at the ceiling, "
+              "%d off the pace" % (len(self.rep.prose), owed,
+                                   len(self.rep.pace)))
+
+
 class TestPinMap(unittest.TestCase):
     """repair S4: the pin map reads both forms, so no form goes invisible."""
 

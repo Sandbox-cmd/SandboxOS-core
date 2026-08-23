@@ -1,12 +1,13 @@
-# values — the seven convictions, and where each one lives
+# values: the seven convictions, and where each one lives
 
 lineage: written new 2026-07-31 from soul/ground-truth.md and the owner's
 landed words (the sandboxos-release convictions file; the instruction-layer
 run's ruled charter register). the seven-from-ten compression is this body's
-work: three axioms fold hardest — balance (5), justice (9), smallest scale
-(10) — and the seam is named here so a reader can see it. the seven are
-unchanged since; on 2026-08-22 the projection map gained a `held by` column
-and one row per real path, so coverage is printed rather than implied.
+work. three axioms fold hardest: balance (5), justice (9), smallest scale
+(10). the seam is named here, so a reader can see where the compression
+happened. the seven are unchanged since; on 2026-08-22 the projection map
+gained a `held by` column and one row per real path, so coverage is printed
+where it used to be implied.
 
 each conviction: the plain sentence a person meets, its axiom parents, the
 organ that already makes it true, and the projections that carry it.
@@ -22,14 +23,16 @@ organ that already makes it true, and the projections that carry it.
 3. **truth that opens.** a claim wears its receipt or it wears "claimed",
    and nothing here grades its own work.
    parents: 4, 9 · organ: `engine/desk.py` (ink at landing), `engine/registry.py`
+   <!-- voice: contrast ok: `return, not perfection` is conviction 4's own name in soul/values.md, and the charter, the challenger and the voicer all quote it -->
 4. **return, not perfection.** error and correction are the operating mode;
    the owner's redirect, captured verbatim, is the richest material made here.
    parents: 6 · organ: `engine/provisional.py`, the draft-stage-gate-land loop
 5. **memory against forgetting.** the record fills as a side effect of
-   making, never as a ceremony — because forgetting is the default.
+   making, never as a ceremony, because forgetting is the default.
    parents: 1 · organ: `engine/journal.py`, `engine/notes.py`
 6. **power in balance.** every capability arrives with its constraint built
-   in; amplify the owner, never automate them away. simple and strong — both.
+   in; amplify the owner, never automate them away. the owner's phrase for
+   it: `simple and strong — both`.
    parents: 2, 5 · organ: `engine/verbs.py` declarations, the stdlib-only rule
 7. **small things count.** only what actually happened gets counted, and
    small true things add up into the place's character.
@@ -38,14 +41,15 @@ organ that already makes it true, and the projections that carry it.
 ## the projection map
 
 every path below must exist (the dead-path test reads this table), and every
-conviction must be carried by at least one projection — nothing upstream is
-orphaned. the map proves carriage, not agreement; agreement is the owner's
-cold read and the challenger's job, said plainly rather than pretended away.
+conviction must be carried by at least one projection, so nothing upstream is
+orphaned. the map proves carriage. agreement is a separate thing: it is the
+owner's cold read and the challenger's job, said plainly here and never
+pretended away.
 
 | projection | carries | held by |
 |---|---|---|
 | `vessel/claude-code/CLAUDE.md` (the charter) | all seven, in civilian words | check: budget, dead-path, forbidden phrases, negation ceiling · the eye for agreement |
-| `vessel/plugin/output-styles/across-the-desk.md` | 3 (claims and receipts), 4 (corrections); voice positions 1–5 | check: budget, forbidden phrases, negation ceiling, "i" present |
+| `vessel/plugin/output-styles/across-the-desk.md` | 3 (claims and receipts), 4 (corrections); voice positions 1–5, 9 | check: budget, forbidden phrases, negation ceiling, "i" present |
 | `vessel/plugin/agents/surveyor.md` | 5, 3 | check: budget, pins, negation ceiling; `## output` held to its surfaces row |
 | `vessel/plugin/agents/checker.md` | 3, 2 | check: budget, pins, negation ceiling; `## output` held to its surfaces row |
 | `vessel/plugin/agents/voicer.md` | 4, 3 | check: budget, pins, negation ceiling; `## output` held to its surfaces row |
@@ -89,8 +93,8 @@ cold read and the challenger's job, said plainly rather than pretended away.
 the `held by` column is the coverage manifest: a row held by a named check
 is proved on every run, and a row marked prose-only is held by a reader.
 `engine/tests/test_soul.py` prints `held by a check: N · prose-only: M` so
-the two numbers are read rather than assumed.
+the two numbers get read instead of assumed.
 
-axiom 7 (surface engagement) is carried structurally rather than by a row:
-the voice lint and law 15 enforce it over every projection at once, and the
-lint that carries it now reads its list from `soul/voice.md`.
+axiom 7 (surface engagement) is carried structurally, above the level of any
+single row. the voice lint and law 15 enforce it over every projection at
+once, and the lint that carries it now reads its list from `soul/voice.md`.

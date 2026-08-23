@@ -5,7 +5,7 @@ The workshop's world, named: what kinds of things exist (a project, a build,
 an app, a note, a ruling, a check, a session, an event) and how they link.
 Everything here is a PROJECTION of the journal plus on-disk cards; delete
 every projection and this module rebuilds them from truth. The schema stays
-deliberately small — name, description, a few typed fields — because a wrong
+kept small — name, description, a few typed fields — because a wrong
 model is more dangerous than no model, and small models stay right.
 
 Facts carry their epistemic status openly (law 1): origin says whose hand,

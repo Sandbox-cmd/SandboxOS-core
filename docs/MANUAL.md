@@ -1,4 +1,4 @@
-# MANUAL — every verb
+# MANUAL: every verb
 
 the terminal rule, once: **everything durable stages first, and your
 keystroke at a real terminal lands it.** the machine has no k to press: a
@@ -10,10 +10,10 @@ what lands is what you were shown. `sandbox approve` prints the pile, prints
 the fingerprint of that exact pile, reads one key, and carries the same
 fingerprint into the landing line, so the two can be compared afterwards.
 
-the gate has two speeds: most durable things wait for your k first; a few
+the gate has two speeds. most durable things wait for your k first. a few
 reversible acts (closing a project, an applied correction) happen at once and
-are confirmed at your next `sandbox resume` — snapshot kept, revert path
-named, and a ship carries none of them until they are confirmed.
+are confirmed at your next `sandbox resume`, with the snapshot kept and the
+revert path named, and a ship carries none of them until that confirmation.
 
 ## the verbs
 
@@ -59,17 +59,19 @@ named, and a ship carries none of them until they are confirmed.
 
 ## the daily loop
 
-- arrive: `sandbox resume` — since you left, plus one k for what waited.
-- work: `sandbox project on NAME`, then build; wrap a piece of building in
-  `sandbox make --open "intent"` … `sandbox make --close NAME --summary "…"`
-  — the diff is computed, the summary staged, and the close re-runs your
-  checks before it lands.
+- arrive: `sandbox resume` prints what happened since you left, plus one k
+  for what waited.
+- work: `sandbox project on NAME`, then build. wrap a piece of building in
+  `sandbox make --open "intent"` … `sandbox make --close NAME --summary "…"`.
+  the close computes the diff and stages the summary, then re-runs your checks
+  before it lands.
 - capture: `sandbox note "what you found"` the moment it happens. staged
-  by mistake? `sandbox drafts --drop N` retracts it, printing the dropped
-  line in full — the retraction happens in the open.
-- ship: fill `## checks` in PROJECT.md, `sandbox ship` — your k ratifies
-  those exact check lines once, the digest of them prints on every run, and a
-  green re-ship over the same lines goes through without asking again.
+  by mistake? `sandbox drafts --drop N` retracts it and prints the dropped
+  line in full, so the retraction happens in the open.
+- ship: fill `## checks` in PROJECT.md, then run `sandbox ship`. your k
+  ratifies those exact check lines once. the digest of them prints on every
+  run, and a green re-ship over the same lines goes through without asking
+  again.
 - hand it over: `sandbox export` writes the whole record to one file, in time
   order, with `--redact` for the paths that name you and `--html` for the same
   record as a page. the file says what it is at the foot: opening it leaves
@@ -81,35 +83,36 @@ named, and a ship carries none of them until they are confirmed.
 - `sandbox save PATH` presses a build (card + payload + checksum) onto
   your shelf; `sandbox use NAME` copies it onto a project; a drifted
   payload refuses to spread.
-- `sandbox share NAME --to DIR` stages a build for a shelf repo — the
-  scrub runs first, git history stays home, and the push is your hand.
+- `sandbox share NAME --to DIR` stages a build for a shelf repo. the scrub
+  runs first and git history stays home; the push is your hand.
 - `sandbox fetch --from DIR [NAME]` lists or pulls: bytes verify against
-  the card before your k, and the source is labeled honestly — a matching
-  hash proves internal consistency, not who made it.
-- `sandbox app install DIR` / `app remove NAME` / `app` — add-ons declare
-  their placements; code refuses anything outside the app's own room
+  the card before your k, and the source is labeled honestly, because a
+  matching hash proves the bytes are the same bytes and says nothing at all
+  about the hand behind them.
+- `sandbox app install DIR`, `app remove NAME` and plain `app`: add-ons
+  declare their placements; code refuses anything outside the app's own room
   before your key is even asked; removal takes exactly what install placed.
 
 ## the system itself
 
-- `sandbox update` — moves the workshop to this core's version: placement
+- `sandbox update` moves the workshop to this core's version: placement
   re-sync (your edited files are skipped and named), migrations (numbered,
-  idempotent), version recorded. pulling new code into the clone is your
-  hand; update tells you honestly what it did not do for you.
-- `sandbox verify` / `sandbox seal` — the copy against its manifest.
-  strict verification (a signature, not just hashes) turns on when you set
-  `SANDBOX_MINISIGN_PUBKEY` to the key from the release notes.
-- `sandbox reset PATH-or-NAME` — return one placed file to pristine, on
-  your word. a short name (`sandbox reset CLAUDE.md`) resolves against what
-  init places, even when an older core placed the file without recording it.
-- `sandbox plugin-dir` — print where the plugin lives. the marketplace init
+  idempotent), version recorded. pulling new code into the clone is your own
+  hand, and update tells you honestly what it did not do for you.
+- `sandbox verify` and `sandbox seal` hold this copy against its manifest.
+  strict verification adds a signature over those hashes, and it turns on the
+  moment you set `SANDBOX_MINISIGN_PUBKEY` to the key from the release notes.
+- `sandbox reset PATH-or-NAME` returns one placed file to pristine, on your
+  word. a short name (`sandbox reset CLAUDE.md`) resolves against what init
+  places, even when an older core placed the file without recording it.
+- `sandbox plugin-dir` prints where the plugin lives. the marketplace init
   writes points the host at this core's own tree, so the plugin follows the
   tree instead of holding a copy that goes stale.
-- `sandbox doctor` — health, skew, staleness, skipped placements; every
-  failing line names its fix.
+- `sandbox doctor` reads health, skew, staleness and skipped placements;
+  every failing line names its fix.
 
 ## environment
 
-`SANDBOX_HOME` — where the workshop lives (default `~/Sandbox`). that
-directory is the custody unit: copy it wholesale and everything moves; the
-clone of this repo is disposable.
+`SANDBOX_HOME` sets where the workshop lives (default `~/Sandbox`). that
+directory is the custody unit: copy it wholesale and everything moves with it,
+and the clone of this repo stays disposable.

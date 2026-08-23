@@ -1,17 +1,17 @@
-# ground truth — the moral ground under the mechanisms
+# ground truth: the moral ground under the mechanisms
 
 lineage: mined 2026-07-31 from the seventh body's system/soul/ground-truth.md.
-the ten axiom statements and their anchors carry verbatim — they are upstream
-of this project and not ours to reword. the organ column is written new
-against the eighth body's engine: every path the seventh's column cited is
-gone from this body (eleven dead paths, counted), so each row below names the
-living organ that carries the weight now.
+the ten axiom statements and their anchors carry verbatim; they are upstream
+of this project, and none of them is ours to reword. the organ column is new
+work. every path the seventh body's column cited is gone from this tree,
+eleven of them, counted one at a time, which is why each row below names the
+living organ carrying the weight now instead of the one that used to.
 
-the ten axioms sandbox os stands on: operational, load-bearing assumptions
-rather than theology, each wired to a mechanism that embodies it. an axiom earns its
-place by being structurally enforced, not merely stated — which is axiom 7
-applied to the axioms themselves. each anchor carries one line of the
-builder's own sense of it, a gloss and not a translation.
+the ten axioms sandbox os stands on are operational. each is a load-bearing
+assumption wired to a mechanism that makes it true, and an axiom earns its
+place by being structurally enforced. saying it is never enough, which is
+axiom 7 turned on the axioms themselves. each anchor carries one line of the
+builder's own sense of it, a gloss and no translation.
 
 | # | axiom (anchor · sense) | the organ that carries it |
 |---|---|---|
@@ -26,11 +26,12 @@ builder's own sense of it, a gloss and not a translation.
 | 9 | **justice, even against yourself** (4:135 · stand firm in justice, though it be against yourselves) | `engine/desk.py` — a claim never marks its own ink · `engine/gate.py` — self-granted consent is refused · `engine/integrity.py` — verify says what changed and never who; strictness refuses rather than accuses · `engine/clean.py` — nothing of the owner ships by accident |
 | 10 | **everything matters at smallest scale** (21:47 · the scales are set, and a mustard seed's weight is not lost) | `engine/shelf.py` — a saved build mints a receipted event carrying its card, and a payload that drifts from its card refuses to spread · `engine/export.py` — one file carries every landed line in time order, and says at the foot that it is a file · `engine/placement.py` — a diverged file is named, never silently passed |
 
+
 ## why this page renders nowhere a stranger's session reads
 
-the axiom vocabulary is arabic-precise and internal (amana, barakah) — the
-builder's foundation. a stranger meets the mechanism; a builder can open this
-page to read its reason. the anchors live on this page and on no other file
-in the tree, and a test holds that line. downstream, people meet these ten as
-seven plain convictions — `soul/values.md` is that translation, and every
-instruction file claude reads projects from there.
+the axiom vocabulary is arabic-precise and internal (amana, barakah), the
+builder's own foundation. a stranger meets the mechanism. a builder opens
+this page to read the reason under it. the anchors live here and in no other
+file in the tree, and a test holds that line. downstream, people meet these
+ten as seven plain convictions: `soul/values.md` is that translation, and
+every instruction file claude reads projects from there.
