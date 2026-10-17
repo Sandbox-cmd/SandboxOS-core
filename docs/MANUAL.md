@@ -71,7 +71,12 @@ revert path named, and a ship carries none of them until that confirmation.
 - ship: fill `## checks` in PROJECT.md, then run `sandbox ship`. your k
   ratifies those exact check lines once. the digest of them prints on every
   run, and a green re-ship over the same lines goes through without asking
-  again.
+  again. each line gets 120 seconds; a slower one names its own limit at
+  its end, `node --test slow.mjs # timeout 300s` (1 to 3600 seconds), and
+  the limit is part of the lines your k reads. when the tool stops a line
+  (its limit, ctrl-c, a closed terminal) it stops what the line started, a
+  server it spawned included. a process that forks twice to detach, or one a
+  line leaves running after it finishes, is out of its reach.
 - hand it over: `sandbox export` writes the whole record to one file, in time
   order, with `--redact` for the paths that name you and `--html` for the same
   record as a page. the file says what it is at the foot: opening it leaves

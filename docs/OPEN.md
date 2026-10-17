@@ -1,6 +1,6 @@
 # OPEN: what is still open, said plainly
 
-Sandbox OS 9.0.2. the honest register: what this copy still owes, who closes
+Sandbox OS 9.0.3. the honest register: what this copy still owes, who closes
 each item, what was decided against out loud, and where the hard edges are.
 
 ## named debts (built next, and named until they are)

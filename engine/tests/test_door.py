@@ -227,19 +227,34 @@ class TestPersonClean(unittest.TestCase):
     # own lint.
     NEEDLES = ("/" + "Users" + "/", "/" + "home" + "/")
 
-    def test_no_home_paths_in_tree(self):
-        hits = []
+    def _files(self):
+        """what would ship. in a git checkout: every tracked file and every
+        untracked one git would commit, so an ignored local file (a host's
+        settings.local.json) and a worktree's .git pointer are left out.
+        anywhere else, a release tarball say, everything under the tree."""
+        r = subprocess.run(["git", "-C", REPO, "ls-files", "-z", "--cached",
+                            "--others", "--exclude-standard"],
+                           capture_output=True, text=True)
+        if r.returncode == 0:
+            return [os.path.join(REPO, p) for p in r.stdout.split("\0") if p]
+        found = []
         for dirpath, dirnames, filenames in os.walk(REPO):
             dirnames[:] = [d for d in dirnames if d not in (".git", "__pycache__")]
-            for name in filenames:
-                path = os.path.join(dirpath, name)
-                try:
-                    with open(path, encoding="utf-8") as f:
-                        text = f.read()
-                except (UnicodeDecodeError, OSError):
-                    continue
-                if any(n in text for n in self.NEEDLES):
-                    hits.append(os.path.relpath(path, REPO))
+            found += [os.path.join(dirpath, name) for name in filenames]
+        return found
+
+    def test_no_home_paths_in_tree(self):
+        files = self._files()
+        self.assertIn(os.path.join(REPO, "README.md"), files)
+        hits = []
+        for path in files:
+            try:
+                with open(path, encoding="utf-8") as f:
+                    text = f.read()
+            except (UnicodeDecodeError, OSError):
+                continue
+            if any(n in text for n in self.NEEDLES):
+                hits.append(os.path.relpath(path, REPO))
         self.assertEqual(hits, [], "personal paths in: %s" % hits)
 
 

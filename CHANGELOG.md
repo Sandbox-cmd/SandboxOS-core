@@ -1,5 +1,71 @@
 # CHANGELOG
 
+## 9.0.3 — a check gets the time it needs (2026-10-17)
+
+a check line had 120 seconds, and a slow one that passed was refused as red.
+one project's rehearsal check passes 10 of 10 in 170 seconds, and it held two
+make closes open for days; commerceos split its own check lines four times to
+fit under the limit. the same day showed a second fault. a line that ran out
+of time left what it had started running: a dev server it had started
+detached outlived its check, held its port, and every later run of that check
+hung on the port. the runner killed only the shell.
+
+### built
+
+- a check line may name its own limit at its end, as a shell comment:
+  `node --test slow.mjs # timeout 300s`. the shell ignores it, and the tool
+  reads it in `line_timeout` in `engine/ship.py`. a line with no limit keeps
+  120 seconds, and a timeout names the limit it hit. a limit runs from 1 to
+  3600 seconds. a line that looks like it names one and does not read
+  (`# Timeout 300s`, `# timeout 5m`, `# timeout 0s`, `# timeout 7200s`) is
+  red with a line giving the shape, so the limit your key read is the one
+  that runs.
+- the limit is part of the line, so changing it changes the checks'
+  fingerprint and the next ship asks for your key again. ship's page shows the
+  first 20 lines of a long list, so a changed line further down is ratified
+  without being on screen; that predates this release and stays open.
+- each check line runs in its own session. when the tool stops a line (its
+  limit, ctrl-c, a closed terminal, a stop signal to sandbox) it stops what
+  the line started: SIGTERM to the line's process group, to every group a
+  descendant moved into and to each descendant, then SIGKILL to each of those
+  still standing five seconds later. descendants are found by parent link
+  before the first signal, which reaches a child that started its own session
+  the way node's `detached: true` does; a member of the line's group whose
+  launcher already exited is reached through the group.
+- while a line is being stopped, a second ctrl-c or stop signal waits until
+  the stop is done, so it cannot cut the stop short before SIGKILL. an ignored
+  signal stays ignored, so `nohup sandbox check` still outlives its terminal.
+  with no `ps` on the machine the stop still reaches the line's own group.
+- out of reach, said plainly: a process that detaches by forking twice, a
+  container or launchd job a line starts, and anything a line leaves running
+  after it finishes in time.
+- a line that finishes in time gives the same output and exit code as before.
+  it runs with no controlling terminal; a check that drives a terminal opens
+  its own, and no current one reads `/dev/tty`.
+- `docs/MANUAL.md` says the limit and the stop in the ship paragraph.
+
+### checked
+
+- fifteen tests in `engine/tests/test_ship.py`. five read the limit: its edge
+  cases, a limit that does not read, a slow line green under its own limit and
+  red without one, and the fingerprint moving with the limit. eight stop a line
+  that left something behind: a child in the line's group, one that ignores
+  SIGTERM, one that started its own session, a group member whose launcher
+  exited, ctrl-c, a second ctrl-c during the stop, a stop signal to sandbox,
+  and a machine with no `ps`; one more keeps an ignored hangup ignored. the
+  last one runs a line that finishes in time and finds it untouched. each of
+  the nine stop and signal cases was red before its fix, in the test run or
+  in a probe of the same case.
+- the home-path floor in `engine/tests/test_door.py` reads what would ship: in
+  a git checkout, the tracked files and the untracked ones git would commit.
+  its own docstring always said "no committed file", and its walk read every
+  file on disk, so a host's ignored `.claude/settings.local.json` (written
+  2026-09-05) turned the suite red on this machine and would have stopped the
+  release. outside a checkout it still walks the whole tree, and an untracked
+  file carrying a home path still fails it.
+- the README's import count reads fifteen: `signal` joins the list.
+- no project's check lines change, and no ratification moves.
+
 ## 9.0.2 — written like a person, for a person (2026-08-23)
 
 the writing convention entered the soul whole. the em dash was the piece a

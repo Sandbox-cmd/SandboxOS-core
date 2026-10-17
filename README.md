@@ -76,7 +76,7 @@ day 0. nothing on the record yet.
 placed: ~/Sandbox/CLAUDE.md
 deny floor: 1 rule(s) on the record's directory
 transcript rule: the account of a session is denied to edits
-plugin: sandbox-os 9.0.2 — read from this core's own tree, each session
+plugin: sandbox-os 9.0.3 — read from this core's own tree, each session
 voice: across-the-desk is the session style unless you pick another
 read-back: the wiring took
 ready. nobody's tool.
@@ -150,7 +150,7 @@ which would be the habit this whole page is against.
 | a ship happens only when your own checks pass | `sandbox ship hello`, with `## checks` empty | `a ship with no checks is a costume — add a line under PROJECT.md's ## checks`, exit 1 |
 | what got built is measured off your files, and the model's account of it sits beside that measurement | `sandbox make --close hello --summary "rewrote the world"`, after a session that touched no file | `attempted — nothing changed on hello (the diff is empty, and says so)` |
 | every count is computed the moment it is shown | `cat ~/Sandbox/projects/hello/CANON.md` | `_3 landed facts — computed, not stored._` |
-| the engine stands on python's own library and reaches no network | `grep -rhoE "^import [a-z_]+" engine/*.py \| sort -u` | fourteen names, `argparse` through `time`, every one of them stdlib |
+| the engine stands on python's own library and reaches no network | `grep -rhoE "^import [a-z_]+" engine/*.py \| sort -u` | fifteen names, `argparse` through `time`, every one of them stdlib |
 
 > ### NOTHING LANDS THAT YOU WERE NOT SHOWN.
 
