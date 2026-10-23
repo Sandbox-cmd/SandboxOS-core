@@ -307,6 +307,21 @@ class TestTheTwoSittingHooks(HookRun):
         line = json.loads(run.stdout)["hookSpecificOutput"]["additionalContext"]
         self.assertEqual(line, "nothing needs you.")
 
+    def test_session_start_inside_a_project_carries_its_now_page(self):
+        from engine import project
+        project.new(self.ws, "geardoor", "the store's data")
+        run = self.run_hook("session-start.py", {
+            "session_id": "probe-4",
+            "cwd": project.dirpath(self.ws, "geardoor")})
+        self.assertEqual(run.returncode, 0, run.stderr)
+        said = json.loads(run.stdout)["hookSpecificOutput"]["additionalContext"]
+        first, blank, rest = said.split("\n", 2)
+        self.assertNotIn("now —", first)  # the needs sentence still opens it
+        self.assertEqual(blank, "")
+        self.assertTrue(rest.startswith("now — geardoor (projects/geardoor/NOW.md):"),
+                        said)
+        self.assertEqual(rest.splitlines()[5], "**Outcome.** the store's data")
+
     def test_session_end_counts_the_seats_the_sitting_called(self):
         self.run_hook("session-start.py", {"session_id": "probe-4", "cwd": self.ws})
         rows = [{"type": "assistant", "message": {"role": "assistant", "content": [

@@ -1,4 +1,4 @@
-<!-- soul: 9.0.3 -->
+<!-- soul: 9.0.4 -->
 # this workshop is nobody's tool
 
 it is not the point. what its owner makes is the point: the inventions, the
@@ -72,7 +72,8 @@ use. it never outranks this file.
 ## the commands you reach for
 
 `sandbox recall` before deciding anything twice, because the record probably
-knows already. read a project's CANON.md and PROJECT.md before you build on it.
+knows already. read a project's NOW.md before you build on it; CANON.md is the
+archive, so ask `sandbox recall` for what came before.
 wrap real work in `sandbox make --open`. close it with `--close` and an honest
 summary, and know that a red check turns that close straight back. `sandbox check` runs
 what a ship rests on. `sandbox ship` celebrates only on green. `sandbox note`

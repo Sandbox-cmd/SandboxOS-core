@@ -1,5 +1,50 @@
 # CHANGELOG
 
+## 9.0.4 — a session starts from NOW.md (2026-10-23)
+
+a session started from a project's CANON.md, and the sandbox project's had
+grown to 550 KB, far past what a session can read whole. phase 1 of the reset
+gives every project one short page that says where it stands and what comes
+next. the archive stays where it is, and `sandbox recall` reads it when a
+session needs the history.
+
+### built
+
+- a new project is born with `NOW.md` beside its contract: the outcome, where
+  it stands, the authority it works under, and the next move. its contract's
+  notes open with `start here: NOW.md`.
+- `sandbox project now [NAME] [--for PATH]` prints the page of the project a
+  path belongs to: one under `projects/NAME/`, or the deepest declared
+  `root:` that holds it. a done project claims no path. anywhere else it
+  prints one line per switched-on project naming what comes next. the page
+  is cut at 4000 characters.
+- the session-start hook adds that page after the needs sentence, with a
+  blank line between them. with no page to give, the sentence stands alone,
+  as it did.
+- a `--root` that is a git repository gets no briefs written into it, and the
+  report line says so and names the door. on 2026-10-23 `project new sandbox
+  --root ~/Sandbox/system` left two untracked pages in the release-only main.
+- `sandbox status` keeps done projects out of its table and names them on one
+  line, `N done: a, b, c`. the count line is unchanged.
+- the charter reads a project's NOW.md first and asks `sandbox recall` for
+  what came before. the consent and law 11 lines wait for phase 2.
+- `sandbox release` runs the suite with stdin closed. a note's origin follows
+  `isatty`, and seven tests that expect a machine origin never pinned stdin,
+  so 9.0.3's suite passed from a pipe and failed at the owner's keyboard. the
+  tests themselves still read the terminal and stay open.
+
+### checked
+
+- `engine/tests/test_project.py` holds the new page and its contract line, a
+  root with `.git` as a directory or a file, `project_for_path` over a
+  projects dir, two nested roots and a done project, the page cut, and the
+  next lines from switched-on projects.
+- `engine/tests/test_plugin_payload.py` starts a session inside a project and
+  finds the page after the sentence; the two one-line tests pass unchanged.
+- `engine/tests/test_resume.py` holds the done line and its absence.
+- the suite passes from a pipe and through `sandbox release` under a
+  pseudo-terminal, where 9.0.3's failed seven.
+
 ## 9.0.3 — a check gets the time it needs (2026-10-17)
 
 a check line had 120 seconds, and a slow one that passed was refused as red.

@@ -234,9 +234,17 @@ def status(ws):
     # surface: 1
     lines.append("%d project(s), %d active · on: %s" %
                  (len(projects), len(active), ", ".join(on) if on else "nothing"))
+    # a done project leaves the table and keeps one name on one line: the
+    # table is for what is still being made.
+    done = [p["dir"] for p in projects if p["state"] == "done"]
     for p in projects:
+        if p["state"] == "done":
+            continue
         mark = "*" if p["dir"] in on else " "
         lines.append(" %s %-20s %-8s %s" % (mark, p["dir"], p["state"], p["goal"]))
+    if done:
+        # surface: 1
+        lines.append("%d done: %s" % (len(done), ", ".join(done)))
     _pile, scars = desk.drafts(ws)
     if scars:
         # surface: 1

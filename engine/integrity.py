@@ -316,9 +316,14 @@ def release_check():
     r = root()
     lines, ok = [], True
 
+    # stdin is closed, so the suite reads the same at the owner's keyboard as
+    # from a pipe: a note's origin follows isatty, and 9.0.3's suite went
+    # red only at a real terminal (2026-10-23). it also keeps a test from
+    # ever reading the owner's keypress.
     suite = subprocess.run([sys.executable, "-m", "unittest", "discover",
                             "-s", "engine/tests", "-t", "."],
-                           cwd=r, capture_output=True, text=True, timeout=600)
+                           cwd=r, capture_output=True, text=True, timeout=600,
+                           stdin=subprocess.DEVNULL)
     good = suite.returncode == 0
     ok = ok and good
     tail = (suite.stderr or "").strip().splitlines()

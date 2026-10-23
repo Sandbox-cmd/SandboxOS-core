@@ -1,11 +1,14 @@
 # SPDX-License-Identifier: FSL-1.1-Apache-2.0
 """SessionStart: one sentence about what waits, then the sitting opens.
 
-Two things happen and no more. The needs sentence is folded from `sandbox
+Three things happen and no more. The needs sentence is folded from `sandbox
 status` — one producer, and this is the one-line renderer of it — with every
 door cut off, because the session shows and the verb lands (experience §4.1).
-Then `sandbox session open --key <the host's session id>` puts the sitting on
-the record, which is the only op a hook may mint.
+Then `sandbox project now --for <the session's cwd>` adds the page the session
+starts from: the NOW.md of the project it stands in, or a next line per
+switched-on project, after a blank line, and nothing when there is none. Then
+`sandbox session open --key <the host's session id>` puts the sitting on the
+record, which is the only op a hook may mint.
 
 The host's own fences are doctor's to report, never this line's; a person
 asks for them with `sandbox doctor`.
@@ -44,12 +47,16 @@ def main():
     ws = _shell.workshop(ev)
     _code, out = _shell.sandbox(["status"], ws=ws)
     line = sentence(out)
+    _code, now = _shell.sandbox(
+        ["project", "now", "--for", ev.get("cwd") or os.getcwd()], ws=ws)
+    now = (now or "").strip()
+    context = "\n\n".join(t for t in (line, now) if t)
     key = ev.get("session_id") or ""
     if key:
         _shell.sandbox(["session", "open", "--key", key], ws=ws)
-    if line:
+    if context:
         print(json.dumps({"hookSpecificOutput": {
-            "hookEventName": "SessionStart", "additionalContext": line}}))
+            "hookEventName": "SessionStart", "additionalContext": context}}))
     return 0
 
 

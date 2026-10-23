@@ -68,7 +68,7 @@ def _flag(argv, name):
 FLAGS = {
     "note": {"--project": "NAME", "--workshop": None, "--ruling": None,
              "--supersedes": "eid-…"},
-    "project": {"--root": "DIR"},
+    "project": {"--root": "DIR", "--for": "PATH"},
     "drafts": {"--drop": "N"},
     "approve": {"--project": "NAME"},
     "recall": {"--project": "NAME", "--why": None, "--ruling": None,
@@ -196,9 +196,18 @@ def _project(ws, argv):
             print("%-20s %-8s %s" % (p["dir"], p["state"], p["goal"]))
         return 0
     root, argv = _flag(argv, "--root")
+    where, argv = _flag(argv, "--for")
+    if argv[:1] == ["now"]:
+        # the page a session starts from; the session-start hook asks with
+        # --for, because it runs from the workshop and not where you stand.
+        brief = project.now_brief(ws, name=(argv[1:] or [None])[0],
+                                  path=where or os.getcwd())
+        if brief:
+            print(brief)
+        return 0
     if not argv:
-        print("project new NAME [goal] [--root DIR] · on NAME · "
-              "off NAME · done NAME")
+        print("project new NAME [goal] [--root DIR] · on|off NAME · "
+              "done NAME · now [NAME]")
         return 2
     sub, rest = argv[0], argv[1:]
     if sub == "new" and rest:
@@ -208,8 +217,8 @@ def _project(ws, argv):
     elif sub == "done" and rest:
         ok, msg = project.done(ws, rest[0])
     else:
-        print("project new NAME [goal] [--root DIR] · on NAME · "
-              "off NAME · done NAME")
+        print("project new NAME [goal] [--root DIR] · on|off NAME · "
+              "done NAME · now [NAME]")
         return 2
     print(msg)
     return 0 if ok else 1

@@ -61,7 +61,9 @@ revert path named, and a ship carries none of them until that confirmation.
 
 - arrive: `sandbox resume` prints what happened since you left, plus one k
   for what waited.
-- work: `sandbox project on NAME`, then build. wrap a piece of building in
+- work: `sandbox project on NAME`, then read its NOW.md, the short page
+  `sandbox project now` prints and a session is handed at its start. wrap a
+  piece of building in
   `sandbox make --open "intent"` … `sandbox make --close NAME --summary "…"`.
   the close computes the diff and stages the summary, then re-runs your checks
   before it lands.

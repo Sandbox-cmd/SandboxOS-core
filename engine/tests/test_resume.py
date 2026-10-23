@@ -32,6 +32,23 @@ class TestStatusResume(unittest.TestCase):
         self.assertLess(out.index("two things need you."),
                         out.index("project(s)"))
 
+    def test_a_done_project_leaves_the_table_and_is_named_on_one_line(self):
+        project.new(self.ws, "oldshop", "the last store")
+        project.new(self.ws, "olderstill")
+        project.done(self.ws, "oldshop")
+        project.done(self.ws, "olderstill")
+        out = status.status(self.ws)
+        lines = out.splitlines()
+        count = [i for i, l in enumerate(lines) if "project(s)" in l][0]
+        # the count line stays; the table holds the one project still made
+        self.assertTrue(lines[count].startswith("3 project(s), 1 active"), out)
+        self.assertEqual([l.split()[0] for l in lines[count + 1:-1]],
+                         ["geardoor"])
+        self.assertEqual(lines[-1], "2 done: olderstill, oldshop")
+
+    def test_no_done_line_when_nothing_is_done(self):
+        self.assertNotIn(" done: ", status.status(self.ws))
+
     def test_resume_headless_refuses_with_its_own_name_and_exits_one(self):
         """the scar: resume printed a refusal and returned 0 on it."""
         notes.note(self.ws, "a finding", target_project="geardoor")

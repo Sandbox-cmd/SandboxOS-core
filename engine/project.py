@@ -12,12 +12,14 @@ arrival confirms it.
 import os
 import shutil
 import subprocess
+import time
 
 from . import desk, journal, provisional
 
 DIRNAME = "projects"
 CONTRACT = "PROJECT.md"
 CANON = "CANON.md"
+NOW = "NOW.md"
 BRIEFS = ("AGENTS.md", "CLAUDE.md")
 
 # the one line under `## checks`, so an empty section says what belongs in
@@ -31,6 +33,25 @@ CHECKS_HINT = "<!-- one command per line; sandbox ship runs them -->"
 # surface: 8
 CANON_HEADER = ("*projected from the record — edits here are "
                 "lost on the next rebuild; change the record with sandbox note.*")
+
+# the page a session starts from. CANON.md grew into an archive no session
+# could read whole (550 KB by 2026-10-23), so a project carries one short page
+# that says where it stands and what comes next, and the archive is asked, not
+# read. NOW_LIMIT is where a session-start brief cuts the page.
+# surface: 8
+NOW_TEMPLATE = """# %(name)s: now (%(date)s)
+
+Read this first. CANON.md is the archive; ask `sandbox recall` for history.
+
+**Outcome.** %(goal)s
+
+**Where it stands.** Just made.
+
+**Authority.**
+
+**Next.**
+"""
+NOW_LIMIT = 4000
 
 # what a project's own root gets when the work lives outside the workshop:
 # one page under the two names a session looks for. twelve lines, because a
@@ -148,6 +169,15 @@ def write_briefs(ws, name, root):
     """
     if os.path.realpath(root) == os.path.realpath(ws):
         return []  # the charter is already here; a second copy of it is noise
+    if os.path.exists(os.path.join(root, ".git")):
+        # a repository keeps its own history, and two untracked pages in it
+        # are somebody else's mess to explain: on 2026-10-23 `project new
+        # sandbox --root ~/Sandbox/system` left two in the release-only main.
+        # a write turned back, then the door: row 3c's shape, not a mistype.
+        # surface: 3c
+        return [("%s is a git repository with its own history — left untouched; "
+                 "add a brief there yourself if it should carry one")
+                % _tilde(root)]
     text = ROOT_BRIEF % {"name": name,
                          "charter": _tilde(os.path.join(os.path.abspath(ws),
                                                         "CLAUDE.md"))}
@@ -191,9 +221,13 @@ def new(ws, name, goal="", root=None):
         f.write("# %s\ngoal: %s\nstate: active\n" % (name, goal))
         if root_abs:
             f.write("root: %s\n" % root_abs)
-        f.write("\n## checks\n%s\n\n## notes\n" % CHECKS_HINT)
+        f.write("\n## checks\n%s\n\n## notes\nstart here: %s\n"
+                % (CHECKS_HINT, NOW))
     with open(os.path.join(d, CANON), "w", encoding="utf-8") as f:
         f.write("# canon — %s\n\n%s\n" % (name, CANON_HEADER))
+    with open(os.path.join(d, NOW), "w", encoding="utf-8") as f:
+        f.write(NOW_TEMPLATE % {"name": name, "goal": goal,
+                                "date": time.strftime("%Y-%m-%d")})
     brief_lines = write_briefs(ws, name, root_abs) if root_abs else []
     git_note = _git_birth(d, name)
     desk.mint(ws, {"cls": "project-state", "origin": "machine",
@@ -267,3 +301,78 @@ def list_all(ws):
             c["dir"] = name
             out.append(c)
     return out
+
+
+def project_for_path(ws, path):
+    """the project a path belongs to, or None.
+
+    A path under projects/NAME/ is NAME's. Anywhere else it belongs to the
+    project whose declared root: holds it, and the deepest root wins, because
+    a project rooted inside another project's tree is the narrower claim. A
+    done project claims nothing.
+    """
+    if not path:
+        return None
+    here = os.path.realpath(os.path.abspath(os.path.expanduser(path)))
+    base = os.path.realpath(dirpath(ws))
+    if here.startswith(base + os.sep):
+        name = here[len(base) + 1:].split(os.sep)[0]
+        c = parse_contract(contract_path(ws, name))
+        return name if c and c["state"] != "done" else None
+    best, depth = None, -1
+    for p in list_all(ws):
+        if p["state"] == "done" or not p.get("root"):
+            continue
+        root = os.path.realpath(os.path.abspath(os.path.expanduser(p["root"])))
+        if (here == root or here.startswith(root + os.sep)) and len(root) > depth:
+            best, depth = p["dir"], len(root)
+    return best
+
+
+def now_page(ws, name):
+    """the project's NOW.md, cut at NOW_LIMIT, or None when it has none."""
+    p = os.path.join(dirpath(ws, name), NOW)
+    if not os.path.exists(p):
+        return None
+    with open(p, encoding="utf-8") as f:
+        return f.read()[:NOW_LIMIT]
+
+
+def next_line(text):
+    """what follows `**Next.**` on its line, or the next line when it stands alone."""
+    lines = (text or "").splitlines()
+    for i, line in enumerate(lines):
+        if line.startswith("**Next.**"):
+            rest = line[len("**Next.**"):].strip()
+            if rest:
+                return rest
+            for after in lines[i + 1:]:
+                if after.strip():
+                    return after.strip()
+            return ""
+    return ""
+
+
+def now_brief(ws, name=None, path=None):
+    """what a session starts from.
+
+    Standing in a project, or naming one, gives that project's page. Anywhere
+    else gives one line per switched-on project that has a page, naming what
+    comes next. Empty when there is nothing to say.
+    """
+    name = name or project_for_path(ws, path)
+    if name:
+        page = now_page(ws, name)
+        if page is None:
+            return ""
+        # surface: 1
+        return "now — %s (%s/%s/%s):\n%s" % (name, DIRNAME, name, NOW,
+                                             page.rstrip("\n"))
+    lines = []
+    for on in on_list(ws):
+        page = now_page(ws, on)
+        if page is not None:
+            # surface: 1
+            lines.append("now — %s: %s" % (on, next_line(page)
+                                          or "%s/%s/%s" % (DIRNAME, on, NOW)))
+    return "\n".join(lines)
