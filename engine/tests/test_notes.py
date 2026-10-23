@@ -44,6 +44,22 @@ class TestNotes(unittest.TestCase):
         events, _ = journal.read(self.ws)
         self.assertEqual([e for e in events if e.get("body") == "typed by a hand"], [])
 
+    def test_the_suite_stands_at_a_pipe_wherever_it_is_started(self):
+        """the 2026-10-23 scar: seven tests read the keyboard the suite was
+        started from, so `python3 -m unittest` typed at a terminal was red."""
+        import subprocess
+        import sys
+        self.assertFalse(os.isatty(0))
+        self.assertFalse(sys.stdin.isatty())
+        self.assertTrue(os.environ.get("NO_COLOR"))
+        child = subprocess.run([sys.executable, "-c",
+                                "import os; print(os.isatty(0))"],
+                               capture_output=True, text=True)
+        self.assertEqual(child.stdout.strip(), "False")
+        notes.note(self.ws, "nobody typed this", target_project="geardoor")
+        pile, _ = desk.drafts(self.ws)
+        self.assertEqual([d["origin"] for d in pile], ["machine"])
+
     def test_approve_shows_the_pile_then_lands_what_it_showed(self):
         notes.note(self.ws, "one finding", target_project="geardoor")
         notes.note(self.ws, "another finding", target_project="geardoor")

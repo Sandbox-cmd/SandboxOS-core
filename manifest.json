@@ -1,13 +1,13 @@
 {
  "files": {
   ".claude-plugin/marketplace.json": "09988111c01d68490e5b94038ca0ed325f2c1f0f1d55e14851f7653793c10cef",
-  "CHANGELOG.md": "55d6a7fd8ba4d5555eb83aa7adfeb2117efaeb31ec87835f9db4cee1d871b5d8",
+  "CHANGELOG.md": "3d146f4125fbca89ca760cc6a63e021c75f8874d5e99e559a4ebabf26e76b8c8",
   "LICENSE": "df3bf096d60edaa342cd1b8042c34bf660f40d7be5c1cd5678e351e8d302151f",
-  "README.md": "bc5d91f289fbb3c4c5cf1ff5c98f75e2d6350aac3cc0216ded690b0f00a0b10a",
-  "VERSION": "b83920bac1b2d47c3840f588f95bee9dc69b85e26117f471541cdf85d7da52a2",
+  "README.md": "434cf110380356b2ef435ac9ba90f96b12f9e1c212ab95c90a211fcfaa50ee83",
+  "VERSION": "66ce3d7475e895268e7bb15a1880f12a3d97ff271e19046560a7f02a52ae280a",
   "boot.py": "eca168882b0fa962db928ca19d9bbba539762f3806d3c8fd1217c4396e905695",
   "docs/MANUAL.md": "9433f9cc9d1f96ddc83a19c5cf093514907e5a52ca65c2d8a6ad9ec7bdf6f9a2",
-  "docs/OPEN.md": "eed4de5ce040f736d62810a112b12da345568c038f41c11b7f9b2364485fa711",
+  "docs/OPEN.md": "ddc27660483ece0d49a941bb2afbf57030cfb62dae2e00611eea27f0496594cf",
   "docs/START-HERE.md": "f374fac81d77c9b84e57a44dc8415115b99a781ec3b7bae0cdfac26973cc74f3",
   "engine/__init__.py": "bbf025736696572bc3947dafebe76a5071d2add853a707fc1dd6310c3af0ae27",
   "engine/apps.py": "365ec261bd399b278418672d76cfb79fff8a7a1266ac58615cbba5e757b72be9",
@@ -34,7 +34,7 @@
   "engine/ship.py": "fbd9ec818d76e9eaea009cfc48a1da4b05f0634764a96ef57aeb9b82b94ebcf2",
   "engine/status.py": "d053e1ccab1293a92f470c8ea76a0c9bf512da3108db58cf80ff45fd16a6a700",
   "engine/succession.py": "0bf10f6bb3b472aee84f06749e9b90b9d6540d063e381ef024844e4e0921aec9",
-  "engine/tests/__init__.py": "dedd267a377aeeef2f936951e179d3fcb0137b67ff2996783281448773547dbc",
+  "engine/tests/__init__.py": "31795317ec8ce540fdd74776cdb60214438c5a4b51635898c90cb4f63d1eea1e",
   "engine/tests/carry_ledger.py": "9d059e33e86b02fb1b35839fe8306fb138c4cc7f351c7c8382c95c074eb4b16b",
   "engine/tests/pins.py": "e70f0c72622a0d3080adef726dab83f6a15c41f49b5b39b5764f5c3619e513c0",
   "engine/tests/test_app.py": "1eb52d928984c408484bf2ce6aeb534dc7bec393f92ebc207d34488b50ffe12d",
@@ -59,7 +59,7 @@
   "engine/tests/test_layer.py": "e1e788802de3bc3ddd8a54383322826c7274634d3516c8ca1ddc00c660bb5fe4",
   "engine/tests/test_make.py": "f2564fb0b2975f63db3df4155c5c2f26ace0e04e74ab097a7212c01d82db72e1",
   "engine/tests/test_marketplace.py": "020b79503cdc4374c5a013ff0522b09888038a274e5343efdf312bab14215ca6",
-  "engine/tests/test_notes.py": "f5f354d300df15a2b2b5a3800008804456f57c668c4c822b1a5093e6d4bd1a77",
+  "engine/tests/test_notes.py": "1b9dd706ce9e387318de6bd9bdcee5d55d4ecb5e102e5065c74fdf18ae90acf7",
   "engine/tests/test_page.py": "dc7baf29ad7fe9a0923e0c437a96b078ebce137673fcd26d8d97d7389a2c41b5",
   "engine/tests/test_person_clean.py": "7848cceef2f0f21bebe0fdeeab43e94162a367df6179da808915fe8d7520b3ea",
   "engine/tests/test_placement.py": "aa7f730095f87bcb3215287c3bdf2cff3f21e233f5f24bfeaaf6548fc70cde4b",
@@ -155,9 +155,9 @@
   "soul/surfaces.md": "43141c8436171afea03280309bad88ba94eabc69611eb6017fbb31007a091f86",
   "soul/values.md": "2a27ebe563e4c102b194f81aec81b8fcb7be13cb9cebe8cd44388f79313e36b9",
   "soul/voice.md": "7b525f3644633890e11a7791b10e08a026271f4c6d5981ae3ac67d7de915c0c1",
-  "vessel/claude-code/CLAUDE.md": "8ca47f47142aec98ab9c3f3bce754f09919c755c46181749c84485385936b6fb",
+  "vessel/claude-code/CLAUDE.md": "220dc77495d4a3407412459c21f099ebd291ba155591a16516fce0b5db8bed50",
   "vessel/git/commit-msg": "bb186f6fa1450e1a123473480e2308dbdc000dd7f45ddbd0a3b7199a4dcc5fbd",
-  "vessel/plugin/.claude-plugin/plugin.json": "ccff627fbd6e827603027cba33b1f41c921a6f124cd9c8a83a03e6c4a6832cab",
+  "vessel/plugin/.claude-plugin/plugin.json": "1b8cdaf9468f7a36a78be80759914a62533bbb032d5143696a9ad4c2856ecdec",
   "vessel/plugin/README.md": "70c562e707ce7d6ca9c1ad5fcd2d8d6afd057b2f53c7b850af5b7ce93e1678ad",
   "vessel/plugin/agents/challenger.md": "c2f57532ca2e4a144f98879bfae0c0af03619da05b79ee417ed0a7ed5c4c187a",
   "vessel/plugin/agents/checker.md": "e67a14ce9eae89aaeca44568c793b23ee30de7737b881ba0a03ece827a7f3b4e",
@@ -180,5 +180,5 @@
   "vessel/plugin/skills/sandbox-workshop/SKILL.md": "8ef2acf91ce42d0830a19fa6699670fff1b86d0adaa018ebc2a844fb18c09b3e",
   "vessel/plugin/skills/spec-driven-discovery/SKILL.md": "6ce3bd34a635cdad0b2e8fe1d05f880c49c84e14672641fe7ccc80724f062c08"
  },
- "generated": "2026-10-23T11:39:16Z"
+ "generated": "2026-10-23T12:05:43Z"
 }

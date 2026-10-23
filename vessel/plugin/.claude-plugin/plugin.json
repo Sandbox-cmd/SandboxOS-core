@@ -1,7 +1,7 @@
 {
  "name": "sandbox-os",
  "description": "Sandbox OS — the hooks, six crew briefs, three skills, the voice and two commands, versioned with the core.",
- "version": "9.0.4",
+ "version": "9.0.5",
  "author": {
   "name": "Sandbox-cmd"
  }

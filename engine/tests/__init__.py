@@ -12,9 +12,33 @@ at.
 """
 import contextlib
 import os
+import sys
 from unittest import mock
 
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+
+def _stand_at_a_pipe():
+    """the suite reads the same wherever it is started: a pipe, never a hand.
+
+    a note's origin follows stdin's isatty and doctor's colour follows
+    stdout's, so the suite was green from a pipe and seven tests red at the
+    owner's keyboard (2026-10-23, 9.0.3's tree included). stdin becomes
+    /dev/null at the descriptor, so every child a test starts inherits it
+    too, and NO_COLOR keeps the rows plain. a test that wants a terminal
+    already says so: it mocks isatty, presses the rig's key, or opens its
+    own pty. this also means no test can read a key the owner meant for
+    something else.
+    """
+    if os.isatty(0):
+        fd = os.open(os.devnull, os.O_RDONLY)
+        os.dup2(fd, 0)
+        os.close(fd)
+        sys.stdin = open(0, closefd=False)
+    os.environ["NO_COLOR"] = "1"
+
+
+_stand_at_a_pipe()
 
 
 @contextlib.contextmanager

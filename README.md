@@ -76,7 +76,7 @@ day 0. nothing on the record yet.
 placed: ~/Sandbox/CLAUDE.md
 deny floor: 1 rule(s) on the record's directory
 transcript rule: the account of a session is denied to edits
-plugin: sandbox-os 9.0.4 — read from this core's own tree, each session
+plugin: sandbox-os 9.0.5 — read from this core's own tree, each session
 voice: across-the-desk is the session style unless you pick another
 read-back: the wiring took
 ready. nobody's tool.

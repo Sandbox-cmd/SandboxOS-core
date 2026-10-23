@@ -1,5 +1,30 @@
 # CHANGELOG
 
+## 9.0.5 — the suite reads the same at a keyboard (2026-10-23)
+
+9.0.4 closed the release check's stdin and left the tests themselves open:
+`python3 -m unittest` typed at a terminal still ran seven of them red. a
+note's origin follows stdin's `isatty` and doctor's colour follows stdout's,
+so the same suite was green from a pipe and red at the owner's keyboard.
+
+### built
+
+- the test package stands at a pipe wherever it is started. when stdin is a
+  terminal, `engine/tests/__init__.py` points it at `/dev/null` at the
+  descriptor, so every child a test starts inherits the pipe as well, and it
+  sets `NO_COLOR`. a test that wants a terminal already says so: it mocks
+  `isatty`, presses the rig's key, or opens its own pty.
+- a test can no longer read a key the owner typed for something else.
+- nothing the tool does outside its tests changes.
+
+### checked
+
+- a new test in `engine/tests/test_notes.py` holds the pin: no terminal in
+  the test process or in a child it starts, `NO_COLOR` set, and an unmocked
+  note staged as the machine's.
+- the suite passes from a pipe and under a pseudo-terminal, where it failed
+  seven tests before.
+
 ## 9.0.4 — a session starts from NOW.md (2026-10-23)
 
 a session started from a project's CANON.md, and the sandbox project's had
